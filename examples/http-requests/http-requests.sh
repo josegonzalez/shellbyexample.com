@@ -129,7 +129,7 @@ curl -s -I "https://httpbin.org/get" | head -5
 
 curl -s -i "https://httpbin.org/get" | head -10
 
-: # Using wget instead of curl:
+: # Using wget as an alternative to curl:
 
 if command -v wget >/dev/null 2>&1; then
   echo "wget example:"
@@ -169,8 +169,10 @@ curl -s -b "session=abc123" "https://httpbin.org/cookies" | grep -A3 '"cookies"'
 
 : # Save and send cookies:
 
-curl -c /tmp/cookies.txt "https://example.com/login"
-curl -b /tmp/cookies.txt "https://example.com/protected"
+echo "Save and send cookies:"
+curl -s -c /tmp/cookies.txt "https://httpbin.org/cookies/set?session=abc123" >/dev/null
+curl -s -b /tmp/cookies.txt "https://httpbin.org/cookies" | grep -A2 '"cookies"'
+rm /tmp/cookies.txt
 
 : # Verbose output for debugging:
 
@@ -178,8 +180,9 @@ curl -v "https://httpbin.org/get"
 
 : # HTTPS with certificate verification:
 
-curl --cacert /path/to/ca.crt "https://example.com"
-curl -k "https://example.com" # Skip verification (insecure!)
+: # curl --cacert /path/to/ca.crt "https://secure-server.example"
+echo "HTTPS certificate verification:"
+curl -s -k "https://httpbin.org/get" >/dev/null && echo "  -k flag: skipped verification"
 
 : # Rate limiting (pause between requests):
 
@@ -192,7 +195,8 @@ done
 
 : # Parallel requests with xargs:
 
-echo "url1 url2 url3" | xargs -n1 -P3 curl -sO
+echo "Parallel requests:"
+printf '%s\n' "https://httpbin.org/get?id=1" "https://httpbin.org/get?id=2" "https://httpbin.org/get?id=3" | xargs -n1 -P3 -I{} sh -c 'curl -s "{}" | grep -o "\"id\": \"[0-9]*\"" | head -1'
 
 : # Handle errors:
 
