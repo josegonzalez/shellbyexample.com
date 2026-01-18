@@ -1,5 +1,5 @@
 #!/bin/sh
-# Create sample data for demonstrations:
+# * matches zero or more of previous character
 
 cat >/tmp/sample.txt <<'EOF'
 hello world
@@ -18,3 +18,6 @@ user123@domain.org
 phone: 555-1234
 phone: (555) 123-4567
 EOF
+
+echo "Pattern 'hel*o' (zero or more 'l'):"
+grep "hel*o" /tmp/sample.txt
