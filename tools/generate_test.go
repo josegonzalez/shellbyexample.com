@@ -497,3 +497,33 @@ echo "code"`
 		t.Error("did not find segment with multiline docs")
 	}
 }
+
+func TestParseSegments_ShellcheckFiltered(t *testing.T) {
+	input := `#!/bin/sh
+: # Using expr for arithmetic
+# shellcheck disable=SC2003
+echo "5 + 3 = $(expr 5 + 3)"
+echo "10 - 4 = $(expr 10 - 4)"`
+
+	lines := strings.Split(input, "\n")
+	segments, _ := parseSegments(lines)
+
+	// Check that no segment contains shellcheck
+	for i, seg := range segments {
+		if strings.Contains(seg.CodeText, "shellcheck") {
+			t.Errorf("segment %d should not contain shellcheck directive: %q", i, seg.CodeText)
+		}
+	}
+
+	// Verify the expr commands are still present
+	found := false
+	for _, seg := range segments {
+		if strings.Contains(seg.CodeText, "expr 5 + 3") {
+			found = true
+			break
+		}
+	}
+	if !found {
+		t.Error("expected to find expr command in output")
+	}
+}

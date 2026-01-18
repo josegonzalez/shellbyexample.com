@@ -269,6 +269,10 @@ func parseSegments(lines []string) ([]Segment, bool) {
 			docLines = append(docLines, comment)
 		} else {
 			// This is code
+			// Skip shellcheck directives
+			if strings.HasPrefix(strings.TrimSpace(line), "# shellcheck") {
+				continue
+			}
 			if !inCode && len(docLines) > 0 {
 				// Starting code after docs
 				inCode = true
