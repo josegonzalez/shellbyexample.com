@@ -75,8 +75,7 @@ table {
     margin: 20px 0;
 }
 
-tr {
-}
+tr {}
 
 tr:last-child {
     border-bottom: none;
@@ -105,6 +104,12 @@ td.docs p {
 
 td.docs p:last-child {
     margin-bottom: 0;
+}
+
+td.docs ul,
+td.docs ol {
+    padding-left: 20px;
+    margin: 20px 0;
 }
 
 td.docs code {
@@ -290,7 +295,10 @@ table tr.separator:last-child hr {
 
 /* Responsive */
 @media (max-width: 768px) {
-    table, tr, td {
+
+    table,
+    tr,
+    td {
         display: block;
         width: 100%;
     }
