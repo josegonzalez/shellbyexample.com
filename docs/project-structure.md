@@ -55,13 +55,17 @@ examples/
 
 ## Tools Directory
 
-| File                | Description                                  |
-| ------------------- | -------------------------------------------- |
-| `generate.go`       | Main site generator                          |
-| `generate_test.go`  | Unit tests for the generator                 |
-| `migrate.go`        | Migration tool for legacy → new format       |
-| `run-in-docker.sh`  | Docker runner for sandboxed script execution |
-| `watch.go`          | File watcher for development (auto-rebuild)  |
+| File                 | Description                                  |
+| -------------------- | -------------------------------------------- |
+| `generate.go`        | Main site generator                          |
+| `generate_test.go`   | Unit tests for the generator                 |
+| `generate-output.go` | Generate output files for scripts            |
+| `migrate.go`         | Migration tool for legacy → new format       |
+| `renumber.go`        | Renumber sub-example files in a directory    |
+| `run-in-docker.sh`   | Docker runner for sandboxed script execution |
+| `validate.go`        | Validate example numbering and structure     |
+| `watch.go`           | File watcher for development (auto-rebuild)  |
+| `watch-outputs.go`   | Watch scripts and regenerate outputs         |
 
 ## Templates Directory
 
@@ -74,14 +78,43 @@ examples/
 
 ## Makefile Targets
 
-| Target                 | Description                                    |
-| ---------------------- | ---------------------------------------------- |
-| `build`                | Generate the static site                       |
-| `serve`                | Build and serve locally at localhost:8000      |
-| `test`                 | Run Go tests                                   |
-| `clean`                | Remove generated files                         |
-| `docker-pull`          | Pull the bash:5.3 Docker image                 |
-| `test-examples`        | Run all scripts in Docker to verify they work  |
-| `validate-safety`      | Check scripts only write to /tmp               |
-| `migrate`              | Run migration from legacy to new format        |
-| `watch`                | Watch for changes and auto-rebuild             |
+### Core
+
+| Target  | Description                              |
+| ------- | ---------------------------------------- |
+| `build` | Generate the static site                 |
+| `serve` | Build and serve locally at localhost:8000 |
+| `test`  | Run Go tests                             |
+| `clean` | Remove generated files                   |
+
+### Docker and Output Generation
+
+| Target                 | Description                                   |
+| ---------------------- | --------------------------------------------- |
+| `docker-pull`          | Pull the bash:5.3 Docker image                |
+| `generate-output`      | Generate output for a single script           |
+| `generate-all-outputs` | Generate outputs for all sub-example scripts  |
+| `test-examples`        | Run all scripts in Docker to verify they work |
+
+### Validation
+
+| Target              | Description                                         |
+| ------------------- | --------------------------------------------------- |
+| `validate`          | Run all validations (numbering + safety)            |
+| `validate-numbering`| Check files start at 01, no gaps, valid shebangs    |
+| `validate-safety`   | Check scripts only write to /tmp (static analysis)  |
+
+### Renumbering
+
+| Target         | Description                                  |
+| -------------- | -------------------------------------------- |
+| `renumber`     | Renumber files in one directory (DIR=path)  |
+| `renumber-all` | Renumber all example directories and validate |
+
+### Development
+
+| Target          | Description                              |
+| --------------- | ---------------------------------------- |
+| `watch`         | Watch for changes and auto-rebuild       |
+| `watch-outputs` | Watch scripts and regenerate outputs     |
+| `migrate`       | Run migration from legacy to new format  |

@@ -1,6 +1,13 @@
-.PHONY: build serve test clean docker-pull generate-output generate-all-outputs test-examples validate-safety validate-numbering migrate watch watch-outputs renumber renumber-all
+.PHONY: build serve test clean \
+        docker-pull generate-output generate-all-outputs test-examples \
+        validate validate-numbering validate-safety \
+        renumber renumber-all \
+        migrate watch watch-outputs
 
-# Default target
+# ==============================================================================
+# Core targets
+# ==============================================================================
+
 build:
 	go mod tidy
 	go run tools/generate.go
@@ -15,11 +22,20 @@ test:
 clean:
 	rm -rf public/
 
-# Pull the bash Docker image
+# ==============================================================================
+# Docker and output generation
+# ==============================================================================
+
 docker-pull:
 	docker pull bash:5.3
 
-# Test all scripts (verify they run without error)
+generate-output: docker-pull
+	@if [ -z "$(SCRIPT)" ]; then echo "Usage: make generate-output SCRIPT=path/to/script.sh"; exit 1; fi
+	go run tools/generate-output.go "$(SCRIPT)"
+
+generate-all-outputs: docker-pull
+	go run tools/generate-output.go --all
+
 test-examples: docker-pull
 	@failed=0; \
 	for script in examples/*/*.sh examples/*/*.bash; do \
@@ -39,7 +55,15 @@ test-examples: docker-pull
 		exit 1; \
 	fi
 
-# Validate scripts don't write outside /tmp (static analysis)
+# ==============================================================================
+# Validation
+# ==============================================================================
+
+validate: validate-numbering validate-safety
+
+validate-numbering:
+	go run tools/validate.go
+
 validate-safety:
 	@echo "Checking for unsafe file operations..."
 	@failed=0; \
@@ -58,28 +82,14 @@ validate-safety:
 	fi; \
 	echo "All scripts appear safe"
 
-# Run migration from old format to new format
-migrate:
-	go run tools/migrate.go
+# ==============================================================================
+# Renumbering
+# ==============================================================================
 
-# Watch for changes and rebuild automatically
-watch:
-	go run tools/watch.go
-
-# Watch for script changes and regenerate outputs
-watch-outputs: docker-pull
-	go run tools/watch-outputs.go
-
-# Renumber sub-example files in an example directory
 renumber:
 	@if [ -z "$(DIR)" ]; then echo "Usage: make renumber DIR=examples/command-line-arguments"; exit 1; fi
 	go run tools/renumber.go "$(DIR)"
 
-# Validate example numbering (starts at 01, no gaps, valid shebangs)
-validate-numbering:
-	go run tools/validate.go
-
-# Renumber all example directories and validate
 renumber-all:
 	@for dir in examples/*/; do \
 		go run tools/renumber.go "$$dir"; \
@@ -87,3 +97,16 @@ renumber-all:
 	@echo ""
 	@echo "Validating numbering..."
 	go run tools/validate.go
+
+# ==============================================================================
+# Development
+# ==============================================================================
+
+watch:
+	go run tools/watch.go
+
+watch-outputs: docker-pull
+	go run tools/watch-outputs.go
+
+migrate:
+	go run tools/migrate.go

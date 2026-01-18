@@ -166,14 +166,49 @@ All scripts are executed in a sandboxed `bash:5.3` Docker container:
 Use the provided Makefile targets to generate output files:
 
 ```bash
+# Generate output for a single script
+make generate-output SCRIPT=examples/hello-world/01-hello-world.sh
+
 # Generate outputs for all sub-examples
+make generate-all-outputs
+
+# Watch for changes and regenerate outputs automatically
 make watch-outputs
+```
 
-# Test all scripts run successfully
-make test-examples
+## Renumbering Files
 
-# Validate scripts only write to /tmp
+If you need to fix file numbering (e.g., after deleting or inserting files):
+
+```bash
+# Renumber files in a single directory
+make renumber DIR=examples/hello-world
+
+# Renumber all example directories
+make renumber-all
+```
+
+The renumber tool:
+- Ensures files start at `01`
+- Removes gaps in numbering
+- Keeps `.sh`/`.bash` and `.output.txt` files paired
+
+## Validation
+
+Run validation to check your examples:
+
+```bash
+# Run all validations
+make validate
+
+# Check numbering only (starts at 01, no gaps, valid shebangs)
+make validate-numbering
+
+# Check scripts only write to /tmp (static analysis)
 make validate-safety
+
+# Test all scripts run successfully in Docker
+make test-examples
 ```
 
 ## Best Practices
@@ -254,6 +289,7 @@ Before submitting a new example:
 - [ ] Scripts only write to `/tmp`
 - [ ] Example is added to `examples.txt`
 - [ ] Scripts pass syntax check
-- [ ] Scripts run successfully in Docker
-- [ ] Output files generated with `make generate-output`
-- [ ] Site builds successfully with `make build`
+- [ ] Scripts run successfully in Docker (`make test-examples`)
+- [ ] Output files generated (`make generate-output SCRIPT=...`)
+- [ ] Validation passes (`make validate`)
+- [ ] Site builds successfully (`make build`)
