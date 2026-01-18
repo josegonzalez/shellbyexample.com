@@ -1,2 +1,2 @@
-After unset [2]: 
-Indices now: 
+After unset [2]: apple banana date
+Indices now: 0 1 3

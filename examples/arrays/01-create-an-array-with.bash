@@ -5,4 +5,5 @@
 #
 # This example creates an array with four elements.
 
+# shellcheck disable=SC2034
 fruits=("apple" "banana" "cherry" "date")

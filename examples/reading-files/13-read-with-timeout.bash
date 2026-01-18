@@ -1,4 +1,6 @@
 #!/bin/bash
 # Read with timeout using `read -t`:
 
-read -t 5 input # Wait 5 seconds max
+read -r -t 5 input <<<"hello" # Wait 5 seconds max
+
+echo "Input: $input"

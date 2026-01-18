@@ -1,5 +1,5 @@
 #!/bin/bash
-# Bash's PIPESTATUS gives all exit codes:
+# Bash provides a `PIPESTATUS` array for all pipe exit codes:
 
 echo "test" | false | true
-echo "PIPESTATUS: ${PIPESTATUS[@]}"
+echo "PIPESTATUS: ${PIPESTATUS[*]}"

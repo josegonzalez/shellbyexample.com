@@ -3,7 +3,7 @@
 
 fruits=(apple banana cherry)
 
-echo "Indices: ${!fruits[@]}"
+echo "Indices: ${!fruits[*]}"
 
 echo "With indices:"
 for i in "${!fruits[@]}"; do

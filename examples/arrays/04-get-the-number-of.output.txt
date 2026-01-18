@@ -1,1 +1,1 @@
-Number of fruits: 0
+Number of fruits: 4

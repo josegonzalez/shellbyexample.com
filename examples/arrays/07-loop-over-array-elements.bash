@@ -1,7 +1,7 @@
 #!/bin/bash
 # Loop over array elements.
 
-echo "Iterating over fruits:"
+fruits=("apple" "banana" "cherry" "date")
 for fruit in "${fruits[@]}"; do
     echo "  - $fruit"
 done

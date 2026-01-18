@@ -1,2 +1,3 @@
-Last argument: /script
-Args 2-3: 
+Last argument: d
+Args 2-3: b c
+Args 2-3: b c

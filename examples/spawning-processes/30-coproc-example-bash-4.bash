@@ -15,6 +15,7 @@ coproc calculator {
 echo "2 + 3" >&"${calculator[1]}"
 #
 # read the result from the calculator
+# shellcheck disable=SC2162
 read -u "${calculator[0]}" result
 
 # optionally close stdin ([0]) and stdout ([1])
@@ -22,9 +23,14 @@ read -u "${calculator[0]}" result
 # note the special syntax for closing file descriptors
 # that requires no spaces between the curly braces and
 # the redirection operator
+# shellcheck disable=SC2086
+# shellcheck disable=SC1083
 exec {calculator[0]}<&-
+# shellcheck disable=SC2086
+# shellcheck disable=SC1083
 exec {calculator[1]}>&-
 
 # wait for the calculator to finish
+# shellcheck disable=SC2154
 wait "$calculator_PID"
 echo "Result: $result"

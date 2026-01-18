@@ -1,2 +1,2 @@
-First three: 
-From index 2: 
+First three: apple banana cherry
+From index 2: cherry date

@@ -1,1 +1,4 @@
-Iterating over fruits:
+  - apple
+  - banana
+  - cherry
+  - date

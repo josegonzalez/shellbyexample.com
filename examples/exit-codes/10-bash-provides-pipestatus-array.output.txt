@@ -1,4 +1,3 @@
-0
 First command: 1
 Second command: 
 Third command: 

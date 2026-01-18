@@ -1,1 +1,1 @@
-All fruits: 
+All fruits: apple banana cherry date

@@ -1,2 +1,2 @@
-First fruit: 
-Second fruit: 
+First fruit: apple
+Second fruit: banana
