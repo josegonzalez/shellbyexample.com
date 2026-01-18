@@ -5,14 +5,14 @@
 #
 # A few examples of string manipulation:
 #
-# - String length with ${#var}:
-# - Substring extraction with ${var:start:length}:
-# - Remove prefix with ${var#pattern} (shortest) or
-#   ${var##pattern} (longest):
-# - Remove suffix with ${var%pattern} (shortest) or
-#   ${var%%pattern} (longest):
-# - Search and replace with ${var/find/replace} (first)
-#   or ${var//find/replace} (all):
+# - String length with `${#var}`:
+# - Substring extraction with `${var:start:length}`:
+# - Remove prefix with `${var#pattern}` (shortest) or
+#   `${var##pattern}` (longest):
+# - Remove suffix with `${var%pattern}` (shortest) or
+#   `${var%%pattern}` (longest):
+# - Search and replace with `${var/find/replace}` (first)
+#   or `${var//find/replace}` (all):
 
 message="Hello, World!"
 echo "Length: ${#message}"

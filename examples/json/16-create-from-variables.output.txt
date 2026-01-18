@@ -1,2 +1,2 @@
-/script: line 7: jq: not found
 From variables:
+/script: line 7: jq: not found

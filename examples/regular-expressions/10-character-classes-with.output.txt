@@ -1,4 +1,4 @@
-grep: /tmp/sample.txt: No such file or directory
 Pattern 'hello[0-9]' (hello + digit):
 Pattern 'hello[._-]' (hello + separator):
+grep: /tmp/sample.txt: No such file or directory
 grep: /tmp/sample.txt: No such file or directory

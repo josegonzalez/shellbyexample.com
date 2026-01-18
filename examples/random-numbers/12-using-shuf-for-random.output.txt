@@ -1,13 +1,13 @@
 Using shuf:
   Random fruit:
-orange
-  Two random fruits:
-banana
 apple
-  Random number 1-10: 7
+  Two random fruits:
+orange
+banana
+  Random number 1-10: 9
   Shuffled list:
-2
+4
 5
 3
-4
+2
 1

@@ -1,3 +1,7 @@
 Rate limited requests:
   Request 1 completed
 /script: line 6: curl: not found
+/script:   Request 2 completed
+line 6: curl: not found
+/script: line 6: curl: not found
+  Request 3 completed

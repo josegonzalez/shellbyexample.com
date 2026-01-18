@@ -1,3 +1,3 @@
-Bash $RANDOM: 5713
-Another: 12909
-Range 1-100: 88
+Bash $RANDOM: 16581
+Another: 17644
+Range 1-100: 69
