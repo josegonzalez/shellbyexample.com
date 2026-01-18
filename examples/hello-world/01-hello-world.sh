@@ -4,6 +4,7 @@
 # shell script.
 #
 # You can run this script by saving it to a file,
-# making it executable with `chmod +x`, and running it.
+# making it executable with `chmod +x`, and running
+# it via `./01-hello-world.sh` in your terminal.
 
 echo "Hello, World!"

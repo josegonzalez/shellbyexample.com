@@ -5,6 +5,10 @@
 #
 # To assign a variable, use `NAME=value` with no spaces
 # around the `=` sign. This is important!
+#
+# To use a variable's value, prefix it with `$`.
 
 greeting="Hello"
 name="World"
+
+echo "$greeting, $name!"
