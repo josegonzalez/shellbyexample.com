@@ -61,6 +61,7 @@ examples/
 | `generate_test.go`  | Unit tests for the generator                 |
 | `migrate.go`        | Migration tool for legacy → new format       |
 | `run-in-docker.sh`  | Docker runner for sandboxed script execution |
+| `watch.go`          | File watcher for development (auto-rebuild)  |
 
 ## Templates Directory
 
@@ -85,3 +86,4 @@ examples/
 | `test-examples`        | Run all scripts in Docker to verify they work  |
 | `validate-safety`      | Check scripts only write to /tmp               |
 | `migrate`              | Run migration from legacy to new format        |
+| `watch`                | Watch for changes and auto-rebuild             |

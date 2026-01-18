@@ -1,4 +1,4 @@
-.PHONY: build serve test clean docker-pull generate-output generate-all-outputs test-examples validate-safety migrate
+.PHONY: build serve test clean docker-pull generate-output generate-all-outputs test-examples validate-safety migrate watch
 
 # Default target
 build:
@@ -77,3 +77,7 @@ validate-safety:
 # Run migration from old format to new format
 migrate:
 	go run tools/migrate.go
+
+# Watch for changes and rebuild automatically
+watch:
+	go run tools/watch.go
