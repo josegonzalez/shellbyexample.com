@@ -1,2 +1,6 @@
 Pattern 'hel*o' (zero or more 'l'):
-grep: /tmp/sample.txt: No such file or directory
+hello world
+hello123
+hello-world
+hello_world
+hello.world

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Grouping with ():
+# grep `-E` with `()` for grouping:
 
 cat >/tmp/sample.txt <<'EOF'
 hello world

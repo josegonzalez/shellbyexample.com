@@ -1,2 +1,6 @@
 Lines NOT containing 'hello':
-grep: /tmp/sample.txt: No such file or directory
+Hello World
+HELLO WORLD
+test@example.com
+user123@domain.org
+192.168.1.1

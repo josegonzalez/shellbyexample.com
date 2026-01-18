@@ -1,5 +1,5 @@
 #!/bin/sh
-# Extended regex with -E (or egrep):
+# Use `grep -E` to enable extended regex patterns:
 
 echo "Extended regex patterns:"
 

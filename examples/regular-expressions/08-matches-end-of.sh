@@ -1,5 +1,5 @@
 #!/bin/sh
-# $ matches end of line
+# The `$` metacharacter matches the end of a line
 
 cat >/tmp/sample.txt <<'EOF'
 hello world

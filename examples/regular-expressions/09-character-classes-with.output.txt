@@ -1,4 +1,6 @@
 Pattern 'hello[0-9]' (hello + digit):
+hello123
 Pattern 'hello[._-]' (hello + separator):
-grep: /tmp/sample.txt: No such file or directory
-grep: /tmp/sample.txt: No such file or directory
+hello-world
+hello_world
+hello.world

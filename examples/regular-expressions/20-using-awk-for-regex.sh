@@ -1,5 +1,12 @@
 #!/bin/sh
-# Using awk for regex:
+# Use `awk` for regex:
+
+cat >/tmp/sample.txt <<'EOF'
+alice 30
+bob 25
+charlie 35
+hello 40
+EOF
 
 echo "awk regex examples:"
 

@@ -1,2 +1,5 @@
 Lines with 'hello' NOT followed by digit:
-grep: /tmp/sample.txt: No such file or directory
+hello world
+hello-world
+hello_world
+hello.world

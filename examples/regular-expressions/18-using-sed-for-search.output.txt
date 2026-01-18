@@ -3,6 +3,12 @@ hello universe world
 hello universe universe
 hi hi hi
 Delete lines with 'HELLO':
-sed: /tmp/sample.txt: No such file or directory
+hello world
+Hello World
+hello123
 sed -n with /p:
-sed: /tmp/sample.txt: No such file or directory
+hello world
+hello123
+hello-world
+hello_world
+hello.world

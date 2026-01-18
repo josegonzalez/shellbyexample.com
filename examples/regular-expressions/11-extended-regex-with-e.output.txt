@@ -1,9 +1,29 @@
 Extended regex patterns:
 One or more digits:
-grep: /tmp/sample.txt: No such file or directory
+hello123
+user123@domain.org
+192.168.1.1
+10.0.0.255
+2024-03-15
+03/15/2024
+phone: 555-1234
+phone: (555) 123-4567
 Optional 's' (phones?):
+phone: 555-1234
+phone: (555) 123-4567
 Exactly 3 digits:
+hello123
+user123@domain.org
+192.168.1.1
+10.0.0.255
+2024-03-15
+03/15/2024
+phone: 555-1234
+phone: (555) 123-4567
 Lines with 'hello' or 'test':
-grep: /tmp/sample.txt: No such file or directory
-grep: /tmp/sample.txt: No such file or directory
-grep: /tmp/sample.txt: No such file or directory
+hello world
+hello123
+hello-world
+hello_world
+hello.world
+test@example.com

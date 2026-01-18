@@ -1,5 +1,5 @@
 #!/bin/sh
-# ^ matches start of line
+# The `^` metacharacter matches the start of a line
 
 cat >/tmp/sample.txt <<'EOF'
 hello world

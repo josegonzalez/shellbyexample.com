@@ -1,5 +1,5 @@
 #!/bin/sh
-# * matches zero or more of previous character
+# The `*` metacharacter matches zero or more of the previous character
 
 cat >/tmp/sample.txt <<'EOF'
 hello world

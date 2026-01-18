@@ -1,2 +1,4 @@
 With line numbers:
-grep: /tmp/sample.txt: No such file or directory
+1:hello world
+5:hello-world
+6:hello_world

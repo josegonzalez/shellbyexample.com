@@ -1,2 +1,2 @@
-grep: /tmp/sample.txt: No such file or directory
 Grouped pattern ((hello|test)@):
+test@example.com

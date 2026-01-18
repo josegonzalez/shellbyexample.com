@@ -1,2 +1,1 @@
-grep: /tmp/sample.txt: No such file or directory
-Count of lines with 'hello': 
+Count of lines with 'hello': 5

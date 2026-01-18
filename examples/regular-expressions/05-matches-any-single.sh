@@ -1,5 +1,5 @@
 #!/bin/sh
-# . matches any single character
+# The `.` metacharacter matches any single character
 
 cat >/tmp/sample.txt <<'EOF'
 hello world

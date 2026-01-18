@@ -1,5 +1,5 @@
 #!/bin/sh
-# Negated character class with [^]:
+# Use `[^]` to negate a character class:
 
 cat >/tmp/sample.txt <<'EOF'
 hello world
