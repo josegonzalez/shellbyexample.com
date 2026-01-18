@@ -1,0 +1,2 @@
+/script: line 10: "${WORKER[0]}": Bad file descriptor
+Result: 

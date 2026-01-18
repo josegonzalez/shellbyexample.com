@@ -3,10 +3,10 @@ file1.txt
 file2.sh
 Detailed listing:
 total 0
-drwxr-xr-x    2 root     root            80 Jan 18 08:38 .
-drwxrwxrwt    3 root     root            60 Jan 18 08:38 ..
--rw-r--r--    1 root     root             0 Jan 18 08:38 file1.txt
--rw-r--r--    1 root     root             0 Jan 18 08:38 file2.sh
+drwxr-xr-x    2 root     root            80 Jan 18 09:50 .
+drwxrwxrwt    3 root     root            60 Jan 18 09:50 ..
+-rw-r--r--    1 root     root             0 Jan 18 09:50 file1.txt
+-rw-r--r--    1 root     root             0 Jan 18 09:50 file2.sh
 One file per line:
 file1.txt
 file2.sh

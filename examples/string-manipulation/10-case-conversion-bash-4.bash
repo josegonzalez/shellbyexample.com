@@ -1,5 +1,5 @@
 #!/bin/bash
-# Case conversion (bash 4+):
+# Case conversion:
 
 word="Hello World"
 echo "Uppercase: ${word^^}"

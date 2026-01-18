@@ -1,6 +1,5 @@
 #!/bin/bash
-# Bash 4+ provides associative arrays (hash maps)
-# using `declare -A`:
+# Bash provides associative arrays (hash maps) using `declare -A`.
 
 declare -A user
 user[name]="Alice"
