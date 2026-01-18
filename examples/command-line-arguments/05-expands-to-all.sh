@@ -1,5 +1,7 @@
 #!/bin/sh
-# `$*` expands to all arguments as a single word when quoted:
+# `$@` expands to all arguments as separate words:
 
-echo "All arguments (\$*):"
-echo "  $*"
+echo "All arguments (\$@):"
+for arg in "$@"; do
+  echo "  - $arg"
+done

@@ -1,2 +1,0 @@
-Got exactly two: one and two
-Usage: exactly_two <arg1> <arg2>
