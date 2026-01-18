@@ -1,5 +1,5 @@
 Skip header:
 name,age,city
-  Alice from NYC
-  Bob from LA
-  Carol from Chicago
+  Alice (age 30) from NYC
+  Bob (age 25) from LA
+  Carol (age 35) from Chicago

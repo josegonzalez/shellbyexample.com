@@ -5,5 +5,4 @@
   umask 077
   echo "Secret" >/tmp/secret.txt
 )
-# shellcheck disable=SC2012
-ls -l /tmp/secret.txt | awk '{print "Permissions:", $1}'
+stat -c 'Permissions: %A' /tmp/secret.txt 2>/dev/null || stat -f 'Permissions: %Sp' /tmp/secret.txt

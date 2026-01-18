@@ -10,8 +10,8 @@ Line 5: Example
 EOF
 
 echo "File statistics:"
-# shellcheck disable=SC2034
 wc /tmp/sample.txt | while read -r lines words chars filename; do
+  echo "  File: $filename"
   echo "  Lines: $lines"
   echo "  Words: $words"
   echo "  Chars: $chars"

@@ -1,2 +1,0 @@
-Script PID: 1
-Parent PID: 0

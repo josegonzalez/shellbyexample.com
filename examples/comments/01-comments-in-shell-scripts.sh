@@ -23,11 +23,7 @@ awesome_feature() {
     true
 }
 
-# broken_function
+# call_to_undefined_function
 
 # multi-line comment
 # another line
-
-# Note: There's no block comment syntax in shell.
-# Some people use here-documents for multi-line
-# comments, but that's a hack - just use `#`.

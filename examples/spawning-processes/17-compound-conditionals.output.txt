@@ -1,3 +1,0 @@
-Compound:
-  Both true
-  At least one true

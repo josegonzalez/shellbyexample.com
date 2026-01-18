@@ -1,3 +1,0 @@
-Wait with timeout:
-Completed in time
-Background jobs examples complete

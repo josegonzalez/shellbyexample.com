@@ -1,1 +1,1 @@
-/script: line 4: greet: not found
+Hello, World!

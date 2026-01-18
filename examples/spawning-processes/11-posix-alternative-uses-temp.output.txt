@@ -1,6 +1,0 @@
-POSIX diff comparison:
---- /tmp/tmp.eodAFE
-+++ /tmp/tmp.GjjNFE
-@@ -1,82 +1,147 @@
--arch
--ash

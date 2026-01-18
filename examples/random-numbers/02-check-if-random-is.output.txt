@@ -1,3 +1,0 @@
-Using $RANDOM:
-  Value: 9880
-  Range 1-10: 7

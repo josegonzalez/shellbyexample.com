@@ -2,8 +2,8 @@
 # Shell provides several ways to spawn and control
 # processes. This covers subshells, command execution,
 # and process management.
-# This example shows basic command execution.
+#
+# This example shows how to run one command based on the output of another command.
 
-echo "Running a command:"
-# shellcheck disable=SC2012
-ls -la /tmp | head -3
+touch /tmp/hello.txt /tmp/world.txt /tmp/hello_world.txt /tmp/hello_world_2.txt
+find /tmp -maxdepth 1 -type f -exec ls {} + 2>/dev/null | head -3

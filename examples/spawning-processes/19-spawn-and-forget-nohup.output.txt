@@ -1,1 +1,0 @@
-nohup keeps command running after logout

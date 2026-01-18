@@ -1,6 +1,6 @@
 Diff of sorted inputs:
---- /tmp/tmp.cieFDk
-+++ /tmp/tmp.gDnaDk
+--- /tmp/tmp.jmdeBM
++++ /tmp/tmp.BDKCCM
 @@ -1,3 +1,3 @@
  a
 -b

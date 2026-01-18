@@ -1,0 +1,5 @@
+Hello, world!
+Hello, "world"!
+Backslashes are literal here as well: \n \t
+Multiple backslashes (2): \\
+Escaped double quote: "

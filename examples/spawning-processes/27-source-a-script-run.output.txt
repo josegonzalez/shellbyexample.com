@@ -1,3 +1,0 @@
-source demo:
-SOURCED_VAR: from sourced script
-Spawning processes examples complete

@@ -1,4 +1,0 @@
-Starting multiple background jobs:
-PIDs: 9, 10, 11
-Waiting for all jobs...
-All jobs finished

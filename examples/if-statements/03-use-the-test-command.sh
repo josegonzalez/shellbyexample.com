@@ -3,6 +3,7 @@
 # Note: spaces inside `[ ]` are required!
 #
 # Numeric comparisons:
+#
 # - `-eq` (equal), `-ne` (not equal)
 # - `-lt` (less than), `-le` (less or equal)
 # - `-gt` (greater than), `-ge` (greater or equal)

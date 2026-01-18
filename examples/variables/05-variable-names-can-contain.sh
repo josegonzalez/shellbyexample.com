@@ -2,8 +2,8 @@
 # Variable names can contain letters, numbers, and
 # underscores. They cannot start with a number.
 
-# shellcheck disable=SC2034
-my_var="valid"
-# shellcheck disable=SC2034
-myVar2="also valid"
-# 2invalid="would cause an error"
+variable_1="hello"
+variable_2="world"
+# 3_variable="would cause an error"
+echo "variable_1: $variable_1"
+echo "variable_2: $variable_2"

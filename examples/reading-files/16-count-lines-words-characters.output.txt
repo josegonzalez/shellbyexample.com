@@ -1,4 +1,5 @@
 File statistics:
+  File: /tmp/sample.txt
   Lines: 5
   Words: 15
   Chars: 76

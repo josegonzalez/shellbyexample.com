@@ -1,0 +1,5 @@
+Hello, world!
+Hello, $name!
+Backslashes are literal: \n \t
+Multiple backslashes (4): \\\\
+Escaped single quote: '

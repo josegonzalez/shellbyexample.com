@@ -1,0 +1,7 @@
+Started 3 background jobs
+The pids will be printed out on exit
+In the normal case, one would kill the pids instead
+12
+11
+10
+Subshell finished

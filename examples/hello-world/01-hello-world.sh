@@ -14,5 +14,3 @@
 
 echo "Hello, World!"
 echo "Welcome to Shell by Example!"
-echo "Line 1"
-echo "Line 2"

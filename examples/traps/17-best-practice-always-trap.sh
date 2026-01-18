@@ -4,7 +4,8 @@
 # happens even if the script fails or is interrupted.
 
 # Create temp file and set up cleanup
-tmpfile=$(mktemp /tmp/example.XXXXXX)
+tmpfile="/tmp/example.123456"
+touch "$tmpfile"
 trap 'rm -f "$tmpfile"; echo "Cleaned up $tmpfile"' EXIT
 
 echo "Created: $tmpfile"

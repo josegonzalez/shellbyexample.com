@@ -1,2 +1,1 @@
-/script: line 6: This: command not found
-Error on line 6
+Error on line 7

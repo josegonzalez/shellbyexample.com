@@ -1,4 +1,0 @@
-Subshell demo:
-  In subshell: /tmp
-  After subshell: /tmp
-  x is: unset

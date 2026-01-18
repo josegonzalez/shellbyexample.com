@@ -43,7 +43,6 @@ line-filters
 
 # Processes
 spawning-processes
-background-jobs
 
 # Utilities
 random-numbers

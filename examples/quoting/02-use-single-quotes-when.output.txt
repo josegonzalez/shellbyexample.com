@@ -1,2 +1,0 @@
-The variable is written as $name
-Backslashes are literal: \n \t

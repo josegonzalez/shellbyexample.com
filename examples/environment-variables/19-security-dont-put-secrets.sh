@@ -13,8 +13,8 @@ chmod 600 /tmp/secret.txt
 
 # Read secret from file when needed
 SECRET=$(cat /tmp/secret.txt)
-# shellcheck disable=SC2012
-echo "Secret file permissions: $(ls -l /tmp/secret.txt | cut -d' ' -f1)"
+permissions=$(stat -c '%A' /tmp/secret.txt 2>/dev/null || stat -f '%Sp' /tmp/secret.txt)
+echo "Secret file permissions: $permissions"
 
 # Clean up
 rm /tmp/secret.txt

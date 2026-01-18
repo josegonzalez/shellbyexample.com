@@ -1,4 +1,2 @@
 Hello, World!
 Welcome to Shell by Example!
-Line 1
-Line 2

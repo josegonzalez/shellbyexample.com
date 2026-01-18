@@ -10,4 +10,4 @@ exactly_two() {
 }
 
 exactly_two one two
-exactly_two one
+exactly_two one || echo "Failed to get exactly two arguments"

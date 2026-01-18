@@ -1,0 +1,3 @@
+Consumed: item1
+Consumed: item2
+Consumed: item3
