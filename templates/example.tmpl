@@ -23,6 +23,7 @@
                 </td>
                 <td class="code">
                     <div class="code-header">
+                        <a class="edit-link" href="https://github.com/josegonzalez/shellbyexample.com/edit/main/examples/{{$.ID}}/{{$sub.Filename}}" target="_blank" rel="noopener noreferrer" title="Edit on GitHub">Edit</a>
                         <button class="copy-btn" data-target="code-{{$index}}" title="Copy to clipboard">Copy</button>
                     </div>
                     <pre id="code-{{$index}}" data-code="{{$sub.CodeText}}">{{$sub.Code}}</pre>
@@ -42,13 +43,16 @@
         </table>
         {{else}}
         <table>
-            {{range .Segments}}
-            <tr{{if .IsBash}} class="bash-section"{{end}}>
+            {{range $index, $seg := .Segments}}
+            <tr{{if $seg.IsBash}} class="bash-section"{{end}}>
                 <td class="docs">
-                    {{if .ShowBashLabel}}<span class="label label-bash">{{if .BashLabel}}{{.BashLabel}}{{else}}Bash{{end}}</span>{{end}}
-                    {{.Docs}}
+                    {{if $seg.ShowBashLabel}}<span class="label label-bash">{{if $seg.BashLabel}}{{$seg.BashLabel}}{{else}}Bash{{end}}</span>{{end}}
+                    {{$seg.Docs}}
                 </td>
-                <td class="code">{{.Code}}</td>
+                <td class="code">
+                    {{if eq $index 0}}<div class="code-header"><a class="edit-link" href="https://github.com/josegonzalez/shellbyexample.com/edit/main/examples/{{$.ID}}/{{$.ID}}.sh" target="_blank" rel="noopener noreferrer" title="Edit on GitHub">Edit</a></div>{{end}}
+                    {{$seg.Code}}
+                </td>
             </tr>
             {{end}}
         </table>
