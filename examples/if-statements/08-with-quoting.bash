@@ -4,6 +4,7 @@
 #
 # With `[[ ]]`, quoting is often optional:
 
+name="Alice"
 if [[ $name = Alice ]]; then
     echo "Hello, Alice!"
 fi

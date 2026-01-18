@@ -3,6 +3,7 @@
 # values and spaces correctly.
 
 user_input=""
-if [ "$user_input" = "" ]; then
+# this will be a syntax error if the variable is not quoted
+if [ $user_input = "some_value" ]; then
     echo "No input provided"
 fi

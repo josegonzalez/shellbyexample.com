@@ -1,1 +1,1 @@
-No input provided
+sh: some_value: unknown operand

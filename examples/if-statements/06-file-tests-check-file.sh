@@ -1,5 +1,5 @@
 #!/bin/sh
-# File tests check file properties.
+# File `test` expressions are also supported.
 
 if [ -f "/etc/passwd" ]; then
     echo "/etc/passwd exists and is a file"
