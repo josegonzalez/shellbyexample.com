@@ -1,6 +1,6 @@
 #!/bin/sh
-# getopts only handles short options.
-# For long options (--verbose), parse manually:
+# `getopts` only handles short options.
+# For long options (`--verbose`), parse manually:
 
 demo_long_opts() {
   verbose=false

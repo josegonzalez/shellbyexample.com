@@ -1,5 +1,5 @@
 #!/bin/sh
-# Check if command exists in PATH:
+# Check if command exists in `PATH`:
 
 command_exists() {
   command -v "$1" >/dev/null 2>&1
@@ -7,4 +7,6 @@ command_exists() {
 
 if command_exists git; then
   echo "git is installed"
+else
+  echo "git is not installed"
 fi

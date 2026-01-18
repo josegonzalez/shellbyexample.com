@@ -1,0 +1,6 @@
+With -v flag only:
+verbose=true, name=
+With -n option and argument:
+verbose=false, name=Bob
+With both -v and -n:
+verbose=true, name=Charlie

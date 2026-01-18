@@ -1,0 +1,6 @@
+Parsing: -n Alice -f output.txt
+Option: -n, OPTARG: 'Alice', OPTIND: 3
+Option: -f, OPTARG: 'output.txt', OPTIND: 5
+
+After parsing, OPTIND=5
+Use 'shift $((OPTIND - 1))' to access remaining args

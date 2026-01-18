@@ -1,5 +1,5 @@
 #!/bin/sh
-# Default values with getopts:
+# Default values with `getopts`:
 
 demo_defaults() {
   OPTIND=1
