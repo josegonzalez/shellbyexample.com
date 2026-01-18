@@ -1,6 +1,0 @@
-Pattern 'hello[0-9]' (hello + digit):
-hello123
-Pattern 'hello[._-]' (hello + separator):
-hello-world
-hello_world
-hello.world

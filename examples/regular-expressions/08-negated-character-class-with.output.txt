@@ -1,5 +1,0 @@
-Lines with 'hello' NOT followed by digit:
-hello world
-hello-world
-hello_world
-hello.world

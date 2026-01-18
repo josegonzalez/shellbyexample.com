@@ -1,1 +1,0 @@
-Count of lines with 'hello': 5

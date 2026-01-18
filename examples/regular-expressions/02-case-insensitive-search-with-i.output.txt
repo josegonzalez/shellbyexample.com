@@ -1,8 +1,0 @@
-Case-insensitive 'hello':
-hello world
-Hello World
-HELLO WORLD
-hello123
-hello-world
-hello_world
-hello.world

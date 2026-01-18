@@ -39,7 +39,6 @@ temporary-files
 arithmetic
 string-manipulation
 printf
-regular-expressions
 line-filters
 
 # Processes

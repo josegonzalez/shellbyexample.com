@@ -1,2 +1,0 @@
-Grouped pattern ((hello|test)@):
-test@example.com

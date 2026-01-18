@@ -1,4 +1,0 @@
-Word 'hello' (not part of larger word):
-hello world
-hello-world
-hello.world

@@ -1,4 +1,0 @@
-With line numbers:
-1:hello world
-5:hello-world
-6:hello_world

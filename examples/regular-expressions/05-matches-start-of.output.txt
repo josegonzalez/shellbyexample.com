@@ -1,6 +1,0 @@
-Lines starting with 'hello':
-hello world
-hello123
-hello-world
-hello_world
-hello.world

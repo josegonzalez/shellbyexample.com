@@ -1,6 +1,0 @@
-Pattern 'hel*o' (zero or more 'l'):
-hello world
-hello123
-hello-world
-hello_world
-hello.world

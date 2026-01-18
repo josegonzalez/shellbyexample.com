@@ -1,4 +1,0 @@
-Capture groups (swap words):
-bar foo
-Extract domain from email:
-example.com

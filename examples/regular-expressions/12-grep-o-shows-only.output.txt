@@ -1,3 +1,0 @@
-Extract email addresses:
-test@example.com
-user123@domain.org
