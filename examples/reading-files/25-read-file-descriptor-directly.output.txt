@@ -1,2 +1,3 @@
 Using file descriptor:
-/script: line 5: can't open /tmp/sample.txt: no such file
+  First line: Line 1: Hello
+  Second line: Line 2: World

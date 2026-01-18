@@ -1,0 +1,2 @@
+realpath: --relative-to=/home/user: No such file or directory
+realpath: /home/user/docs/file.txt: No such file or directory

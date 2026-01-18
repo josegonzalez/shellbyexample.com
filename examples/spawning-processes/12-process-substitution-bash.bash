@@ -1,5 +1,5 @@
 #!/bin/bash
-# Process substitution (bash):
+# Process substitution:
 
 diff <(ls /bin) <(ls /usr/bin)
 while read -r line; do

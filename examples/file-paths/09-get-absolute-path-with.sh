@@ -1,5 +1,5 @@
 #!/bin/sh
-# Get absolute path with realpath (GNU) or readlink:
+# Get absolute path with `realpath` (GNU) or `readlink`:
 
 echo "Absolute paths:"
 # realpath resolves symlinks

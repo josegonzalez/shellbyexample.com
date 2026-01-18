@@ -1,4 +1,4 @@
 #!/bin/sh
-# PWD gives current directory:
+# `PWD` gives current directory:
 
 echo "Current directory: $PWD"

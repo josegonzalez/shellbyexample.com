@@ -1,5 +1,5 @@
 #!/bin/sh
-# Path normalization (remove . and ..):
+# Path normalization (remove `.` and `..`):
 
 normalize_path() {
     # Use cd and pwd for normalization

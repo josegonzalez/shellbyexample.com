@@ -75,6 +75,13 @@ func generateOutput(scriptPath string, verbose bool) scriptResult {
 		return result
 	}
 
+	// Check if script needs network access
+	needsNetwork := false
+	content, err := os.ReadFile(scriptPath)
+	if err == nil && strings.Contains(string(content), "# network: required") {
+		needsNetwork = true
+	}
+
 	// Determine output file path
 	ext := filepath.Ext(scriptPath)
 	outputPath := strings.TrimSuffix(scriptPath, ext) + ".output.txt"
@@ -84,7 +91,12 @@ func generateOutput(scriptPath string, verbose bool) scriptResult {
 	}
 
 	// Run the script in Docker
-	cmd := exec.Command("./tools/run-in-docker.sh", scriptPath)
+	args := []string{}
+	if needsNetwork {
+		args = append(args, "-n")
+	}
+	args = append(args, scriptPath)
+	cmd := exec.Command("./tools/run-in-docker.sh", args...)
 	output, err := cmd.CombinedOutput()
 
 	// Write output regardless of error (script might have non-zero exit)

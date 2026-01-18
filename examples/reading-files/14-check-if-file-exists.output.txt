@@ -1,2 +1,2 @@
+File read successfully
 Error: File not found: /nonexistent
-Error: File not found: /tmp/sample.txt

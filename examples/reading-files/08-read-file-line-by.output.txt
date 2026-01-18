@@ -1,2 +1,6 @@
 Reading line by line:
-/script: line 5: can't open /tmp/sample.txt: no such file
+  -> Line 1: Hello
+  -> Line 2: World
+  -> Line 3: Shell
+  -> Line 4: Scripting
+  -> Line 5: Example

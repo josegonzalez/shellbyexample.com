@@ -1,2 +1,4 @@
 Lines 2-4 (sed):
-sed: /tmp/sample.txt: No such file or directory
+Line 2: World
+Line 3: Shell
+Line 4: Scripting

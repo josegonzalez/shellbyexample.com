@@ -1,2 +1,6 @@
 With line numbers:
-/script: line 6: can't open /tmp/sample.txt: no such file
+  1: Line 1: Hello
+  2: Line 2: World
+  3: Line 3: Shell
+  4: Line 4: Scripting
+  5: Line 5: Example

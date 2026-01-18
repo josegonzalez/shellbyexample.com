@@ -1,5 +1,4 @@
 #!/bin/sh
-# Relative path from one location to another:
-# (GNU realpath or Python needed for portable solution)
+# Relative path from one location to another via GNU `realpath`
 
-# realpath --relative-to=/home/user /home/user/docs/file.txt
+realpath --relative-to=/home/user /home/user/docs/file.txt

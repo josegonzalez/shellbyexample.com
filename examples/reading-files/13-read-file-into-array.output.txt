@@ -1,0 +1,3 @@
+Number of items: 3
+First item: apple
+All items: apple banana cherry

@@ -2,8 +2,21 @@
 # Run a script safely inside the shellbyexample Docker container
 set -euo pipefail
 
+# Default network mode (none for security)
+NETWORK_MODE="none"
+
+# Parse optional flags
+while getopts "n" opt; do
+    case $opt in
+        n) NETWORK_MODE="bridge" ;;
+        *) ;;
+    esac
+done
+shift $((OPTIND-1))
+
 if [ $# -lt 1 ]; then
-    echo "Usage: $0 <script> [args...]" >&2
+    echo "Usage: $0 [-n] <script> [args...]" >&2
+    echo "  -n  Enable network access (use bridge network instead of none)" >&2
     exit 1
 fi
 
@@ -27,7 +40,7 @@ fi
 
 docker run --rm \
     --read-only \
-    --network none \
+    --network "$NETWORK_MODE" \
     --memory=128m \
     --cpus=0.5 \
     --tmpfs /tmp:rw,size=64m \

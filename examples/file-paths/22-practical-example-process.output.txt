@@ -1,2 +1,2 @@
-/script: line 5: syntax error: unexpected redirection
 Processing example:
+File path examples complete

@@ -375,6 +375,10 @@ func extractDocsAndCode(content string) (docs, code string) {
 				// Extract comment text (remove leading "# " or "#")
 				comment := strings.TrimPrefix(trimmed, "#")
 				comment = strings.TrimPrefix(comment, " ")
+				// Filter out metadata comments that shouldn't appear in docs
+				if strings.HasPrefix(comment, "network:") {
+					continue
+				}
 				docLines = append(docLines, comment)
 				continue
 			} else if inDocs && trimmed == "" {

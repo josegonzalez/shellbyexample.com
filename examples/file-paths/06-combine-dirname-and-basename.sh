@@ -1,5 +1,5 @@
 #!/bin/sh
-# Combine dirname and basename:
+# Combine `dirname` and `basename`:
 
 fullpath="/var/log/syslog"
 dir=$(dirname "$fullpath")

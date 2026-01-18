@@ -1,6 +1,6 @@
 --- /dev/fd/63
 +++ /dev/fd/62
-@@ -1,82 +1,143 @@
+@@ -1,82 +1,147 @@
 -arch
 -ash
 -base64
@@ -101,6 +101,7 @@
 +cpio
 +crontab
 +cryptpw
++curl
 +cut
 +dc
 +deallocvt
@@ -131,6 +132,7 @@
 +install
 +ipcrm
 +ipcs
++jq
 +killall
 +last
 +ldd
@@ -154,6 +156,7 @@
 +nsenter
 +nslookup
 +od
++openssl
 +openvt
 +passwd
 +paste
@@ -217,6 +220,7 @@
 +vlock
 +volname
 +wc
++wcurl
 +wget
 +which
 +who
@@ -227,5 +231,5 @@
 +xzcat
 +yes
 Line: total 0
-Line: drwxrwxrwt    2 root     root            40 Jan 18 07:58 .
-Line: drwxr-xr-x    1 root     root            24 Jan 18 07:58 ..
+Line: drwxrwxrwt    2 root     root            40 Jan 18 08:29 .
+Line: drwxr-xr-x    1 root     root            24 Jan 18 08:29 ..
