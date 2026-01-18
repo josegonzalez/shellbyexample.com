@@ -1,5 +1,0 @@
-Case-insensitive:
-Apple
-APRICOT
-banana
-cherry

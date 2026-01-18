@@ -1,4 +1,0 @@
-Sort CSV by quantity (column 2):
-Banana,50,0.75
-Cherry,75,2.00
-Apple,100,1.50

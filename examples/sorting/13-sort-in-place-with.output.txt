@@ -1,4 +1,0 @@
-Sorted in place:
-apple
-banana
-cherry

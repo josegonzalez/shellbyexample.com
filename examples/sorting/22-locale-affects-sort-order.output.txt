@@ -1,5 +1,0 @@
-Locale-independent sort (C locale):
-Apple
-Banana
-Étoile
-éclair

@@ -1,0 +1,2 @@
+  Red fruit: apple
+  Red fruit: cherry

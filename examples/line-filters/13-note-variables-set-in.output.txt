@@ -1,2 +1,0 @@
-Sum with here-string (persists):
-Total: 60

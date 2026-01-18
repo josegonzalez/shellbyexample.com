@@ -1,4 +1,0 @@
-Unique values only:
-apple
-banana
-cherry

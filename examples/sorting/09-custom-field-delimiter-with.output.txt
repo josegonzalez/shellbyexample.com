@@ -1,5 +1,0 @@
-Sort /etc/passwd-like by UID (field 2):
-root:0:root
-daemon:1:daemon
-alice:1000:Alice User
-bob:1001:Bob Smith

@@ -1,3 +1,0 @@
-Check if sorted:
-  Already sorted
-Check line 1

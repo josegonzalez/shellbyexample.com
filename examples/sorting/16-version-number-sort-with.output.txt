@@ -1,5 +1,0 @@
-Version sort:
-v1.2
-v1.9
-v1.10
-v2.0
