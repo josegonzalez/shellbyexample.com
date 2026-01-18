@@ -1,0 +1,2 @@
+Script location:
+  $0: /script

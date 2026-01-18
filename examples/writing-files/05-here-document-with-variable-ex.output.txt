@@ -1,0 +1,4 @@
+Template with variables:
+Hello, Alice!
+Today is 2026-01-18
+Your home is /root

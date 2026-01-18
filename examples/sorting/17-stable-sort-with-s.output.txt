@@ -1,0 +1,5 @@
+Stable sort:
+Alice 90
+Carol 90
+Bob 85
+Dave 85

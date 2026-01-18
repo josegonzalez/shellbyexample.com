@@ -1,0 +1,3 @@
+POSIX substring with expr:
+  First 5: Hello
+  Using cut: Hello

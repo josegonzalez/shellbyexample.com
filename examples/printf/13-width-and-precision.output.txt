@@ -1,0 +1,11 @@
+Width specifiers:
+  |     hello|
+  |hello     |
+  |        42|
+  |42        |
+Precision for floats:
+  Default: 3.141593
+  2 decimals: 3.14
+  Width + precision:     3.14
+Precision for strings (max length):
+  Hello

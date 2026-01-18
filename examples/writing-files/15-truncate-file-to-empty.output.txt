@@ -1,0 +1,1 @@
+After truncate, size: 0 bytes

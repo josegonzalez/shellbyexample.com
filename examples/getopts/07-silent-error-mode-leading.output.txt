@@ -1,0 +1,3 @@
+Silent mode (handles errors ourselves):
+Got -v
+Got -n with value: -x

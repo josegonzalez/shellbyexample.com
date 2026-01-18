@@ -1,0 +1,2 @@
+After unset [2]: 
+Indices now: 

@@ -1,0 +1,2 @@
+HOME is set to: /root
+UNDEFINED_VAR is not set

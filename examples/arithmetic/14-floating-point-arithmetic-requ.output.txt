@@ -1,0 +1,4 @@
+Floating-point with bc:
+  5.5 + 3.2 = 8.7
+  10 / 3 = 3.33
+  sqrt(2) = 1.4142

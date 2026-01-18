@@ -1,0 +1,3 @@
+Handle missing final newline:
+  [line1]
+  [line2]

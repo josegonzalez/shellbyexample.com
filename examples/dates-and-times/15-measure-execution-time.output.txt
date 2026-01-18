@@ -1,0 +1,2 @@
+Execution timing:
+Elapsed: 1s

@@ -1,0 +1,6 @@
+To CSV-like:
+/script: line 5: jq: not found
+To shell variables:
+/script: line 8: jq: not found
+  name=, age=
+JSON examples complete

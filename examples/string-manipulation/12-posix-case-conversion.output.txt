@@ -1,0 +1,3 @@
+POSIX case conversion with tr:
+  Uppercase: HELLO WORLD
+  Lowercase: hello world

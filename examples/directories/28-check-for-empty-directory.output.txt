@@ -1,0 +1,1 @@
+/tmp/emptydir is empty

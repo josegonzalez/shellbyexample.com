@@ -1,0 +1,2 @@
+Path: /home/user/documents/report.txt
+Directory: /home/user/documents

@@ -1,0 +1,2 @@
+Raw value:
+/script: line 5: jq: not found

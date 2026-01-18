@@ -96,6 +96,7 @@ td.docs {
 td.code {
     width: 60%;
     background: #f8f8f8;
+    position: relative;
 }
 
 td.docs p {
@@ -159,7 +160,7 @@ td.code code {
     color: #ef6c00;
 }
 
-/* Inline bash sections within POSIX examples */
+/* Inline bash sections */
 tr.bash-section {
     background: linear-gradient(90deg, #fff9f0 40%, #fff5e6 40%);
 }
@@ -177,6 +178,92 @@ tr.bash-section td.docs .label-bash {
 
 tr.bash-section td.code {
     background: #fff5e6;
+}
+
+/* Code header with copy button */
+.code-header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+}
+
+/* Copy button */
+.copy-btn {
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 500;
+    color: #666;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.copy-btn:hover {
+    background: #f5f5f5;
+    border-color: #ccc;
+}
+
+.copy-btn:active {
+    background: #eee;
+}
+
+.copy-btn.copied {
+    color: #2e7d32;
+    border-color: #2e7d32;
+    background: #e8f5e9;
+}
+
+/* Output row */
+tr.output-row td.docs {
+    padding-top: 0;
+}
+
+tr.output-row td.code {
+    padding-top: 0;
+}
+
+tr.output-row td.code .output-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #999;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    padding-top: 10px;
+    border-top: 1px dashed #ddd;
+}
+
+tr.output-row td.code.output pre {
+    font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #555;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+tr.output-row.bash-section td.code .output-label {
+    border-top-color: #ffcc80;
+}
+
+/* Separator between sub-examples */
+tr.separator td {
+    padding: 15px 0;
+}
+
+tr.separator hr {
+    border: none;
+    border-top: 1px solid #e0e0e0;
+    margin: 0;
+}
+
+table tr.separator:last-child td {
+    padding: 0;
+}
+
+table tr.separator:last-child hr {
+    display: none;
 }
 
 /* Navigation */
@@ -216,5 +303,13 @@ tr.bash-section td.code {
     td.code {
         border-left: none;
         border-top: 1px solid #eee;
+    }
+
+    tr.output-row td.docs {
+        padding-bottom: 5px;
+    }
+
+    tr.output-row td.code {
+        border-top: none;
     }
 }

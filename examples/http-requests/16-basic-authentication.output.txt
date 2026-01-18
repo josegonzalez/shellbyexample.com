@@ -1,0 +1,2 @@
+Basic auth:
+/script: line 5: curl: not found

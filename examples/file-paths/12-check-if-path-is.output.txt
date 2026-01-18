@@ -1,0 +1,2 @@
+/home/user is absolute
+relative/path is relative

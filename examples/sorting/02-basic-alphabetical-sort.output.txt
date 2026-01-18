@@ -1,0 +1,5 @@
+Basic sort:
+apple
+banana
+cherry
+date

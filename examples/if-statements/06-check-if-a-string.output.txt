@@ -1,0 +1,2 @@
+Variable is empty
+Variable is not empty

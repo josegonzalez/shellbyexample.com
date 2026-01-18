@@ -1,0 +1,2 @@
+In child - MY_VAR: <unset>
+In child - MY_EXPORTED: <unset>

@@ -1,0 +1,2 @@
+Follow redirects:
+/script: line 5: curl: not found

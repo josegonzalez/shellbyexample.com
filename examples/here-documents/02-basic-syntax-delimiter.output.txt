@@ -1,0 +1,3 @@
+This is a here-document.
+It can span multiple lines.
+Variables like /root are expanded.

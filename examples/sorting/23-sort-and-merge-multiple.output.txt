@@ -1,0 +1,5 @@
+Merge sorted files:
+four
+one
+three
+two

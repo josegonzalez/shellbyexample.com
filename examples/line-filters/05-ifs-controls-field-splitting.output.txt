@@ -1,0 +1,3 @@
+Custom delimiter (CSV):
+  alice is 30, works as engineer
+  bob is 25, works as designer

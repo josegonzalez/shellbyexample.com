@@ -1,0 +1,3 @@
+Command group demo:
+  In group
+  y is: group_value

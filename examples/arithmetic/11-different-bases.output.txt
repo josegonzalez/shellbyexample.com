@@ -1,0 +1,4 @@
+Different bases:
+  Hex 0xFF = 255
+  Octal 077 = 63
+  Binary 2#1010 = 10

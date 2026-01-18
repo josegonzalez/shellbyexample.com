@@ -1,0 +1,6 @@
+Lexicographic (wrong for numbers):
+1
+10
+100
+2
+25

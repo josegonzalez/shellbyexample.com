@@ -1,0 +1,5 @@
+Detect modification:
+sha256sum: can't open '/tmp/sample.txt': No such file or directory
+  File was modified!
+  Before: 
+  After:  4487e24377581c1a43c957c7700c8b49920de7b8500c05590cee74996ef73f42

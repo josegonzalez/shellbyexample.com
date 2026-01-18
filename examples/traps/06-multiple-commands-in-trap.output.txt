@@ -1,0 +1,4 @@
+Multi-command trap:
+  Running...
+  Step 1: Save state
+  Step 2: Close files

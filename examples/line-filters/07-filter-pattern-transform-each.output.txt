@@ -1,0 +1,3 @@
+Transform each line (uppercase):
+HELLO
+WORLD

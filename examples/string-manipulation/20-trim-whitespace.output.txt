@@ -1,0 +1,2 @@
+Padded: '   hello world   '
+Trimmed: 'hello world'

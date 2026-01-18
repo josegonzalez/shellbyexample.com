@@ -1,0 +1,5 @@
+Skip header:
+name,age,city
+  Alice from NYC
+  Bob from LA
+  Carol from Chicago

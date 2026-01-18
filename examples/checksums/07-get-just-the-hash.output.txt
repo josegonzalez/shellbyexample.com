@@ -1,0 +1,2 @@
+Hash only:
+sha256sum: can't open '/tmp/sample.txt': No such file or directory

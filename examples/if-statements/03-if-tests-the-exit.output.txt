@@ -1,0 +1,1 @@
+/tmp exists and is readable

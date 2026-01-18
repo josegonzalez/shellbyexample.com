@@ -1,0 +1,2 @@
+/etc/passwd exists and is a file
+/tmp exists and is a directory

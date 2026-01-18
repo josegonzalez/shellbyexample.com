@@ -1,0 +1,3 @@
+She said "Hello"
+Path: C:\Users\name
+Dollar sign: $100

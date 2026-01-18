@@ -1,0 +1,6 @@
+  Multiple random numbers:
+85
+62
+51
+86
+73

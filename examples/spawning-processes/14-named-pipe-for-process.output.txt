@@ -1,0 +1,2 @@
+Named pipe communication:
+Received: Hello from producer

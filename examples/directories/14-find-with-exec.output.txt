@@ -1,0 +1,2 @@
+Find and show sizes:
+find: /tmp/findtest: No such file or directory

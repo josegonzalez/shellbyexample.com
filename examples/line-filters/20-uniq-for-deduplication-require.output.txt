@@ -1,0 +1,8 @@
+Unique lines:
+a
+b
+c
+Count occurrences:
+      2 a
+      1 b
+      3 c

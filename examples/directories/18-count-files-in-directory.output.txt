@@ -1,0 +1,2 @@
+find: /tmp/findtest: No such file or directory
+File count: 0

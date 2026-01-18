@@ -1,0 +1,8 @@
+Length: 13
+Hello
+World!
+file.txt
+/home/user/docs
+archive
+hi hello hello
+hi hi hi

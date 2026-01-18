@@ -1,0 +1,4 @@
+[31mRed text[0m
+[32mGreen text[0m
+[1mBold text[0m
+[4mUnderlined[0m

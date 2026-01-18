@@ -1,0 +1,2 @@
+Max depth 1:
+find: /tmp/findtest: No such file or directory

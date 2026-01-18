@@ -1,0 +1,7 @@
+awk regex examples:
+Lines matching /hello/:
+awk: /tmp/sample.txt: No such file or directory
+Lines NOT matching /hello/:
+awk: /tmp/sample.txt: No such file or directory
+Field matching:
+alice 30

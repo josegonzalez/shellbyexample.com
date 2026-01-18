@@ -1,0 +1,9 @@
+cp: can't stat '/tmp/sample.txt': No such file or directory
+Compare identical files:
+sha256sum: can't open '/tmp/sample.txt': No such file or directory
+sha256sum: can't open '/tmp/copy.txt': No such file or directory
+Files are identical
+Compare different files:
+sha256sum: can't open '/tmp/sample.txt': No such file or directory
+sha256sum: can't open '/tmp/other.txt': No such file or directory
+Files are identical

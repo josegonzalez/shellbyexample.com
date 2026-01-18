@@ -1,0 +1,4 @@
+Path: /usr/local/bin/script.sh
+Directory: /usr/local/bin
+Filename: script.sh
+Basename without ext: script

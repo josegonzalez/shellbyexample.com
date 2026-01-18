@@ -1,0 +1,6 @@
+Add field:
+/script: line 5: jq: not found
+Update field:
+/script: line 8: jq: not found
+Delete field:
+/script: line 11: jq: not found

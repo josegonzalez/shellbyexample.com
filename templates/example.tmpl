@@ -10,9 +10,37 @@
     <div class="example" id="{{.ID}}">
         <h2>
             <a href="index.html">Shell by Example</a>: {{.Name}}
-            {{if .IsBash}}<span class="label label-bash">Bash</span>{{else}}<span class="label label-posix">POSIX</span>{{end}}
+            {{if .IsBash}}<span class="label label-bash">Bash</span>{{else if .HasBashMix}}<span class="label label-posix">POSIX</span> <span class="label label-bash">+ Bash</span>{{else}}<span class="label label-posix">POSIX</span>{{end}}
         </h2>
 
+        {{if .SubExamples}}
+        <table>
+            {{range $index, $sub := .SubExamples}}
+            <tr{{if $sub.IsBash}} class="bash-section"{{end}}>
+                <td class="docs">
+                    {{if $sub.IsBash}}<span class="label label-bash">Bash</span>{{end}}
+                    {{$sub.Docs}}
+                </td>
+                <td class="code">
+                    <div class="code-header">
+                        <button class="copy-btn" data-target="code-{{$index}}" title="Copy to clipboard">Copy</button>
+                    </div>
+                    <pre id="code-{{$index}}" data-code="{{$sub.CodeText}}">{{$sub.Code}}</pre>
+                </td>
+            </tr>
+            {{if $sub.OutputText}}
+            <tr class="output-row{{if $sub.IsBash}} bash-section{{end}}">
+                <td class="docs"></td>
+                <td class="code output">
+                    <div class="output-label">Output:</div>
+                    <pre>{{$sub.OutputText}}</pre>
+                </td>
+            </tr>
+            {{end}}
+            <tr class="separator"><td colspan="2"><hr></td></tr>
+            {{end}}
+        </table>
+        {{else}}
         <table>
             {{range .Segments}}
             <tr{{if .IsBash}} class="bash-section"{{end}}>
@@ -24,6 +52,7 @@
             </tr>
             {{end}}
         </table>
+        {{end}}
 
         <p class="next">
             {{if .Prev}}<a href="{{.Prev.ID}}.html">&laquo; {{.Prev.Name}}</a>{{end}}
@@ -37,5 +66,6 @@
             | <a href="https://github.com/josegonzalez/shellbyexample.com">source</a>
         </p>
     </div>
+    <script src="clipboard.js"></script>
 </body>
 </html>

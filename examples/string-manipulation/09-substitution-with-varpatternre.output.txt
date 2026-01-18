@@ -1,0 +1,4 @@
+Replace first: hello universe world
+Replace all: hello universe universe
+Replace at start: hi world world
+Replace at end: hello world planet

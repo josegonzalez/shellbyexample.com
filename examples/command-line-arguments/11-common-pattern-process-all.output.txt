@@ -1,0 +1,5 @@
+Processing arguments with shift:
+  Processing: -v
+  Processing: --name=test
+  Processing: file1.txt
+  Processing: file2.txt

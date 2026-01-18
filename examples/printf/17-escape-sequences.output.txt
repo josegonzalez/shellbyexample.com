@@ -1,0 +1,7 @@
+Escape sequences:
+  Tab:	after tab
+  Newline:
+after newline
+  Backslash: \
+  Single quote: \'
+  Bell: (beep)

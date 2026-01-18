@@ -1,0 +1,2 @@
+Lines 2-4 (sed):
+sed: /tmp/sample.txt: No such file or directory

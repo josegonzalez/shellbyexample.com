@@ -1,0 +1,2 @@
+First 2 lines (head):
+head: /tmp/sample.txt: No such file or directory

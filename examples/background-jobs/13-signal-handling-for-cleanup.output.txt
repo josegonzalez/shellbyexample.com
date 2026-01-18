@@ -1,0 +1,2 @@
+Started 3 background jobs
+They will be killed on exit

@@ -1,0 +1,2 @@
+archive.tar.gz is a gzipped tarball
+data.zip is a zip archive

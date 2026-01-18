@@ -1,0 +1,2 @@
+With line numbers:
+grep: /tmp/sample.txt: No such file or directory

@@ -1,0 +1,1 @@
+/script: line 6: unexpected EOF while looking for matching `''

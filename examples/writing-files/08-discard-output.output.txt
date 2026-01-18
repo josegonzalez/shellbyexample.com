@@ -1,0 +1,2 @@
+Discarding output:
+  Stderr discarded (no error shown)

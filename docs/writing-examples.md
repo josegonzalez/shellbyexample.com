@@ -4,36 +4,100 @@ This guide explains how to write shell examples for the Shell by Example project
 
 ## Directory Structure
 
-Each example lives in its own directory under `examples/`:
+Each example lives in its own directory under `examples/`. The project supports two formats:
+
+### New Format (Sub-Examples)
+
+The new format uses numbered sub-example files, each demonstrating a related concept:
+
+```text
+examples/
+├── hello-world/
+│   ├── 01-hello-world.sh
+│   ├── 01-hello-world.output.txt
+│   ├── 02-echo-basics.sh
+│   ├── 02-echo-basics.output.txt
+│   └── 03-echo-no-newline.sh
+└── arrays/
+    ├── 01-creating-arrays.bash
+    ├── 01-creating-arrays.output.txt
+    └── 02-accessing-elements.bash
+```
+
+### Legacy Format
+
+The legacy format uses a single file with alternating documentation and code segments:
 
 ```text
 examples/
 ├── hello-world/
 │   └── hello-world.sh
-├── for-loops/
-│   └── for-loops.sh
-└── arrays/
-    └── arrays.sh
+└── for-loops/
+    └── for-loops.sh
 ```
 
-### Naming Conventions
+Both formats are supported and can coexist during migration.
 
-- Use **kebab-case** for example names (e.g., `hello-world`, `for-loops`, `command-substitution`)
+## Naming Conventions
+
+### Sub-Example Files (New Format)
+
+- **Prefix**: Two-digit number (`01`, `02`, etc.) for ordering
+- **Description**: Kebab-case descriptive name
+- **Extension**: `.sh` for POSIX-compliant, `.bash` for Bash-specific
+- **Output file**: Same base name with `.output.txt` suffix
+
+Examples:
+
+- `01-hello-world.sh` - POSIX script
+- `02-creating-arrays.bash` - Bash-specific script
+- `01-hello-world.output.txt` - Output file
+
+### Legacy Files
+
+- Use **kebab-case** for example names (e.g., `hello-world`, `for-loops`)
 - The directory name **must match** the script name
 - Keep names concise but descriptive
 
-## Script Structure
+## Sub-Example Script Format (New Format)
 
-### 1. Shebang (First Line)
+Each sub-example uses standard `#` comments for documentation at the top of the file:
+
+```sh
+#!/bin/sh
+# Our first shell script is the classic "Hello World".
+# This example demonstrates the basic structure of a
+# shell script.
+#
+# You can run this script by saving it to a file,
+# making it executable with chmod +x, and running it.
+
+echo "Hello, World!"
+```
+
+The generator:
+
+1. Extracts leading `#` comments as documentation
+2. Displays documentation above the code block
+3. Loads the corresponding `.output.txt` file if present
+
+### Grouping Concepts
+
+Group related concepts into a single sub-example file. For example:
+
+- Echo basics + multiple lines + no newline flag = good grouping
+- Each unrelated concept = separate file
+
+## Legacy Script Format
+
+### Shebang (First Line)
 
 Every script must start with a shebang:
 
 - `#!/bin/sh` - For POSIX-compliant examples (preferred when possible)
-- `#!/bin/bash` - For Bash-specific features (arrays, advanced string manipulation, etc.)
+- `#!/bin/bash` - For Bash-specific features
 
-### 2. Comment Syntax
-
-Shell by Example uses a special comment syntax to separate documentation from code:
+### Comment Syntax
 
 | Syntax | Purpose | Where It Appears |
 | -------- | --------- | ------------------ |
@@ -41,7 +105,7 @@ Shell by Example uses a special comment syntax to separate documentation from co
 | `# text` | Code comment | Right column (code block only) |
 | `code # comment` | Inline comment | Right column with the code |
 
-### 3. Segment Pattern
+### Segment Pattern
 
 Structure your example as alternating documentation and code segments:
 
@@ -58,33 +122,6 @@ executable_code_here
 : # the following code.
 
 more_code
-```
-
-**Key points:**
-
-- Start with documentation explaining what the example demonstrates
-- Leave a blank line between documentation and code
-- Leave a blank line between code and the next documentation section
-- Each `: #` line becomes part of the left-column explanation
-
-### Example
-
-Here's a properly structured example:
-
-```sh
-#!/bin/sh
-
-: # Our first shell script is the classic "Hello World".
-: # This example demonstrates the basic structure of a
-: # shell script.
-
-echo "Hello, World!"
-
-: # The `echo` command prints text to standard output.
-: # It's one of the most commonly used commands in
-: # shell scripting.
-
-echo "Welcome to Shell by Example!"
 ```
 
 ## Registration
@@ -105,68 +142,69 @@ your-new-example
 - Lines starting with `#` are comments (ignored)
 - Order in this file determines order on the site
 
+## Safety Requirements
+
+### Script Constraints
+
+1. **All file operations use `/tmp`** - Scripts may ONLY create/modify/delete files in `/tmp`
+2. **No network access** - Scripts should not make network requests
+3. **No destructive operations** - No `rm -rf /`, no writes outside `/tmp`
+4. **Scripts clean up after themselves** - Use `trap` for cleanup where appropriate
+
+### Docker-Based Execution
+
+All scripts are executed in a sandboxed `bash:5.3` Docker container:
+
+- Container runs with `--read-only` root filesystem
+- Only `/tmp` is mounted writable
+- No network access (`--network none`)
+- Resource limits enforced (memory, CPU, timeout)
+- Container is removed after execution
+
+## Generating Output Files
+
+Use the provided Makefile targets to generate output files:
+
+```bash
+# Generate output for a single script
+make generate-output SCRIPT=examples/hello-world/01-hello-world.sh
+
+# Generate outputs for all sub-examples
+make generate-all-outputs
+
+# Test all scripts run successfully
+make test-examples
+
+# Validate scripts only write to /tmp
+make validate-safety
+```
+
 ## Best Practices
 
 ### Content Guidelines
 
-1. **Start with the concept** - Begin with documentation explaining what the example teaches
+1. **Start with the concept** - Begin with documentation explaining what the sub-example teaches
 2. **Show basic usage first** - Introduce simple cases before advanced patterns
-3. **Build progressively** - Each segment should build on previous ones
-4. **Keep segments focused** - One concept per documentation/code pair
+3. **Keep sub-examples focused** - One related group of concepts per file
+4. **Build progressively** - Later sub-examples can build on earlier ones
 
 ### Bash-Specific Features
 
 When using Bash-specific features:
 
+- Use `.bash` extension for the file
 - Use `#!/bin/bash` as the shebang
 - Note the Bash requirement in your opening documentation
 
-```sh
+```bash
 #!/bin/bash
+# Arrays in Bash let you store multiple values in
+# a single variable. Note: Arrays are a Bash feature
+# and are not available in POSIX sh.
 
-: # Arrays in Bash let you store multiple values in
-: # a single variable. Note: Arrays are a Bash feature
-: # and are not available in POSIX sh.
+arr=(one two three)
+echo "${arr[0]}"
 ```
-
-### Inline Bash Sections
-
-For POSIX examples that want to show Bash alternatives, use inline bash markers.
-These create visually distinct sections with an orange highlight.
-
-**Supported markers:**
-
-- `[bash]` - Generic bash (displays "Bash" label)
-- `[bash4]` - Bash 4+ specific (displays "Bash 4+" label)
-- `[bash5]` - Bash 5+ specific (displays "Bash 5+" label)
-- `[bash 4+]` or `[bash 5+]` - Alternative syntax with space
-- `[/bash]` - Ends bash section
-
-**Example usage:**
-
-```sh
-#!/bin/sh
-
-: # POSIX approach to read a file line by line:
-
-while read -r line; do
-    echo "$line"
-done < file.txt
-
-: # [bash4] With Bash 4+, use mapfile for better performance:
-
-mapfile -t lines < file.txt
-for line in "${lines[@]}"; do
-    echo "$line"
-done
-
-: # [/bash]
-
-: # Back to POSIX content here.
-```
-
-The bash section will be highlighted with an orange border and background,
-making it clear to readers which parts require Bash.
 
 ### Code Quality
 
@@ -175,27 +213,6 @@ making it clear to readers which parts require Bash.
 - **Keep examples runnable** - Scripts should execute without errors
 - **Use meaningful variable names** - Self-documenting code is best
 
-### Inline Comments vs Documentation
-
-Use regular `#` comments for code-level details that belong with the code:
-
-```sh
-: # You can use comments to organize code sections.
-
-# ==========================================
-# Configuration Section
-# ==========================================
-
-CONFIG_FILE="/etc/myapp.conf"
-LOG_DIR="/var/log/myapp"
-```
-
-Use inline comments sparingly for clarification:
-
-```sh
-echo "This line runs" # This comment is ignored
-```
-
 ## Building & Testing
 
 ### Build the Site
@@ -203,7 +220,7 @@ echo "This line runs" # This comment is ignored
 Run the build tool to generate the site:
 
 ```sh
-./tools/build
+make build
 ```
 
 ### Verify Output
@@ -216,29 +233,30 @@ Verify your script has valid syntax:
 
 ```sh
 # For POSIX sh scripts
-sh -n examples/{example-id}/{example-id}.sh
+sh -n examples/{example-id}/01-*.sh
 
 # For Bash scripts
-bash -n examples/{example-id}/{example-id}.sh
+bash -n examples/{example-id}/01-*.bash
 ```
 
 ### Test Execution
 
-Run your script to ensure it works:
+Run your scripts in Docker:
 
 ```sh
-./examples/{example-id}/{example-id}.sh
+make test-examples
 ```
 
 ## Checklist for New Examples
 
 Before submitting a new example:
 
-- [ ] Directory name matches script name (kebab-case)
+- [ ] Sub-example files follow naming convention (`NN-description.sh/bash`)
 - [ ] Script has appropriate shebang (`#!/bin/sh` or `#!/bin/bash`)
-- [ ] Documentation uses `: #` syntax
-- [ ] Blank lines separate documentation from code segments
+- [ ] Documentation uses `#` comments at the top
+- [ ] Scripts only write to `/tmp`
 - [ ] Example is added to `examples.txt`
-- [ ] Script passes syntax check (`sh -n` or `bash -n`)
-- [ ] Script executes without errors
-- [ ] Site builds successfully with `./tools/build`
+- [ ] Scripts pass syntax check
+- [ ] Scripts run successfully in Docker
+- [ ] Output files generated with `make generate-output`
+- [ ] Site builds successfully with `make build`

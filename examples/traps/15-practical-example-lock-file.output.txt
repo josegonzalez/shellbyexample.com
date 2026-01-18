@@ -1,0 +1,5 @@
+Lock file pattern:
+  Creating lock: /tmp/mylock_1
+  Doing work...
+  Lock will be removed on exit
+  Lock removed: yes

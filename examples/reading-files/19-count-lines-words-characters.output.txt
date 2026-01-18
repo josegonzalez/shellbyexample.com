@@ -1,0 +1,2 @@
+File statistics:
+wc: /tmp/sample.txt: No such file or directory

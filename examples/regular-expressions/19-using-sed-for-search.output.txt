@@ -1,0 +1,8 @@
+sed substitution examples:
+hello universe world
+hello universe universe
+hi hi hi
+Delete lines with 'HELLO':
+sed: /tmp/sample.txt: No such file or directory
+sed -n with /p:
+sed: /tmp/sample.txt: No such file or directory

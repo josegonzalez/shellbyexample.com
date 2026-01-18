@@ -1,0 +1,4 @@
+Filename: document.backup.tar.gz
+Remove .gz: document.backup.tar
+Remove all extensions: document
+Get extension: gz

@@ -1,0 +1,7 @@
+Debug with tee:
+a
+b
+c
+A
+B
+C

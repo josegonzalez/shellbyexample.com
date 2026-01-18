@@ -1,0 +1,4 @@
+Without set -e:
+  This still runs
+With set -e:
+  This runs

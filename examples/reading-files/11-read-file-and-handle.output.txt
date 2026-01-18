@@ -1,0 +1,2 @@
+Reading file without final newline:
+  [no newline]

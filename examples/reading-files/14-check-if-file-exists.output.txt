@@ -1,0 +1,2 @@
+Error: File not found: /tmp/sample.txt
+Error: File not found: /nonexistent

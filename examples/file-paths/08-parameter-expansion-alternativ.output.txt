@@ -1,0 +1,7 @@
+Parameter expansion:
+  Directory: /path/to
+  Filename: document.tar.gz
+  Extension: gz
+  Without ext: /path/to/document.tar
+  Base name: document.tar.gz
+  Base without ext: document.tar

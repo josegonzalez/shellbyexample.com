@@ -1,0 +1,4 @@
+Verify checksum:
+sha256sum: can't open '/tmp/sample.txt': No such file or directory
+  Verification result:
+sha256sum: /tmp/checksum.txt: no checksum lines found

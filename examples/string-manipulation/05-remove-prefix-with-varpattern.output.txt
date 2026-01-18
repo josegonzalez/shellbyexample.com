@@ -1,0 +1,3 @@
+Path: /home/user/documents/file.txt
+Remove leading /: home/user/documents/file.txt
+Remove path (##*/): file.txt

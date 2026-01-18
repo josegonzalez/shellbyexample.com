@@ -1,0 +1,4 @@
+xargs demo:
+Processing file1
+Processing file2
+Processing file3

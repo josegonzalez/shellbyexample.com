@@ -1,0 +1,2 @@
+POSIX random selection:
+  Random fruit: banana

@@ -1,0 +1,3 @@
+Last 2 lines (tail):
+tail: can't open '/tmp/sample.txt': No such file or directory
+tail: no files

@@ -1,0 +1,1 @@
+nohup keeps commands running after logout

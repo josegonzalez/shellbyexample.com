@@ -1,0 +1,4 @@
+Splitting 'apple,banana,cherry':
+  Part 1: apple
+  Part 2: banana
+  Part 3: cherry

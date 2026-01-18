@@ -1,0 +1,1 @@
+Dir: /var/log, Name: syslog

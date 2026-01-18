@@ -1,0 +1,4 @@
+Relative: 45s ago
+Relative: 1h ago
+Relative: 1d ago
+Dates and times examples complete

@@ -7,6 +7,8 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/alecthomas/chroma/v2"
@@ -17,7 +19,7 @@ import (
 	"github.com/gomarkdown/markdown/parser"
 )
 
-// Segment represents a documentation/code pair
+// Segment represents a documentation/code pair (old format)
 type Segment struct {
 	Docs          template.HTML
 	DocsText      string
@@ -28,14 +30,30 @@ type Segment struct {
 	ShowBashLabel bool   // True only for first segment in consecutive bash group
 }
 
+// SubExample represents a single sub-example script (new format)
+type SubExample struct {
+	Order      int
+	Name       string        // Derived from filename (e.g., "Hello World" from "01-hello-world.sh")
+	Filename   string        // Original filename
+	Code       template.HTML // Syntax highlighted
+	CodeText   string        // Raw code for clipboard
+	Output     template.HTML // Formatted output
+	OutputText string        // Raw output
+	IsBash     bool          // Based on .bash extension
+	Docs       template.HTML // Rendered markdown documentation
+	DocsText   string        // Raw documentation text
+}
+
 // Example represents a complete example
 type Example struct {
-	ID       string
-	Name     string
-	Segments []Segment
-	Next     *Example
-	Prev     *Example
-	IsBash   bool
+	ID          string
+	Name        string
+	Segments    []Segment    // Old format
+	SubExamples []SubExample // New format
+	Next        *Example
+	Prev        *Example
+	IsBash      bool
+	HasBashMix  bool // Mix of POSIX and Bash sub-examples
 }
 
 // IndexEntry for the index page
@@ -173,28 +191,217 @@ func run(cfg Config) error {
 	}
 	fmt.Println("Generated public/site.css")
 
+	// Copy clipboard.js if it exists
+	clipboardPath := filepath.Join(cfg.BaseDir, "templates/clipboard.js")
+	if clipboardContent, err := os.ReadFile(clipboardPath); err == nil {
+		err = os.WriteFile(filepath.Join(cfg.OutDir, "clipboard.js"), clipboardContent, 0644)
+		if err != nil {
+			return fmt.Errorf("writing clipboard.js: %w", err)
+		}
+		fmt.Println("Generated public/clipboard.js")
+	}
+
 	return nil
 }
 
+// subExampleFileRegex matches files like "01-hello-world.sh" or "02-echo-basics.bash"
+var subExampleFileRegex = regexp.MustCompile(`^(\d{2})-(.+)\.(sh|bash)$`)
+
 func parseExample(baseDir, id string) (*Example, error) {
-	// Find the shell script file
 	dir := filepath.Join(baseDir, "examples", id)
 	entries, err := os.ReadDir(dir)
 	if err != nil {
 		return nil, fmt.Errorf("reading directory: %w", err)
 	}
 
-	var scriptPath string
+	// Check if this is new format (has numbered sub-example files) or old format
+	var subExampleFiles []os.DirEntry
+	var legacyScriptPath string
+
 	for _, entry := range entries {
-		if strings.HasSuffix(entry.Name(), ".sh") {
-			scriptPath = filepath.Join(dir, entry.Name())
-			break
+		name := entry.Name()
+		if subExampleFileRegex.MatchString(name) {
+			subExampleFiles = append(subExampleFiles, entry)
+		} else if strings.HasSuffix(name, ".sh") && !strings.HasPrefix(name, ".") {
+			legacyScriptPath = filepath.Join(dir, name)
 		}
 	}
-	if scriptPath == "" {
+
+	// Convert ID to name
+	name := idToName(id)
+
+	// Use new format if sub-example files exist
+	if len(subExampleFiles) > 0 {
+		return parseExampleNewFormat(dir, id, name, subExampleFiles)
+	}
+
+	// Fall back to legacy format
+	if legacyScriptPath == "" {
 		return nil, fmt.Errorf("no .sh file found in %s", dir)
 	}
 
+	return parseExampleLegacy(legacyScriptPath, id, name)
+}
+
+func parseExampleNewFormat(dir, id, name string, files []os.DirEntry) (*Example, error) {
+	var subExamples []SubExample
+	hasBash := false
+	hasPosix := false
+
+	for _, entry := range files {
+		filename := entry.Name()
+		subEx, err := parseSubExample(dir, filename)
+		if err != nil {
+			return nil, fmt.Errorf("parsing sub-example %s: %w", filename, err)
+		}
+		subExamples = append(subExamples, subEx)
+
+		if subEx.IsBash {
+			hasBash = true
+		} else {
+			hasPosix = true
+		}
+	}
+
+	// Sort by order
+	sort.Slice(subExamples, func(i, j int) bool {
+		return subExamples[i].Order < subExamples[j].Order
+	})
+
+	return &Example{
+		ID:          id,
+		Name:        name,
+		SubExamples: subExamples,
+		IsBash:      hasBash && !hasPosix, // Only IsBash if all are bash
+		HasBashMix:  hasBash && hasPosix,
+	}, nil
+}
+
+func parseSubExample(dir, filename string) (SubExample, error) {
+	matches := subExampleFileRegex.FindStringSubmatch(filename)
+	if len(matches) != 4 {
+		return SubExample{}, fmt.Errorf("invalid sub-example filename: %s", filename)
+	}
+
+	order, _ := strconv.Atoi(matches[1])
+	descPart := matches[2]
+	ext := matches[3]
+
+	// Convert description to title (e.g., "hello-world" -> "Hello World")
+	subName := idToName(descPart)
+
+	// Determine if bash
+	isBash := ext == "bash"
+
+	// Read the script file
+	scriptPath := filepath.Join(dir, filename)
+	content, err := os.ReadFile(scriptPath)
+	if err != nil {
+		return SubExample{}, fmt.Errorf("reading script: %w", err)
+	}
+
+	// Extract documentation and code
+	docs, code := extractDocsAndCode(string(content))
+
+	// Try to load output file
+	outputPath := filepath.Join(dir, strings.TrimSuffix(filename, "."+ext)+".output.txt")
+	var outputText string
+	if outputContent, err := os.ReadFile(outputPath); err == nil {
+		outputText = strings.TrimRight(string(outputContent), "\n")
+	}
+
+	// Render markdown for docs
+	var docsHTML template.HTML
+	if docs != "" {
+		extensions := parser.CommonExtensions | parser.AutoHeadingIDs
+		p := parser.NewWithExtensions(extensions)
+		html := markdown.ToHTML([]byte(docs), p, nil)
+		docsHTML = template.HTML(html)
+	}
+
+	// Syntax highlight code
+	var codeHTML template.HTML
+	if code != "" {
+		highlighted, err := highlightCode(code, "bash")
+		if err != nil {
+			codeHTML = template.HTML("<pre><code>" + template.HTMLEscapeString(code) + "</code></pre>")
+		} else {
+			codeHTML = template.HTML(highlighted)
+		}
+	}
+
+	// Format output (escape HTML)
+	var outputHTML template.HTML
+	if outputText != "" {
+		outputHTML = template.HTML(template.HTMLEscapeString(outputText))
+	}
+
+	return SubExample{
+		Order:      order,
+		Name:       subName,
+		Filename:   filename,
+		Code:       codeHTML,
+		CodeText:   code,
+		Output:     outputHTML,
+		OutputText: outputText,
+		IsBash:     isBash,
+		Docs:       docsHTML,
+		DocsText:   docs,
+	}, nil
+}
+
+// extractDocsAndCode extracts leading # comments as documentation and the rest as code
+// Documentation ends at the first empty line after comments
+func extractDocsAndCode(content string) (docs, code string) {
+	lines := strings.Split(content, "\n")
+	var docLines []string
+	var codeLines []string
+	inDocs := false
+	docsDone := false
+
+	for i, line := range lines {
+		trimmed := strings.TrimSpace(line)
+
+		// Skip shebang - it goes to code
+		if i == 0 && strings.HasPrefix(line, "#!") {
+			codeLines = append(codeLines, line)
+			continue
+		}
+
+		// If we haven't finished docs, look for # comments
+		if !docsDone {
+			if strings.HasPrefix(trimmed, "#") && !strings.HasPrefix(trimmed, "#!") {
+				inDocs = true
+				// Extract comment text (remove leading "# " or "#")
+				comment := strings.TrimPrefix(trimmed, "#")
+				comment = strings.TrimPrefix(comment, " ")
+				docLines = append(docLines, comment)
+				continue
+			} else if inDocs && trimmed == "" {
+				// Empty line after doc comments ends the docs section
+				docsDone = true
+				// Don't add empty line to code yet, let the next iteration handle it
+				continue
+			} else if inDocs || trimmed != "" {
+				// First non-comment, non-empty line after docs means docs are done
+				docsDone = true
+			}
+		}
+
+		// Everything after docs is code
+		if docsDone || (!inDocs && trimmed != "") {
+			docsDone = true
+			codeLines = append(codeLines, line)
+		}
+	}
+
+	docs = strings.TrimSpace(strings.Join(docLines, "\n"))
+	code = strings.TrimRight(strings.Join(codeLines, "\n"), "\n\t ")
+
+	return docs, code
+}
+
+func parseExampleLegacy(scriptPath, id, name string) (*Example, error) {
 	content, err := os.ReadFile(scriptPath)
 	if err != nil {
 		return nil, fmt.Errorf("reading script: %w", err)
@@ -207,15 +414,11 @@ func parseExample(baseDir, id string) (*Example, error) {
 	// Mark only first segment in each consecutive bash group to show label
 	for i := range segments {
 		if segments[i].IsBash {
-			// Show label if this is the first segment OR previous wasn't bash
 			if i == 0 || !segments[i-1].IsBash {
 				segments[i].ShowBashLabel = true
 			}
 		}
 	}
-
-	// Convert ID to name
-	name := idToName(id)
 
 	return &Example{
 		ID:       id,
@@ -408,9 +611,6 @@ func idToName(id string) string {
 	}
 	return strings.Join(words, " ")
 }
-
-// bashLabelRegex matches Bash-specific indicators in comments
-var bashLabelRegex = regexp.MustCompile(`(?i)\[bash\]|\(bash\)|bash-specific|bash only`)
 
 // Bash section markers for inline bash sections within POSIX examples
 var bashStartRegex = regexp.MustCompile(`(?i)\[bash(\d)?(\s*\d*\+?)?\]`)

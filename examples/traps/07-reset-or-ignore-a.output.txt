@@ -1,0 +1,3 @@
+Ignore and reset trap:
+  SIGINT now ignored
+  SIGINT reset to default

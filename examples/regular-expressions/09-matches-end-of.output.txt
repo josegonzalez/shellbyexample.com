@@ -1,0 +1,2 @@
+Lines ending with 'world':
+grep: /tmp/sample.txt: No such file or directory

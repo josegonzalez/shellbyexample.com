@@ -1,0 +1,2 @@
+Pattern 'h.llo':
+grep: /tmp/sample.txt: No such file or directory

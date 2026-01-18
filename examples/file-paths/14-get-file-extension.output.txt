@@ -1,0 +1,3 @@
+Extension of file.txt: txt
+Extension of archive.tar.gz: gz
+Extension of noext: 

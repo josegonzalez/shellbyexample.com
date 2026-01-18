@@ -1,0 +1,2 @@
+Case-insensitive 'hello':
+grep: /tmp/sample.txt: No such file or directory

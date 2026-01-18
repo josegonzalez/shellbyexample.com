@@ -1,0 +1,4 @@
+Sorted output:
+apple
+banana
+cherry

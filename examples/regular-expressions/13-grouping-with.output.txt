@@ -1,0 +1,2 @@
+Grouped pattern ((hello|test)@):
+grep: /tmp/sample.txt: No such file or directory

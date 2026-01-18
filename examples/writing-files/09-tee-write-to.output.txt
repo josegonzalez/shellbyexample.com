@@ -1,0 +1,6 @@
+Using tee:
+This goes to both
+File contains: This goes to both
+Append with tee -a:
+This goes to both
+Appended line

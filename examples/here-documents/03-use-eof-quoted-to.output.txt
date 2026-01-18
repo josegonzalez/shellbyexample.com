@@ -1,0 +1,3 @@
+This text is literal.
+$HOME is not expanded here.
+Special characters like \n are also literal.

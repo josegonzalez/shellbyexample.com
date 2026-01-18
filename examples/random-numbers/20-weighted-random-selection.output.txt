@@ -1,0 +1,6 @@
+Weighted random (5 trials):
+  apple
+  banana
+  banana
+  banana
+  banana

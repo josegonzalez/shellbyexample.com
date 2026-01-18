@@ -1,0 +1,7 @@
+Config file:
+# Configuration file
+# Generated on Sun Jan 18 06:02:17 UTC 2026
+
+host=localhost
+port=8080
+debug=false

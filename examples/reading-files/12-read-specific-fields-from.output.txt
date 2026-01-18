@@ -1,0 +1,4 @@
+Reading colon-separated fields:
+  alice is a 30 year old engineer
+  bob is a 25 year old designer
+  carol is a 35 year old manager

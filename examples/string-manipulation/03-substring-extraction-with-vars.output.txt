@@ -1,0 +1,3 @@
+First 5 chars: Hello
+From position 7: World!
+Last 6 chars: World!

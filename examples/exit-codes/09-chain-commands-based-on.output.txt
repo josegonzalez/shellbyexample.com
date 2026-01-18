@@ -1,0 +1,4 @@
+Using && (run if previous succeeded):
+  This runs because true succeeded
+Using || (run if previous failed):
+  This runs because false failed

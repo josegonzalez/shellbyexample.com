@@ -1,0 +1,10 @@
+Find all files:
+/tmp/findtest/b.sh
+/tmp/findtest/a.txt
+/tmp/findtest/sub/c.txt
+Find only .txt files:
+/tmp/findtest/a.txt
+/tmp/findtest/sub/c.txt
+Find by type (directories):
+/tmp/findtest
+/tmp/findtest/sub

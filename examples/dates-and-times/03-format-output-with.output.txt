@@ -1,0 +1,5 @@
+Formatted outputs:
+  ISO format: 2026-01-18
+  US format: 01/18/2026
+  Time: 05:58:49
+  Full: 2026-01-18 05:58:49

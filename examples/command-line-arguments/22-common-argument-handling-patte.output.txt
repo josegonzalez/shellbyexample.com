@@ -1,0 +1,2 @@
+Verbose mode on
+Remaining arguments: file1 file2

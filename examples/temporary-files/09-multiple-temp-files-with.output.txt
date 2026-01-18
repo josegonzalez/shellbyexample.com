@@ -1,0 +1,3 @@
+Cleanup demo:
+Files: /tmp/tmp.pgmafn, /tmp/tmp.Eajjfn
+Dir: /tmp/tmp.obHCgn

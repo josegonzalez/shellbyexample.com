@@ -1,0 +1,5 @@
+Created nested directories:
+total 0
+drwxr-xr-x    3 root     root            60 Jan 18 06:00 .
+drwxr-xr-x    3 root     root            60 Jan 18 06:00 ..
+drwxr-xr-x    2 root     root            40 Jan 18 06:00 grandchild

@@ -1,0 +1,4 @@
+Uppercase: HELLO WORLD
+Lowercase: hello world
+First char upper: Hello World
+First char lower: hello World

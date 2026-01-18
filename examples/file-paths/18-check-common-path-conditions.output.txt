@@ -1,0 +1,8 @@
+Path checks for /tmp:
+  Exists
+  Is directory
+  Not regular file
+  Not symlink
+  Is readable
+  Is writable
+  Is executable

@@ -1,0 +1,2 @@
+Temporary: Hola
+After command: GREETING=<unset>

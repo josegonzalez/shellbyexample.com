@@ -1,0 +1,2 @@
+empty is zero-length
+nonempty has content

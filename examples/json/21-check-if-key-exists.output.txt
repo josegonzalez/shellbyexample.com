@@ -1,0 +1,3 @@
+Key exists:
+/script: line 5: jq: not found
+/script: line 6: jq: not found

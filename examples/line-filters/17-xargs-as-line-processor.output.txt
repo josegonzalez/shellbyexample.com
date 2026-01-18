@@ -1,0 +1,4 @@
+Using xargs:
+Processing: file1
+Processing: file2
+Processing: file3

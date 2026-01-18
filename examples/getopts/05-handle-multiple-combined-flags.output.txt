@@ -1,0 +1,2 @@
+Combined flags (-abc):
+a=true b=true c=true

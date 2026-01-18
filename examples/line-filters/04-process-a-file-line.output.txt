@@ -1,0 +1,5 @@
+Processing file:
+  apple (red): 10 items
+  banana (yellow): 20 items
+  cherry (red): 15 items
+  date (brown): 25 items
