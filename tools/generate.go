@@ -45,6 +45,12 @@ type IndexEntry struct {
 	IsBash bool
 }
 
+// Config holds configuration for the site generator
+type Config struct {
+	BaseDir string // Base directory for reading examples, templates
+	OutDir  string // Output directory (public/)
+}
+
 var (
 	chromaFormatter *html.Formatter
 	chromaStyle     *chroma.Style
@@ -56,11 +62,18 @@ func init() {
 }
 
 func main() {
-	// Read examples list
-	examplesFile, err := os.ReadFile("examples.txt")
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error reading examples.txt: %v\n", err)
+	cfg := Config{BaseDir: ".", OutDir: "public"}
+	if err := run(cfg); err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		os.Exit(1)
+	}
+}
+
+func run(cfg Config) error {
+	// Read examples list
+	examplesFile, err := os.ReadFile(filepath.Join(cfg.BaseDir, "examples.txt"))
+	if err != nil {
+		return fmt.Errorf("reading examples.txt: %w", err)
 	}
 
 	// Parse example IDs
@@ -73,16 +86,21 @@ func main() {
 	}
 
 	// Load templates
-	exampleTmpl := template.Must(template.ParseFiles("templates/example.tmpl"))
-	indexTmpl := template.Must(template.ParseFiles("templates/index.tmpl"))
+	exampleTmpl, err := template.ParseFiles(filepath.Join(cfg.BaseDir, "templates/example.tmpl"))
+	if err != nil {
+		return fmt.Errorf("parsing example template: %w", err)
+	}
+	indexTmpl, err := template.ParseFiles(filepath.Join(cfg.BaseDir, "templates/index.tmpl"))
+	if err != nil {
+		return fmt.Errorf("parsing index template: %w", err)
+	}
 
 	// Parse all examples
 	var examples []*Example
 	for _, id := range exampleIDs {
-		ex, err := parseExample(id)
+		ex, err := parseExample(cfg.BaseDir, id)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error parsing example %s: %v\n", id, err)
-			os.Exit(1)
+			return fmt.Errorf("parsing example %s: %w", id, err)
 		}
 		examples = append(examples, ex)
 	}
@@ -97,22 +115,22 @@ func main() {
 		}
 	}
 
-	// Ensure public directory exists
-	os.MkdirAll("public", 0755)
+	// Ensure output directory exists
+	if err := os.MkdirAll(cfg.OutDir, 0755); err != nil {
+		return fmt.Errorf("creating output directory: %w", err)
+	}
 
 	// Generate example pages
 	for _, ex := range examples {
 		var buf bytes.Buffer
 		err := exampleTmpl.Execute(&buf, ex)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error rendering example %s: %v\n", ex.ID, err)
-			os.Exit(1)
+			return fmt.Errorf("rendering example %s: %w", ex.ID, err)
 		}
-		outPath := filepath.Join("public", ex.ID+".html")
+		outPath := filepath.Join(cfg.OutDir, ex.ID+".html")
 		err = os.WriteFile(outPath, buf.Bytes(), 0644)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error writing %s: %v\n", outPath, err)
-			os.Exit(1)
+			return fmt.Errorf("writing %s: %w", outPath, err)
 		}
 		fmt.Printf("Generated %s\n", outPath)
 	}
@@ -129,21 +147,18 @@ func main() {
 	var buf bytes.Buffer
 	err = indexTmpl.Execute(&buf, indexEntries)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error rendering index: %v\n", err)
-		os.Exit(1)
+		return fmt.Errorf("rendering index: %w", err)
 	}
-	err = os.WriteFile("public/index.html", buf.Bytes(), 0644)
+	err = os.WriteFile(filepath.Join(cfg.OutDir, "index.html"), buf.Bytes(), 0644)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error writing index.html: %v\n", err)
-		os.Exit(1)
+		return fmt.Errorf("writing index.html: %w", err)
 	}
 	fmt.Println("Generated public/index.html")
 
 	// Copy CSS
-	cssContent, err := os.ReadFile("templates/site.css")
+	cssContent, err := os.ReadFile(filepath.Join(cfg.BaseDir, "templates/site.css"))
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error reading site.css: %v\n", err)
-		os.Exit(1)
+		return fmt.Errorf("reading site.css: %w", err)
 	}
 
 	// Generate Chroma CSS
@@ -152,17 +167,18 @@ func main() {
 
 	// Combine CSS
 	finalCSS := string(cssContent) + "\n/* Chroma syntax highlighting */\n" + chromaCSS.String()
-	err = os.WriteFile("public/site.css", []byte(finalCSS), 0644)
+	err = os.WriteFile(filepath.Join(cfg.OutDir, "site.css"), []byte(finalCSS), 0644)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error writing site.css: %v\n", err)
-		os.Exit(1)
+		return fmt.Errorf("writing site.css: %w", err)
 	}
 	fmt.Println("Generated public/site.css")
+
+	return nil
 }
 
-func parseExample(id string) (*Example, error) {
+func parseExample(baseDir, id string) (*Example, error) {
 	// Find the shell script file
-	dir := filepath.Join("examples", id)
+	dir := filepath.Join(baseDir, "examples", id)
 	entries, err := os.ReadDir(dir)
 	if err != nil {
 		return nil, fmt.Errorf("reading directory: %w", err)

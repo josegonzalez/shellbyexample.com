@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -525,5 +527,521 @@ echo "10 - 4 = $(expr 10 - 4)"`
 	}
 	if !found {
 		t.Error("expected to find expr command in output")
+	}
+}
+
+func TestParseExample(t *testing.T) {
+	tests := []struct {
+		name       string
+		exampleID  string
+		expectBash bool
+		expectErr  bool
+	}{
+		{
+			name:       "valid POSIX example",
+			exampleID:  "valid-example",
+			expectBash: false,
+			expectErr:  false,
+		},
+		{
+			name:       "valid Bash example",
+			exampleID:  "bash-example",
+			expectBash: true,
+			expectErr:  false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ex, err := parseExample("testdata", tt.exampleID)
+			if tt.expectErr {
+				if err == nil {
+					t.Error("expected error, got nil")
+				}
+				return
+			}
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			if ex.ID != tt.exampleID {
+				t.Errorf("ID = %q, want %q", ex.ID, tt.exampleID)
+			}
+			if ex.IsBash != tt.expectBash {
+				t.Errorf("IsBash = %v, want %v", ex.IsBash, tt.expectBash)
+			}
+			if len(ex.Segments) == 0 {
+				t.Error("expected at least one segment")
+			}
+		})
+	}
+}
+
+func TestParseExample_Errors(t *testing.T) {
+	tests := []struct {
+		name      string
+		exampleID string
+		errMsg    string
+	}{
+		{
+			name:      "missing directory",
+			exampleID: "nonexistent-example",
+			errMsg:    "reading directory",
+		},
+		{
+			name:      "no shell file",
+			exampleID: "empty-dir",
+			errMsg:    "no .sh file found",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, err := parseExample("testdata", tt.exampleID)
+			if err == nil {
+				t.Fatal("expected error, got nil")
+			}
+			if !strings.Contains(err.Error(), tt.errMsg) {
+				t.Errorf("error = %q, want to contain %q", err.Error(), tt.errMsg)
+			}
+		})
+	}
+}
+
+func TestRun(t *testing.T) {
+	// Create a temporary output directory
+	tmpDir := t.TempDir()
+
+	cfg := Config{
+		BaseDir: "testdata",
+		OutDir:  tmpDir,
+	}
+
+	err := run(cfg)
+	if err != nil {
+		t.Fatalf("run() error: %v", err)
+	}
+
+	// Verify expected output files were created
+	expectedFiles := []string{
+		"index.html",
+		"site.css",
+		"valid-example.html",
+		"bash-example.html",
+	}
+
+	for _, f := range expectedFiles {
+		path := filepath.Join(tmpDir, f)
+		if _, err := os.Stat(path); os.IsNotExist(err) {
+			t.Errorf("expected file %s to exist", f)
+		}
+	}
+
+	// Verify index.html contains example links
+	indexContent, err := os.ReadFile(filepath.Join(tmpDir, "index.html"))
+	if err != nil {
+		t.Fatalf("reading index.html: %v", err)
+	}
+	if !strings.Contains(string(indexContent), "valid-example.html") {
+		t.Error("index.html should contain link to valid-example.html")
+	}
+
+	// Verify CSS contains Chroma styles
+	cssContent, err := os.ReadFile(filepath.Join(tmpDir, "site.css"))
+	if err != nil {
+		t.Fatalf("reading site.css: %v", err)
+	}
+	if !strings.Contains(string(cssContent), "Chroma syntax highlighting") {
+		t.Error("site.css should contain Chroma syntax highlighting comment")
+	}
+}
+
+func TestRun_Errors(t *testing.T) {
+	tests := []struct {
+		name   string
+		cfg    Config
+		errMsg string
+	}{
+		{
+			name: "missing examples.txt",
+			cfg: Config{
+				BaseDir: "testdata/nonexistent",
+				OutDir:  t.TempDir(),
+			},
+			errMsg: "reading examples.txt",
+		},
+		{
+			name: "missing templates",
+			cfg: Config{
+				BaseDir: "testdata/no-templates", // has examples.txt but no templates dir
+				OutDir:  t.TempDir(),
+			},
+			errMsg: "parsing example template",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := run(tt.cfg)
+			if err == nil {
+				t.Fatal("expected error, got nil")
+			}
+			if !strings.Contains(err.Error(), tt.errMsg) {
+				t.Errorf("error = %q, want to contain %q", err.Error(), tt.errMsg)
+			}
+		})
+	}
+}
+
+func TestHighlightCode(t *testing.T) {
+	tests := []struct {
+		name     string
+		code     string
+		lang     string
+		wantErr  bool
+		contains string
+	}{
+		{
+			name:     "valid bash code",
+			code:     "echo hello",
+			lang:     "bash",
+			wantErr:  false,
+			contains: "echo",
+		},
+		{
+			name:     "unknown language falls back",
+			code:     "some code",
+			lang:     "nonexistent-language-xyz",
+			wantErr:  false,
+			contains: "some code",
+		},
+		{
+			name:     "empty code",
+			code:     "",
+			lang:     "bash",
+			wantErr:  false,
+			contains: "",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result, err := highlightCode(tt.code, tt.lang)
+			if tt.wantErr {
+				if err == nil {
+					t.Error("expected error, got nil")
+				}
+				return
+			}
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			if tt.contains != "" && !strings.Contains(result, tt.contains) {
+				t.Errorf("result = %q, want to contain %q", result, tt.contains)
+			}
+		})
+	}
+}
+
+func TestCreateSegmentWithBash_EmptyInputs(t *testing.T) {
+	// Test with empty doc lines
+	seg := createSegmentWithBash(nil, []string{"echo hello"}, false, "")
+	if seg.DocsText != "" {
+		t.Errorf("DocsText = %q, want empty", seg.DocsText)
+	}
+	if seg.CodeText != "echo hello" {
+		t.Errorf("CodeText = %q, want %q", seg.CodeText, "echo hello")
+	}
+
+	// Test with empty code lines
+	seg2 := createSegmentWithBash([]string{"some docs"}, nil, false, "")
+	if seg2.DocsText != "some docs" {
+		t.Errorf("DocsText = %q, want %q", seg2.DocsText, "some docs")
+	}
+	if seg2.CodeText != "" {
+		t.Errorf("CodeText = %q, want empty", seg2.CodeText)
+	}
+
+	// Test with both empty
+	seg3 := createSegmentWithBash(nil, nil, false, "")
+	if seg3.DocsText != "" {
+		t.Errorf("DocsText = %q, want empty", seg3.DocsText)
+	}
+	if seg3.CodeText != "" {
+		t.Errorf("CodeText = %q, want empty", seg3.CodeText)
+	}
+}
+
+func TestParseSegments_EmptyInput(t *testing.T) {
+	segments, isBash := parseSegments(nil)
+	if len(segments) != 0 {
+		t.Errorf("expected 0 segments, got %d", len(segments))
+	}
+	if isBash {
+		t.Error("expected isBash to be false for nil input")
+	}
+
+	segments2, isBash2 := parseSegments([]string{})
+	if len(segments2) != 0 {
+		t.Errorf("expected 0 segments, got %d", len(segments2))
+	}
+	if isBash2 {
+		t.Error("expected isBash to be false for empty input")
+	}
+}
+
+func TestParseSegments_OnlyShebang(t *testing.T) {
+	lines := []string{"#!/bin/sh"}
+	segments, isBash := parseSegments(lines)
+	// Shebang alone creates a segment with just the shebang in code
+	if isBash {
+		t.Error("expected isBash to be false for /bin/sh")
+	}
+	// The segment should have the shebang in it
+	found := false
+	for _, seg := range segments {
+		if strings.Contains(seg.CodeText, "#!/bin/sh") {
+			found = true
+		}
+	}
+	if !found && len(segments) > 0 {
+		t.Error("expected shebang to be present in a segment")
+	}
+}
+
+func TestParseSegments_BashMarkerOnly(t *testing.T) {
+	// Test a bash marker line that only contains the marker
+	input := `#!/bin/sh
+: # [bash]
+# echo "bash only"
+: # [/bash]`
+
+	lines := strings.Split(input, "\n")
+	segments, _ := parseSegments(lines)
+
+	// Should create segments without the markers visible in docs
+	for _, seg := range segments {
+		if strings.Contains(seg.DocsText, "[bash]") || strings.Contains(seg.DocsText, "[/bash]") {
+			t.Errorf("docs should not contain bash markers: %q", seg.DocsText)
+		}
+	}
+}
+
+func TestRun_MoreErrors(t *testing.T) {
+	tests := []struct {
+		name   string
+		cfg    Config
+		errMsg string
+	}{
+		{
+			name: "missing index template",
+			cfg: Config{
+				BaseDir: "testdata/missing-index-tmpl",
+				OutDir:  t.TempDir(),
+			},
+			errMsg: "parsing index template",
+		},
+		{
+			name: "missing CSS file",
+			cfg: Config{
+				BaseDir: "testdata/missing-css",
+				OutDir:  t.TempDir(),
+			},
+			errMsg: "reading site.css",
+		},
+		{
+			name: "bad example in list",
+			cfg: Config{
+				BaseDir: "testdata/bad-example",
+				OutDir:  t.TempDir(),
+			},
+			errMsg: "parsing example",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := run(tt.cfg)
+			if err == nil {
+				t.Fatal("expected error, got nil")
+			}
+			if !strings.Contains(err.Error(), tt.errMsg) {
+				t.Errorf("error = %q, want to contain %q", err.Error(), tt.errMsg)
+			}
+		})
+	}
+}
+
+func TestParseExample_WithBashSections(t *testing.T) {
+	ex, err := parseExample("testdata", "bash-section-example")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	// Should not be marked as bash overall (it's a POSIX script with bash sections)
+	if ex.IsBash {
+		t.Error("expected IsBash to be false for script with inline bash sections")
+	}
+
+	// Check that bash segments have the label set correctly
+	bashSegmentFound := false
+	for _, seg := range ex.Segments {
+		if seg.IsBash {
+			bashSegmentFound = true
+			if seg.BashLabel == "" {
+				t.Error("expected BashLabel to be set for bash segment")
+			}
+		}
+	}
+
+	if !bashSegmentFound {
+		t.Error("expected to find at least one bash segment")
+	}
+}
+
+func TestParseSegments_EmptySegmentFiltering(t *testing.T) {
+	// Create input that would result in an empty segment
+	input := `#!/bin/sh
+: # doc
+echo code
+: #
+
+`
+	lines := strings.Split(input, "\n")
+	segments, _ := parseSegments(lines)
+
+	// Verify no empty segments
+	for i, seg := range segments {
+		if seg.DocsText == "" && strings.TrimSpace(seg.CodeText) == "" {
+			t.Errorf("segment %d is empty", i)
+		}
+	}
+}
+
+func TestRun_WithBashSectionExample(t *testing.T) {
+	tmpDir := t.TempDir()
+
+	cfg := Config{
+		BaseDir: "testdata",
+		OutDir:  tmpDir,
+	}
+
+	err := run(cfg)
+	if err != nil {
+		t.Fatalf("run() error: %v", err)
+	}
+
+	// Verify the bash-section-example.html was created
+	path := filepath.Join(tmpDir, "bash-section-example.html")
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		t.Error("expected bash-section-example.html to exist")
+	}
+}
+
+func TestRun_TemplateExecuteErrors(t *testing.T) {
+	tests := []struct {
+		name   string
+		cfg    Config
+		errMsg string
+	}{
+		{
+			name: "bad example template execution",
+			cfg: Config{
+				BaseDir: "testdata/bad-template",
+				OutDir:  t.TempDir(),
+			},
+			errMsg: "rendering example",
+		},
+		{
+			name: "bad index template execution",
+			cfg: Config{
+				BaseDir: "testdata/bad-index-template",
+				OutDir:  t.TempDir(),
+			},
+			errMsg: "rendering index",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := run(tt.cfg)
+			if err == nil {
+				t.Fatal("expected error, got nil")
+			}
+			if !strings.Contains(err.Error(), tt.errMsg) {
+				t.Errorf("error = %q, want to contain %q", err.Error(), tt.errMsg)
+			}
+		})
+	}
+}
+
+func TestRun_WriteFileErrors(t *testing.T) {
+	// Create a directory with read-only permissions to test write errors
+	tmpDir := t.TempDir()
+	readOnlyDir := filepath.Join(tmpDir, "readonly")
+	if err := os.MkdirAll(readOnlyDir, 0555); err != nil {
+		t.Skipf("cannot create read-only directory: %v", err)
+	}
+	defer os.Chmod(readOnlyDir, 0755) // Cleanup
+
+	cfg := Config{
+		BaseDir: "testdata",
+		OutDir:  readOnlyDir,
+	}
+
+	err := run(cfg)
+	if err == nil {
+		// On some systems (like macOS with root), this might not fail
+		t.Skip("write to read-only directory succeeded (running as root?)")
+	}
+	// We just want to verify that an error is returned for write failures
+	// The exact error message depends on which write fails first
+}
+
+func TestParseExample_ReadScriptError(t *testing.T) {
+	// Create a temporary directory structure with an unreadable script file
+	tmpDir := t.TempDir()
+	exampleDir := filepath.Join(tmpDir, "examples", "unreadable-example")
+	if err := os.MkdirAll(exampleDir, 0755); err != nil {
+		t.Fatalf("creating example dir: %v", err)
+	}
+
+	// Create a shell script with no read permission
+	scriptPath := filepath.Join(exampleDir, "test.sh")
+	if err := os.WriteFile(scriptPath, []byte("#!/bin/sh\necho hello"), 0000); err != nil {
+		t.Fatalf("creating script: %v", err)
+	}
+	defer os.Chmod(scriptPath, 0644) // Cleanup
+
+	_, err := parseExample(tmpDir, "unreadable-example")
+	if err == nil {
+		// On some systems (like running as root), this might not fail
+		t.Skip("reading unreadable file succeeded (running as root?)")
+	}
+	if !strings.Contains(err.Error(), "reading script") {
+		t.Errorf("error = %q, want to contain 'reading script'", err.Error())
+	}
+}
+
+func TestRun_MkdirAllError(t *testing.T) {
+	// Try to create output directory inside a non-existent path that can't be created
+	// This is tricky because most paths can be created. We'll use a path that would
+	// require creating a file as a directory.
+	tmpDir := t.TempDir()
+	blockingFile := filepath.Join(tmpDir, "blocker")
+	if err := os.WriteFile(blockingFile, []byte("blocking"), 0644); err != nil {
+		t.Fatalf("creating blocking file: %v", err)
+	}
+
+	cfg := Config{
+		BaseDir: "testdata",
+		OutDir:  filepath.Join(blockingFile, "subdir"), // Can't create dir inside a file
+	}
+
+	err := run(cfg)
+	if err == nil {
+		t.Fatal("expected error, got nil")
+	}
+	if !strings.Contains(err.Error(), "creating output directory") {
+		t.Errorf("error = %q, want to contain 'creating output directory'", err.Error())
 	}
 }
