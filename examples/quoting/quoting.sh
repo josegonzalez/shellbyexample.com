@@ -45,13 +45,13 @@ echo "Dollar sign: \$100"
 echo "It's a $name"
 echo 'Say "Hello"'
 
-: # Some useful escape sequences in double quotes:
+: # Escape sequences like \n and \t are NOT interpreted in double quotes:
 
 echo "Line 1\nLine 2"   # Note: \n is NOT interpreted here (use echo -e or $'...')
 echo "Tab:\tseparated"  # Note: \t is NOT interpreted here (use echo -e or $'...')
 
-: # For reliable newlines, use $'...' syntax (POSIX)
-: # or literal newlines.
+: # For reliable newlines, use literal newlines (shown below)
+: # or printf. Note: $'...' works in bash but is not POSIX.
 
 echo "Line 1
 Line 2"

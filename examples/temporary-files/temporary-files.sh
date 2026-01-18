@@ -209,7 +209,8 @@ portable_mktemp() {
   echo "$result"
 }
 
-echo "Portable mktemp: $(portable_mktemp)"
-rm "$(portable_mktemp)"
+portable_tmp=$(portable_mktemp)
+echo "Portable mktemp: $portable_tmp"
+rm "$portable_tmp"
 
 echo "Temporary files examples complete"

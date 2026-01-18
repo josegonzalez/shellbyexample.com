@@ -42,8 +42,8 @@ echo "Remove path (##*/): ${filepath##*/}"
 # Remove shortest match from end
 echo "Remove extension (%.*): ${filepath%.*}"
 
-# Remove longest match from end
-echo "Directory only (%%/*): ${filepath%%/*}"
+# Remove filename from end (get directory)
+echo "Directory (%/*): ${filepath%/*}"
 
 : # More practical examples:
 
