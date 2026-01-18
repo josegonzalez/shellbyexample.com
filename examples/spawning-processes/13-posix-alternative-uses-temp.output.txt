@@ -1,6 +1,6 @@
 POSIX diff comparison:
---- /tmp/tmp.AgAGJC
-+++ /tmp/tmp.ohgbJC
+--- /tmp/tmp.JLJIpp
++++ /tmp/tmp.Ndjapp
 @@ -1,82 +1,143 @@
 -arch
 -ash

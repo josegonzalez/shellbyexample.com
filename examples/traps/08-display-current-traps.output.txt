@@ -1,3 +1,3 @@
-/script: trap: line 6: illegal option -p
 Current traps:
+/script: trap: line 6: illegal option -p
 trapped

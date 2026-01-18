@@ -4,10 +4,10 @@ orange
   Two random fruits:
 banana
 apple
-  Random number 1-10: 5
+  Random number 1-10: 7
   Shuffled list:
 2
-1
 5
-4
 3
+4
+1

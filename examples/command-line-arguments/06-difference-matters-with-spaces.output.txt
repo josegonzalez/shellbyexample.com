@@ -1,0 +1,5 @@
+With quoted $@:
+  [hello world]
+  [foo bar]
+With quoted $*:
+  [hello world foo bar]

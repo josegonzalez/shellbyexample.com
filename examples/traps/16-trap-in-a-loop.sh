@@ -1,5 +1,5 @@
 #!/bin/sh
-# Trap in a loop (handle Ctrl+C gracefully):
+# Trap in a loop (handle `Ctrl+C` gracefully):
 
 graceful_loop() {
   (

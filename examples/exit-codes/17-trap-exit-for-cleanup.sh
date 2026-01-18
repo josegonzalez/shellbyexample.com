@@ -1,5 +1,5 @@
 #!/bin/sh
-# Trap EXIT for cleanup regardless of exit code:
+# Trap `EXIT` for cleanup regardless of exit code:
 
 cleanup_demo() {
   (

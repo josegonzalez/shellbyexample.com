@@ -1,2 +1,2 @@
-Coin flips: tails heads heads
+Coin flips: heads heads tails
 Random numbers examples complete

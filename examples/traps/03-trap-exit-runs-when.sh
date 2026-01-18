@@ -1,5 +1,5 @@
 #!/bin/sh
-# Trap EXIT runs when the script exits (any reason):
+# Trap `EXIT` runs when the script exits (any reason):
 
 demo_exit_trap() {
   (

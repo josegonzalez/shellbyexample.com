@@ -1,2 +1,2 @@
-rm: can't remove '/tmp/sample.txt': No such file or directory
 Regular expressions examples complete
+rm: can't remove '/tmp/sample.txt': No such file or directory

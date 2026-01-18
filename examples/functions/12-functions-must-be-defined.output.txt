@@ -1,0 +1,2 @@
+/script: line 7: undefined_func: not found
+Hello, World!

@@ -1,2 +1,2 @@
-/script: line 6: jq: not found
 Nested access:
+/script: line 6: jq: not found

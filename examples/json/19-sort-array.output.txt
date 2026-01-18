@@ -1,4 +1,4 @@
 Sort by name:
-/script: line 5: jq: not found
 Sort by id (reverse):
+/script: line 5: jq: not found
 /script: line 8: jq: not found

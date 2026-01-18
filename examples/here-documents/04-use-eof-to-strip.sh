@@ -1,5 +1,5 @@
 #!/bin/sh
-# Use <<-EOF to strip leading tabs (not spaces).
+# Use `<<-EOF` to strip leading tabs (not spaces).
 # This helps with indentation in scripts.
 
 cat <<-EOF

@@ -1,5 +1,8 @@
 #!/bin/bash
-# With [[ ]], quoting is often optional:
+# Bash provides extended test syntax `[[ ]]` which is
+# safer and more powerful than single brackets `[ ]`.
+#
+# With `[[ ]]`, quoting is often optional:
 
 if [[ $name = Alice ]]; then
     echo "Hello, Alice!"

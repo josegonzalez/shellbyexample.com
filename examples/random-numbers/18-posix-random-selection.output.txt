@@ -1,2 +1,2 @@
 POSIX random selection:
-  Random fruit: banana
+  Random fruit: date

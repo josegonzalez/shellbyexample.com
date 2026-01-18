@@ -1,5 +1,5 @@
 #!/bin/sh
-# Use <<'EOF' (quoted) to prevent variable expansion.
+# Use `<< 'EOF'` (quoted) to prevent variable expansion.
 
 cat << 'EOF'
 This text is literal.

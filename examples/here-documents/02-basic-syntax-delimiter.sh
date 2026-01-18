@@ -1,6 +1,8 @@
 #!/bin/sh
-# Basic syntax: <<DELIMITER ... DELIMITER
-# The delimiter can be any word (EOF is common).
+# Basic syntax: `<<DELIMITER ... DELIMITER`
+#
+# The delimiter can be any word (`EOF` is common).
+# Variables like `$HOME` are expanded.
 
 cat << EOF
 This is a here-document.

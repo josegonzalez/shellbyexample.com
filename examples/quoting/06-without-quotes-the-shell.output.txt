@@ -1,0 +1,6 @@
+Without quotes:
+  file1.txt
+  file2.txt
+  file3.txt
+With quotes:
+  file1.txt file2.txt file3.txt

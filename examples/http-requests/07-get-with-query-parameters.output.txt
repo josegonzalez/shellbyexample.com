@@ -1,2 +1,2 @@
-Query parameters:
 /script: line 5: curl: not found
+Query parameters:

@@ -1,2 +1,2 @@
-mv: can't rename '/tmp/testdir_copy': No such file or directory
 Renamed to testdir_renamed
+mv: can't rename '/tmp/testdir_copy': No such file or directory

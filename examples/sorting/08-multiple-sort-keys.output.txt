@@ -1,2 +1,2 @@
-Sort by age, then name:
 sort: /tmp/data.txt: No such file or directory
+Sort by age, then name:

@@ -1,2 +1,2 @@
-/script: line 5: curl: not found
 GET request:
+/script: line 5: curl: not found

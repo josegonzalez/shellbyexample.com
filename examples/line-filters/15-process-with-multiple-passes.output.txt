@@ -1,2 +1,2 @@
-Multi-pass processing:
 cat: can't open '/tmp/data.txt': No such file or directory
+Multi-pass processing:

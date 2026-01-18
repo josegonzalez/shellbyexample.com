@@ -1,1 +1,3 @@
-Done with trap examples
+Created: /tmp/example.oDgAEm
+some data
+Cleaned up /tmp/example.oDgAEm

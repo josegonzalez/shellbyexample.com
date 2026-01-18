@@ -1,2 +1,2 @@
-Loop in shell:
 /script: line 5: jq: not found
+Loop in shell:

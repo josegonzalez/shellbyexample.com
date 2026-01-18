@@ -1,5 +1,5 @@
 #!/bin/sh
-# POSIX sh lacks range syntax for 'for', so use 'while' instead:
+# POSIX sh lacks range syntax for `for`, so use `while` instead:
 
 echo "Counting to 5:"
 i=1

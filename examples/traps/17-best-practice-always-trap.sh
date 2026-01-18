@@ -1,5 +1,14 @@
 #!/bin/sh
-# Best practice: Always trap EXIT for scripts that
-# create temporary resources.
+# Best practice: Always trap `EXIT` for scripts that
+# create temporary resources. This ensures cleanup
+# happens even if the script fails or is interrupted.
 
-echo "Done with trap examples"
+# Create temp file and set up cleanup
+tmpfile=$(mktemp /tmp/example.XXXXXX)
+trap 'rm -f "$tmpfile"; echo "Cleaned up $tmpfile"' EXIT
+
+echo "Created: $tmpfile"
+echo "some data" >"$tmpfile"
+cat "$tmpfile"
+
+# Cleanup happens automatically when script exits

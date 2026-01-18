@@ -1,5 +1,5 @@
 #!/bin/sh
-# $@ contains all arguments, $# is the count.
+# `$@` contains all arguments, `$#` is the count.
 
 show_args() {
     echo "Number of arguments: $#"

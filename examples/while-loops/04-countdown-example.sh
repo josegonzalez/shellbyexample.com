@@ -1,5 +1,8 @@
 #!/bin/sh
-# Countdown example:
+# The condition is tested before each iteration.
+# If false initially, the loop body never runs.
+#
+# A countdown example:
 
 echo "Countdown:"
 n=5

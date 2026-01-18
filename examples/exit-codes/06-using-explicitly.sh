@@ -1,5 +1,5 @@
 #!/bin/sh
-# Using $? explicitly:
+# Using `$?` explicitly:
 
 ls /nonexistent 2>/dev/null
 status=$?
