@@ -1,6 +1,0 @@
-File numbering:
-  file_001.txt
-  file_002.txt
-  file_003.txt
-  file_010.txt
-  file_100.txt

@@ -1,8 +1,0 @@
-Help option:
-Usage: script [options] [files...]
-
-Options:
-  -h        Show this help
-  -v        Verbose output
-  -o FILE   Output file
-  -n NAME   Set name

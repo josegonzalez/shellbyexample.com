@@ -1,3 +1,0 @@
-[DEBUG] 10:02:25: Starting process
-[2026-01-18 10:02:25] Application started
-Printf examples complete

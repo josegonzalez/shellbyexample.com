@@ -1,6 +1,0 @@
-Complete example:
-Settings:
-  Verbose: true
-  Output: result.txt
-  Format: json
-  Files: input1.txt input2.txt

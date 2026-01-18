@@ -1,5 +1,0 @@
-
-Name                 Age     Salary
-Alice Smith           30   75000.00
-Bob Johnson           25   65000.00
-Carol White           35   85000.00

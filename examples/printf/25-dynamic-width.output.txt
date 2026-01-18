@@ -1,2 +1,0 @@
-       right-aligned
-left-aligned        

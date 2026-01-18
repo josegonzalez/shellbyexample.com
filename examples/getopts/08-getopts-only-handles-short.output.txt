@@ -1,4 +1,0 @@
-Long options (manual parsing):
-Verbose: true
-Name: Bob
-Remaining: file.txt
