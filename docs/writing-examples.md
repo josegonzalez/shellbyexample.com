@@ -166,11 +166,8 @@ All scripts are executed in a sandboxed `bash:5.3` Docker container:
 Use the provided Makefile targets to generate output files:
 
 ```bash
-# Generate output for a single script
-make generate-output SCRIPT=examples/hello-world/01-hello-world.sh
-
 # Generate outputs for all sub-examples
-make generate-all-outputs
+make watch-outputs
 
 # Test all scripts run successfully
 make test-examples

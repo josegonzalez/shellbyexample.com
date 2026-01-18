@@ -66,7 +66,26 @@ func main() {
 				continue
 			}
 
-			fmt.Printf("Change detected: %s\n", event.Name)
+			// Describe the change type
+			var changeType string
+			switch {
+			case event.Op&fsnotify.Rename != 0:
+				changeType = "renamed"
+			case event.Op&fsnotify.Remove != 0:
+				changeType = "deleted"
+			case event.Op&fsnotify.Create != 0:
+				changeType = "created"
+				// Watch newly created directories
+				if info, err := os.Stat(event.Name); err == nil && info.IsDir() {
+					if err := addWatchRecursive(watcher, event.Name); err != nil {
+						fmt.Fprintf(os.Stderr, "Failed to watch new directory %s: %v\n", event.Name, err)
+					}
+				}
+			default:
+				changeType = "modified"
+			}
+
+			fmt.Printf("File %s: %s\n", changeType, event.Name)
 
 			// Debounce: reset timer on each event
 			if debounceTimer != nil {

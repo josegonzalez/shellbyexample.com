@@ -81,8 +81,6 @@ examples/
 | `test`                 | Run Go tests                                   |
 | `clean`                | Remove generated files                         |
 | `docker-pull`          | Pull the bash:5.3 Docker image                 |
-| `generate-output`      | Generate output for a single script            |
-| `generate-all-outputs` | Generate outputs for all sub-examples          |
 | `test-examples`        | Run all scripts in Docker to verify they work  |
 | `validate-safety`      | Check scripts only write to /tmp               |
 | `migrate`              | Run migration from legacy to new format        |

@@ -1,4 +1,4 @@
-.PHONY: build serve test clean docker-pull generate-output generate-all-outputs test-examples validate-safety migrate watch
+.PHONY: build serve test clean docker-pull generate-output generate-all-outputs test-examples validate-safety migrate watch watch-outputs renumber
 
 # Default target
 build:
@@ -18,22 +18,6 @@ clean:
 # Pull the bash Docker image
 docker-pull:
 	docker pull bash:5.3
-
-# Generate output for a single script
-generate-output:
-	@if [ -z "$(SCRIPT)" ]; then echo "Usage: make generate-output SCRIPT=path/to/script.sh"; exit 1; fi
-	./tools/run-in-docker.sh "$(SCRIPT)" > "$${SCRIPT%.*}.output.txt" || true
-
-# Generate outputs for all sub-examples
-generate-all-outputs: docker-pull
-	@for script in examples/*/*.sh examples/*/*.bash; do \
-		[ -f "$$script" ] || continue; \
-		base="$${script%.*}"; \
-		if echo "$$script" | grep -qE '/[0-9]{2}-'; then \
-			echo "Running $$script..."; \
-			./tools/run-in-docker.sh "$$script" > "$$base.output.txt" 2>&1 || true; \
-		fi; \
-	done
 
 # Test all scripts (verify they run without error)
 test-examples: docker-pull
@@ -81,3 +65,12 @@ migrate:
 # Watch for changes and rebuild automatically
 watch:
 	go run tools/watch.go
+
+# Watch for script changes and regenerate outputs
+watch-outputs: docker-pull
+	go run tools/watch-outputs.go
+
+# Renumber sub-example files in an example directory
+renumber:
+	@if [ -z "$(DIR)" ]; then echo "Usage: make renumber DIR=examples/command-line-arguments"; exit 1; fi
+	go run tools/renumber.go "$(DIR)"
