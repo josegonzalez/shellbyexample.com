@@ -1,3 +1,2 @@
-/script: cd: line 5: can't cd to /tmp/testdir: No such file or directory
-In subshell: /tmp
+In subshell: /tmp/testdir
 Still in: /tmp

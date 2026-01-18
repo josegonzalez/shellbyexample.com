@@ -1,2 +1,6 @@
+curl: (6) Could not resolve host: example.com (Could not contact DNS servers)
 Error: curl failed
+--2026-01-18 08:42:16--  https://example.com/
+Resolving example.com (example.com)... failed: Try again.
+wget: unable to resolve host address 'example.com'
 Error: wget failed

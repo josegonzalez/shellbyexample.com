@@ -1,3 +1,4 @@
 Files modified in last day:
-touch: /tmp/findtest/old.txt: No such file or directory
-find: /tmp/findtest: No such file or directory
+/tmp/findtest/old.txt
+/tmp/findtest/file2.txt
+/tmp/findtest/file1.txt

@@ -1,2 +1,1 @@
-rmdir: '/tmp/mydir': No such file or directory
 Removed /tmp/mydir

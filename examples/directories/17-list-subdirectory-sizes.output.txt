@@ -1,2 +1,2 @@
 Subdirectory sizes:
-du: /tmp/findtest: No such file or directory
+0	/tmp/findtest

@@ -1,3 +1,2 @@
-/script: cd: line 5: can't cd to /tmp/testdir: No such file or directory
-Changed to: /tmp
+Changed to: /tmp/testdir
 Back to: /tmp

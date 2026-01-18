@@ -1,3 +1,4 @@
-touch: /tmp/testdir/.hidden: No such file or directory
 Including hidden files:
-ls: /tmp/testdir: No such file or directory
+.
+..
+.hidden

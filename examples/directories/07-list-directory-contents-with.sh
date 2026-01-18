@@ -1,5 +1,5 @@
 #!/bin/sh
-# List directory contents with ls:
+# List directory contents with `ls`:
 
 mkdir -p /tmp/testdir
 touch /tmp/testdir/file1.txt /tmp/testdir/file2.sh
