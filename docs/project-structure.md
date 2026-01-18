@@ -61,7 +61,6 @@ examples/
 | `generate.go`        | Main site generator                          |
 | `generate_test.go`   | Unit tests for the generator                 |
 | `generate-output.go` | Generate output files for scripts            |
-| `migrate.go`         | Migration tool for legacy → new format       |
 | `renumber.go`        | Renumber sub-example files in a directory    |
 | `run-in-docker.sh`   | Docker runner for sandboxed script execution |
 | `validate.go`        | Validate example numbering and structure     |
@@ -101,9 +100,8 @@ examples/
 
 | Target              | Description                                         |
 | ------------------- | --------------------------------------------------- |
-| `validate`          | Run all validations (numbering + safety)            |
+| `validate`          | Run all validations                                 |
 | `validate-numbering`| Check files start at 01, no gaps, valid shebangs    |
-| `validate-safety`   | Check scripts only write to /tmp (static analysis)  |
 
 ### Renumbering
 
@@ -118,4 +116,3 @@ examples/
 | --------------- | ---------------------------------------- |
 | `watch`         | Watch for changes and auto-rebuild       |
 | `watch-outputs` | Watch scripts and regenerate outputs     |
-| `migrate`       | Run migration from legacy to new format  |

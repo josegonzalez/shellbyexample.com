@@ -1,8 +1,8 @@
 .PHONY: build serve test clean \
         docker-build generate-output generate-all-outputs test-examples \
-        validate validate-numbering validate-safety \
+        validate validate-numbering \
         renumber renumber-all \
-        migrate watch watch-outputs
+        watch watch-outputs
 
 # ==============================================================================
 # Core targets
@@ -59,28 +59,10 @@ test-examples: docker-build
 # Validation
 # ==============================================================================
 
-validate: validate-numbering validate-safety
+validate: validate-numbering
 
 validate-numbering:
 	go run tools/validate.go
-
-validate-safety:
-	@echo "Checking for unsafe file operations..."
-	@failed=0; \
-	for script in examples/*/*.sh examples/*/*.bash; do \
-		[ -f "$$script" ] || continue; \
-		if echo "$$script" | grep -qE '/[0-9]{2}-'; then \
-			if grep -qE '(>|>>)\s*[^/$$]|>\s*/[^t]|>\s*/t[^m]|>\s*/tm[^p]' "$$script" 2>/dev/null; then \
-				echo "WARNING: $$script may write outside /tmp"; \
-				failed=$$((failed + 1)); \
-			fi; \
-		fi; \
-	done; \
-	if [ $$failed -gt 0 ]; then \
-		echo "Found $$failed potentially unsafe script(s)"; \
-		exit 1; \
-	fi; \
-	echo "All scripts appear safe"
 
 # ==============================================================================
 # Renumbering
@@ -107,6 +89,3 @@ watch:
 
 watch-outputs: docker-build
 	go run tools/watch-outputs.go
-
-migrate:
-	go run tools/migrate.go

@@ -3,6 +3,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -19,6 +20,17 @@ func main() {
 	}
 
 	errors := validate(examplesDir)
+
+	// Find and report empty scripts
+	emptyScripts := findEmptyScripts(examplesDir)
+	if len(emptyScripts) > 0 {
+		fmt.Printf("Found %d script(s) containing only shebang and comments:\n", len(emptyScripts))
+		for _, path := range emptyScripts {
+			fmt.Printf("  %s\n", path)
+		}
+		fmt.Println()
+	}
+
 	if len(errors) > 0 {
 		fmt.Println("Validation errors found:")
 		for _, err := range errors {
@@ -192,4 +204,78 @@ func validateShebang(path string, ext string) error {
 	}
 
 	return nil
+}
+
+func findEmptyScripts(examplesDir string) []string {
+	var emptyScripts []string
+
+	err := filepath.Walk(examplesDir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if info.IsDir() {
+			return nil
+		}
+
+		ext := filepath.Ext(path)
+		if ext != ".sh" && ext != ".bash" {
+			return nil
+		}
+
+		if isEmptyScript(path) {
+			emptyScripts = append(emptyScripts, path)
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error walking directory: %v\n", err)
+	}
+
+	return emptyScripts
+}
+
+// isEmptyScript returns true if the file contains only:
+// - A shebang line (first line starting with #!)
+// - Comment lines (starting with #)
+// - Empty/whitespace-only lines
+func isEmptyScript(path string) bool {
+	file, err := os.Open(path)
+	if err != nil {
+		return false
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	lineNum := 0
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		lineNum++
+
+		trimmed := strings.TrimSpace(line)
+
+		// Empty or whitespace-only line
+		if trimmed == "" {
+			continue
+		}
+
+		// First line should be a shebang
+		if lineNum == 1 {
+			if !strings.HasPrefix(trimmed, "#!") {
+				return false
+			}
+			continue
+		}
+
+		// All other non-empty lines should be comments
+		if !strings.HasPrefix(trimmed, "#") {
+			return false
+		}
+	}
+
+	// Must have at least a shebang line
+	return lineNum >= 1
 }

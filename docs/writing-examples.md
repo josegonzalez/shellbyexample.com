@@ -204,9 +204,6 @@ make validate
 # Check numbering only (starts at 01, no gaps, valid shebangs)
 make validate-numbering
 
-# Check scripts only write to /tmp (static analysis)
-make validate-safety
-
 # Test all scripts run successfully in Docker
 make test-examples
 ```
