@@ -121,8 +121,20 @@ func regenerateOutput(scriptPath string) {
 
 	fmt.Printf("Regenerating output for %s...\n", scriptPath)
 
+	// Check if script needs network access
+	needsNetwork := false
+	content, err := os.ReadFile(scriptPath)
+	if err == nil && strings.Contains(string(content), "# network: required") {
+		needsNetwork = true
+	}
+
 	// Run the script in Docker
-	cmd := exec.Command("./tools/run-in-docker.sh", scriptPath)
+	args := []string{}
+	if needsNetwork {
+		args = append(args, "-n")
+	}
+	args = append(args, scriptPath)
+	cmd := exec.Command("./tools/run-in-docker.sh", args...)
 	output, err := cmd.CombinedOutput()
 
 	// Write output to file (even if script failed, we want to capture the error)
