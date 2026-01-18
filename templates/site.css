@@ -1,0 +1,220 @@
+/* Shell by Example - CSS */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #333;
+    background: #fff;
+}
+
+a {
+    color: #0066cc;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+h2 a {
+    color: #333;
+}
+
+/* Index page */
+.index {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.index .intro {
+    margin-bottom: 20px;
+    color: #555;
+}
+
+.index ul {
+    list-style: none;
+    margin: 20px 0;
+}
+
+.index li {
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.index li:last-child {
+    border-bottom: none;
+}
+
+/* Example page */
+.example {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Side-by-side table layout */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+tr {
+}
+
+tr:last-child {
+    border-bottom: none;
+}
+
+td {
+    vertical-align: top;
+    padding: 15px;
+}
+
+td.docs {
+    width: 40%;
+    padding-right: 30px;
+    color: #444;
+}
+
+td.code {
+    width: 60%;
+    background: #f8f8f8;
+}
+
+td.docs p {
+    margin-bottom: 10px;
+}
+
+td.docs p:last-child {
+    margin-bottom: 0;
+}
+
+td.docs code {
+    background: #f0f0f0;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+    font-size: 13px;
+}
+
+/* Code blocks */
+td.code pre {
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+}
+
+td.code code {
+    font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* Chroma wrapper - remove default background */
+.chroma {
+    background: transparent !important;
+}
+
+.chroma pre {
+    margin: 0;
+    padding: 0;
+}
+
+/* Labels */
+.label {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-left: 8px;
+    vertical-align: middle;
+    text-transform: uppercase;
+}
+
+.label-posix {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.label-bash {
+    background: #fff3e0;
+    color: #ef6c00;
+}
+
+/* Inline bash sections within POSIX examples */
+tr.bash-section {
+    background: linear-gradient(90deg, #fff9f0 40%, #fff5e6 40%);
+}
+
+tr.bash-section td.docs {
+    border-left: 3px solid #ef6c00;
+    padding-left: 12px;
+}
+
+tr.bash-section td.docs .label-bash {
+    margin-left: 0;
+    margin-bottom: 8px;
+    display: inline-block;
+}
+
+tr.bash-section td.code {
+    background: #fff5e6;
+}
+
+/* Navigation */
+.next {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    text-align: center;
+}
+
+/* Footer */
+.footer {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    color: #999;
+    font-size: 12px;
+    text-align: center;
+}
+
+.footer a {
+    color: #666;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    table, tr, td {
+        display: block;
+        width: 100%;
+    }
+
+    td.docs {
+        padding: 15px;
+        padding-right: 15px;
+    }
+
+    td.code {
+        border-left: none;
+        border-top: 1px solid #eee;
+    }
+}

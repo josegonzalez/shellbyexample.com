@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Shell by Example: {{.Name}}</title>
+    <link rel="stylesheet" href="site.css">
+</head>
+<body>
+    <div class="example" id="{{.ID}}">
+        <h2>
+            <a href="index.html">Shell by Example</a>: {{.Name}}
+            {{if .IsBash}}<span class="label label-bash">Bash</span>{{else}}<span class="label label-posix">POSIX</span>{{end}}
+        </h2>
+
+        <table>
+            {{range .Segments}}
+            <tr{{if .IsBash}} class="bash-section"{{end}}>
+                <td class="docs">
+                    {{if .ShowBashLabel}}<span class="label label-bash">{{if .BashLabel}}{{.BashLabel}}{{else}}Bash{{end}}</span>{{end}}
+                    {{.Docs}}
+                </td>
+                <td class="code">{{.Code}}</td>
+            </tr>
+            {{end}}
+        </table>
+
+        <p class="next">
+            {{if .Prev}}<a href="{{.Prev.ID}}.html">&laquo; {{.Prev.Name}}</a>{{end}}
+            {{if and .Prev .Next}} | {{end}}
+            {{if .Next}}<a href="{{.Next.ID}}.html">{{.Next.Name}} &raquo;</a>{{end}}
+        </p>
+
+        <p class="footer">
+            <a href="https://github.com/josegonzalez/shellbyexample.com">source</a>
+            |
+            <a href="https://github.com/josegonzalez/shellbyexample.com#license">license</a>
+        </p>
+    </div>
+</body>
+</html>

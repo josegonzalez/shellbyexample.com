@@ -1,0 +1,5 @@
+# Generated site output
+public/
+
+# Test coverage
+coverage.out

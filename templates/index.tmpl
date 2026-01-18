@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Shell by Example</title>
+    <link rel="stylesheet" href="site.css">
+</head>
+<body>
+    <div class="index">
+        <h2>Shell by Example</h2>
+
+        <p class="intro">
+            <em>Shell by Example</em> is a hands-on introduction to shell scripting
+            using annotated example programs. Check out the first example or browse
+            the full list below.
+        </p>
+
+        <p class="intro">
+            Examples marked with <span class="label label-posix">POSIX</span> work
+            in any POSIX-compliant shell (sh, dash, bash, zsh, etc.).
+            Examples marked with <span class="label label-bash">Bash</span> require
+            Bash-specific features.
+        </p>
+
+        <ul>
+            {{range .}}
+            <li>
+                <a href="{{.ID}}.html">{{.Name}}</a>
+                {{if .IsBash}}<span class="label label-bash">Bash</span>{{else}}<span class="label label-posix">POSIX</span>{{end}}
+            </li>
+            {{end}}
+        </ul>
+
+        <p class="footer">
+            by <a href="https://github.com/josegonzalez">Jose Gonzalez</a>
+            | inspired by <a href="https://gobyexample.com">Go by Example</a>
+            | <a href="https://github.com/josegonzalez/shellbyexample.com">source</a>
+        </p>
+    </div>
+</body>
+</html>

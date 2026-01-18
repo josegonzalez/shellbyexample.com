@@ -1,0 +1,13 @@
+# Shell by Example - Topic List
+# Each line is an example ID (directory name under examples/)
+
+hello-world
+comments
+variables
+quoting
+command-substitution
+if-statements
+for-loops
+functions
+arrays
+here-documents
