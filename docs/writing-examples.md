@@ -4,11 +4,7 @@ This guide explains how to write shell examples for the Shell by Example project
 
 ## Directory Structure
 
-Each example lives in its own directory under `examples/`. The project supports two formats:
-
-### New Format (Sub-Examples)
-
-The new format uses numbered sub-example files, each demonstrating a related concept:
+Each example lives in its own directory under `examples/`. Each example uses numbered sub-example files, each demonstrating a related concept:
 
 ```text
 examples/
@@ -24,23 +20,9 @@ examples/
     └── 02-accessing-elements.bash
 ```
 
-### Legacy Format
-
-The legacy format uses a single file with alternating documentation and code segments:
-
-```text
-examples/
-├── hello-world/
-│   └── hello-world.sh
-└── for-loops/
-    └── for-loops.sh
-```
-
-Both formats are supported and can coexist during migration.
-
 ## Naming Conventions
 
-### Sub-Example Files (New Format)
+### Sub-Example Files
 
 - **Prefix**: Two-digit number (`01`, `02`, etc.) for ordering
 - **Description**: Kebab-case descriptive name
@@ -53,13 +35,7 @@ Examples:
 - `02-creating-arrays.bash` - Bash-specific script
 - `01-hello-world.output.txt` - Output file
 
-### Legacy Files
-
-- Use **kebab-case** for example names (e.g., `hello-world`, `for-loops`)
-- The directory name **must match** the script name
-- Keep names concise but descriptive
-
-## Sub-Example Script Format (New Format)
+## Sub-Example Script Format
 
 Each sub-example uses standard `#` comments for documentation at the top of the file:
 
@@ -87,42 +63,6 @@ Group related concepts into a single sub-example file. For example:
 
 - Echo basics + multiple lines + no newline flag = good grouping
 - Each unrelated concept = separate file
-
-## Legacy Script Format
-
-### Shebang (First Line)
-
-Every script must start with a shebang:
-
-- `#!/bin/sh` - For POSIX-compliant examples (preferred when possible)
-- `#!/bin/bash` - For Bash-specific features
-
-### Comment Syntax
-
-| Syntax | Purpose | Where It Appears |
-| -------- | --------- | ------------------ |
-| `: # text` | Documentation | Left column (explanation) |
-| `# text` | Code comment | Right column (code block only) |
-| `code # comment` | Inline comment | Right column with the code |
-
-### Segment Pattern
-
-Structure your example as alternating documentation and code segments:
-
-```sh
-#!/bin/sh
-
-: # Documentation explaining the concept.
-: # Can span multiple lines for longer
-: # explanations.
-
-executable_code_here
-
-: # Next documentation section explaining
-: # the following code.
-
-more_code
-```
 
 ## Registration
 

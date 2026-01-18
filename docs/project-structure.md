@@ -21,10 +21,6 @@ Overview of the Shell by Example repository layout.
 
 ## Example Directory Structure
 
-The project supports two example formats:
-
-### New Format (Sub-Examples)
-
 Each example is broken into numbered sub-example files:
 
 ```text
@@ -42,16 +38,6 @@ examples/
 - `NN-description.sh` - POSIX shell script (numbered for ordering)
 - `NN-description.bash` - Bash-specific script
 - `NN-description.output.txt` - Script output
-
-### Legacy Format
-
-Single file per example with embedded documentation:
-
-```text
-examples/
-└── for-loops/
-    └── for-loops.sh
-```
 
 ## Tools Directory
 

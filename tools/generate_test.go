@@ -33,498 +33,77 @@ func TestIdToName(t *testing.T) {
 	}
 }
 
-func TestExtractBashLabel(t *testing.T) {
-	tests := []struct {
-		input    string
-		expected string
-	}{
-		{"[bash]", "Bash"},
-		{"[BASH]", "Bash"},
-		{"[Bash]", "Bash"},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.input, func(t *testing.T) {
-			result := extractBashLabel(tt.input)
-			if result != tt.expected {
-				t.Errorf("extractBashLabel(%q) = %q, want %q", tt.input, result, tt.expected)
-			}
-		})
-	}
-}
-
-func TestStripBashCommentPrefix(t *testing.T) {
-	tests := []struct {
-		name     string
-		input    []string
-		expected []string
-	}{
-		{
-			name:     "strips # prefix",
-			input:    []string{"# echo hello", "# echo world"},
-			expected: []string{"echo hello", "echo world"},
-		},
-		{
-			name:     "preserves lines without prefix",
-			input:    []string{"echo hello", "echo world"},
-			expected: []string{"echo hello", "echo world"},
-		},
-		{
-			name:     "mixed lines",
-			input:    []string{"# commented", "not commented", "# also commented"},
-			expected: []string{"commented", "not commented", "also commented"},
-		},
-		{
-			name:     "empty lines",
-			input:    []string{"", "# hello", ""},
-			expected: []string{"", "hello", ""},
-		},
-		{
-			name:     "single hash without space",
-			input:    []string{"#nospace"},
-			expected: []string{"#nospace"},
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			result := stripBashCommentPrefix(tt.input)
-			if len(result) != len(tt.expected) {
-				t.Fatalf("length mismatch: got %d, want %d", len(result), len(tt.expected))
-			}
-			for i := range result {
-				if result[i] != tt.expected[i] {
-					t.Errorf("line %d: got %q, want %q", i, result[i], tt.expected[i])
-				}
-			}
-		})
-	}
-}
-
-func TestParseSegments_BasicParsing(t *testing.T) {
-	tests := []struct {
-		name             string
-		input            string
-		expectedCount    int
-		expectedIsBash   bool
-		expectedDocsText []string
-		expectedCodeText []string
-	}{
-		{
-			name: "simple posix script",
-			input: `#!/bin/sh
-: # This is documentation
-echo "Hello"`,
-			expectedCount:    2,
-			expectedIsBash:   false,
-			expectedDocsText: []string{"", "This is documentation"},
-			expectedCodeText: []string{"#!/bin/sh", "echo \"Hello\""},
-		},
-		{
-			name: "bash script detected",
-			input: `#!/bin/bash
-: # Documentation here
-echo "Hello"`,
-			expectedCount:    2,
-			expectedIsBash:   true,
-			expectedDocsText: []string{"", "Documentation here"},
-			expectedCodeText: []string{"#!/bin/bash", "echo \"Hello\""},
-		},
-		{
-			name: "multiple segments",
-			input: `#!/bin/sh
-: # First doc
-echo "first"
-: # Second doc
-echo "second"`,
-			expectedCount:    3,
-			expectedIsBash:   false,
-			expectedDocsText: []string{"", "First doc", "Second doc"},
-			expectedCodeText: []string{"#!/bin/sh", "echo \"first\"", "echo \"second\""},
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			lines := strings.Split(tt.input, "\n")
-			segments, isBash := parseSegments(lines)
-
-			if isBash != tt.expectedIsBash {
-				t.Errorf("isBash = %v, want %v", isBash, tt.expectedIsBash)
-			}
-
-			if len(segments) != tt.expectedCount {
-				t.Errorf("segment count = %d, want %d", len(segments), tt.expectedCount)
-				for i, seg := range segments {
-					t.Logf("segment %d: docs=%q code=%q", i, seg.DocsText, seg.CodeText)
-				}
-				return
-			}
-
-			for i, seg := range segments {
-				if i < len(tt.expectedDocsText) && seg.DocsText != tt.expectedDocsText[i] {
-					t.Errorf("segment %d docs = %q, want %q", i, seg.DocsText, tt.expectedDocsText[i])
-				}
-				if i < len(tt.expectedCodeText) && seg.CodeText != tt.expectedCodeText[i] {
-					t.Errorf("segment %d code = %q, want %q", i, seg.CodeText, tt.expectedCodeText[i])
-				}
-			}
-		})
-	}
-}
-
-func TestParseSegments_BashSections(t *testing.T) {
-	tests := []struct {
-		name           string
-		input          string
-		expectedBash   []bool
-		expectedLabels []string
-	}{
-		{
-			name: "inline bash section",
-			input: `#!/bin/sh
-: # POSIX code here
-echo "posix"
-: # [bash]
-: # Bash-specific feature
-# echo "bash only"
-: # [/bash]
-: # Back to POSIX
-echo "posix again"`,
-			expectedBash:   []bool{false, false, true, false},
-			expectedLabels: []string{"", "", "Bash", ""},
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			lines := strings.Split(tt.input, "\n")
-			segments, _ := parseSegments(lines)
-
-			// Filter out empty segments for comparison
-			var nonEmpty []Segment
-			for _, seg := range segments {
-				if seg.DocsText != "" || strings.TrimSpace(seg.CodeText) != "" {
-					nonEmpty = append(nonEmpty, seg)
-				}
-			}
-
-			if len(nonEmpty) != len(tt.expectedBash) {
-				t.Errorf("segment count = %d, want %d", len(nonEmpty), len(tt.expectedBash))
-				for i, seg := range nonEmpty {
-					t.Logf("segment %d: isBash=%v label=%q docs=%q", i, seg.IsBash, seg.BashLabel, seg.DocsText)
-				}
-				return
-			}
-
-			for i, seg := range nonEmpty {
-				if seg.IsBash != tt.expectedBash[i] {
-					t.Errorf("segment %d IsBash = %v, want %v", i, seg.IsBash, tt.expectedBash[i])
-				}
-				if seg.BashLabel != tt.expectedLabels[i] {
-					t.Errorf("segment %d BashLabel = %q, want %q", i, seg.BashLabel, tt.expectedLabels[i])
-				}
-			}
-		})
-	}
-}
-
-func TestParseSegments_EmptySegmentsRemoved(t *testing.T) {
-	input := `#!/bin/sh
-
-: # Documentation
-echo "code"
-
-`
-	lines := strings.Split(input, "\n")
-	segments, _ := parseSegments(lines)
-
-	// Should have filtered out empty segments
-	for i, seg := range segments {
-		if seg.DocsText == "" && strings.TrimSpace(seg.CodeText) == "" {
-			t.Errorf("segment %d is empty and should have been removed", i)
-		}
-	}
-}
-
-func TestShowBashLabelDeduplication(t *testing.T) {
+func TestExtractDocsAndCode(t *testing.T) {
 	tests := []struct {
 		name         string
-		bashFlags    []bool
-		expectedShow []bool
+		input        string
+		expectedDocs string
+		expectedCode string
 	}{
 		{
-			name:         "single bash segment",
-			bashFlags:    []bool{true},
-			expectedShow: []bool{true},
+			name: "simple script with docs",
+			input: `#!/bin/sh
+# This is documentation
+
+echo "Hello"`,
+			expectedDocs: "This is documentation",
+			expectedCode: `#!/bin/sh
+echo "Hello"`,
 		},
 		{
-			name:         "consecutive bash segments",
-			bashFlags:    []bool{true, true, true},
-			expectedShow: []bool{true, false, false},
+			name: "multiline docs",
+			input: `#!/bin/sh
+# First line
+# Second line
+# Third line
+
+echo "code"`,
+			expectedDocs: "First line\nSecond line\nThird line",
+			expectedCode: `#!/bin/sh
+echo "code"`,
 		},
 		{
-			name:         "non-bash then bash",
-			bashFlags:    []bool{false, true, true},
-			expectedShow: []bool{false, true, false},
+			name: "no docs",
+			input: `#!/bin/sh
+echo "Hello"`,
+			expectedDocs: "",
+			expectedCode: `#!/bin/sh
+echo "Hello"`,
 		},
 		{
-			name:         "bash, non-bash, bash",
-			bashFlags:    []bool{true, false, true},
-			expectedShow: []bool{true, false, true},
+			name: "shellcheck filtered",
+			input: `#!/bin/sh
+# Documentation here
+
+# shellcheck disable=SC2003
+echo "test"`,
+			expectedDocs: "Documentation here",
+			expectedCode: `#!/bin/sh
+echo "test"`,
 		},
 		{
-			name:         "alternating",
-			bashFlags:    []bool{true, false, true, false, true},
-			expectedShow: []bool{true, false, true, false, true},
-		},
-		{
-			name:         "all non-bash",
-			bashFlags:    []bool{false, false, false},
-			expectedShow: []bool{false, false, false},
-		},
-		{
-			name:         "complex pattern",
-			bashFlags:    []bool{false, true, true, true, false, true, true},
-			expectedShow: []bool{false, true, false, false, false, true, false},
+			name: "network metadata filtered",
+			input: `#!/bin/sh
+# Documentation
+# network: true
+
+echo "test"`,
+			expectedDocs: "Documentation",
+			expectedCode: `#!/bin/sh
+echo "test"`,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			// Create segments with the given bash flags
-			segments := make([]Segment, len(tt.bashFlags))
-			for i, isBash := range tt.bashFlags {
-				segments[i] = Segment{IsBash: isBash}
+			docs, code := extractDocsAndCode(tt.input)
+			if docs != tt.expectedDocs {
+				t.Errorf("docs = %q, want %q", docs, tt.expectedDocs)
 			}
-
-			// Apply the ShowBashLabel logic (same as in parseExample)
-			for i := range segments {
-				if segments[i].IsBash {
-					if i == 0 || !segments[i-1].IsBash {
-						segments[i].ShowBashLabel = true
-					}
-				}
-			}
-
-			// Verify results
-			for i, seg := range segments {
-				if seg.ShowBashLabel != tt.expectedShow[i] {
-					t.Errorf("segment %d ShowBashLabel = %v, want %v", i, seg.ShowBashLabel, tt.expectedShow[i])
-				}
+			if code != tt.expectedCode {
+				t.Errorf("code = %q, want %q", code, tt.expectedCode)
 			}
 		})
-	}
-}
-
-func TestCreateSegment(t *testing.T) {
-	docLines := []string{"This is", "documentation"}
-	codeLines := []string{"echo hello", "echo world"}
-
-	seg := createSegment(docLines, codeLines)
-
-	if seg.DocsText != "This is\ndocumentation" {
-		t.Errorf("DocsText = %q, want %q", seg.DocsText, "This is\ndocumentation")
-	}
-	if seg.CodeText != "echo hello\necho world" {
-		t.Errorf("CodeText = %q, want %q", seg.CodeText, "echo hello\necho world")
-	}
-	if seg.IsBash {
-		t.Error("IsBash should be false for createSegment")
-	}
-	if seg.BashLabel != "" {
-		t.Errorf("BashLabel = %q, want empty", seg.BashLabel)
-	}
-}
-
-func TestCreateSegmentWithBash(t *testing.T) {
-	docLines := []string{"Bash feature"}
-	codeLines := []string{"# declare -A arr", "# arr[key]=value"}
-
-	seg := createSegmentWithBash(docLines, codeLines, true, "Bash")
-
-	if seg.DocsText != "Bash feature" {
-		t.Errorf("DocsText = %q, want %q", seg.DocsText, "Bash feature")
-	}
-	// Code should have "# " stripped
-	if seg.CodeText != "declare -A arr\narr[key]=value" {
-		t.Errorf("CodeText = %q, want %q", seg.CodeText, "declare -A arr\narr[key]=value")
-	}
-	if !seg.IsBash {
-		t.Error("IsBash should be true")
-	}
-	if seg.BashLabel != "Bash" {
-		t.Errorf("BashLabel = %q, want %q", seg.BashLabel, "Bash")
-	}
-}
-
-func TestCreateSegment_TrimsTrailingWhitespace(t *testing.T) {
-	docLines := []string{"doc"}
-	codeLines := []string{"echo hello", "", "  ", ""}
-
-	seg := createSegment(docLines, codeLines)
-
-	if strings.HasSuffix(seg.CodeText, "\n") || strings.HasSuffix(seg.CodeText, " ") {
-		t.Errorf("CodeText should not have trailing whitespace: %q", seg.CodeText)
-	}
-}
-
-func TestBashStartRegex(t *testing.T) {
-	tests := []struct {
-		input    string
-		expected bool
-	}{
-		{"[bash]", true},
-		{"[BASH]", true},
-		{"[Bash]", true},
-		{"bash", false},
-		{"[notbash]", false},
-		{"", false},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.input, func(t *testing.T) {
-			result := bashStartRegex.MatchString(tt.input)
-			if result != tt.expected {
-				t.Errorf("bashStartRegex.MatchString(%q) = %v, want %v", tt.input, result, tt.expected)
-			}
-		})
-	}
-}
-
-func TestBashEndRegex(t *testing.T) {
-	tests := []struct {
-		input    string
-		expected bool
-	}{
-		{"[/bash]", true},
-		{"[/BASH]", true},
-		{"[/Bash]", true},
-		{"/bash", false},
-		{"[bash]", false},
-		{"", false},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.input, func(t *testing.T) {
-			result := bashEndRegex.MatchString(tt.input)
-			if result != tt.expected {
-				t.Errorf("bashEndRegex.MatchString(%q) = %v, want %v", tt.input, result, tt.expected)
-			}
-		})
-	}
-}
-
-func TestParseSegments_ShebangVariants(t *testing.T) {
-	tests := []struct {
-		name         string
-		shebang      string
-		expectedBash bool
-	}{
-		{"sh", "#!/bin/sh", false},
-		{"bash", "#!/bin/bash", true},
-		{"usr bin bash", "#!/usr/bin/bash", true},
-		{"env bash", "#!/usr/bin/env bash", true},
-		{"dash", "#!/bin/dash", false},
-		{"zsh", "#!/bin/zsh", false},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			input := tt.shebang + "\necho hello"
-			lines := strings.Split(input, "\n")
-			_, isBash := parseSegments(lines)
-
-			if isBash != tt.expectedBash {
-				t.Errorf("shebang %q: isBash = %v, want %v", tt.shebang, isBash, tt.expectedBash)
-			}
-		})
-	}
-}
-
-func TestParseSegments_MultilineDoc(t *testing.T) {
-	input := `#!/bin/sh
-: # This is a longer
-: # documentation block
-: # with multiple lines
-echo "code"`
-
-	lines := strings.Split(input, "\n")
-	segments, _ := parseSegments(lines)
-
-	// Find the segment with the multiline docs
-	var found bool
-	for _, seg := range segments {
-		if strings.Contains(seg.DocsText, "longer") {
-			found = true
-			expected := "This is a longer\ndocumentation block\nwith multiple lines"
-			if seg.DocsText != expected {
-				t.Errorf("DocsText = %q, want %q", seg.DocsText, expected)
-			}
-		}
-	}
-	if !found {
-		t.Error("did not find segment with multiline docs")
-	}
-}
-
-func TestParseSegments_ShellcheckFiltered(t *testing.T) {
-	input := `#!/bin/sh
-: # Using expr for arithmetic
-# shellcheck disable=SC2003
-echo "5 + 3 = $(expr 5 + 3)"
-echo "10 - 4 = $(expr 10 - 4)"`
-
-	lines := strings.Split(input, "\n")
-	segments, _ := parseSegments(lines)
-
-	// Check that no segment contains shellcheck
-	for i, seg := range segments {
-		if strings.Contains(seg.CodeText, "shellcheck") {
-			t.Errorf("segment %d should not contain shellcheck directive: %q", i, seg.CodeText)
-		}
-	}
-
-	// Verify the expr commands are still present
-	found := false
-	for _, seg := range segments {
-		if strings.Contains(seg.CodeText, "expr 5 + 3") {
-			found = true
-			break
-		}
-	}
-	if !found {
-		t.Error("expected to find expr command in output")
-	}
-}
-
-func TestExtractDocsAndCode_ShellcheckFiltered(t *testing.T) {
-	input := `#!/bin/sh
-# Using expr for arithmetic
-
-# shellcheck disable=SC2003
-echo "5 + 3 = $(expr 5 + 3)"
-# shellcheck disable=SC2086
-echo "10 - 4 = $(expr 10 - 4)"`
-
-	docs, code := extractDocsAndCode(input)
-
-	// Check that code doesn't contain shellcheck
-	if strings.Contains(code, "shellcheck") {
-		t.Errorf("code should not contain shellcheck directive: %q", code)
-	}
-
-	// Verify the expr commands are still present
-	if !strings.Contains(code, "expr 5 + 3") {
-		t.Error("expected to find 'expr 5 + 3' in code")
-	}
-	if !strings.Contains(code, "expr 10 - 4") {
-		t.Error("expected to find 'expr 10 - 4' in code")
-	}
-
-	// Verify docs are extracted correctly
-	if !strings.Contains(docs, "Using expr for arithmetic") {
-		t.Errorf("docs should contain 'Using expr for arithmetic': %q", docs)
 	}
 }
 
@@ -533,18 +112,28 @@ func TestParseExample(t *testing.T) {
 		name       string
 		exampleID  string
 		expectBash bool
+		expectMix  bool
 		expectErr  bool
 	}{
 		{
 			name:       "valid POSIX example",
 			exampleID:  "valid-example",
 			expectBash: false,
+			expectMix:  false,
 			expectErr:  false,
 		},
 		{
 			name:       "valid Bash example",
 			exampleID:  "bash-example",
 			expectBash: true,
+			expectMix:  false,
+			expectErr:  false,
+		},
+		{
+			name:       "mixed POSIX and Bash",
+			exampleID:  "bash-section-example",
+			expectBash: false,
+			expectMix:  true,
 			expectErr:  false,
 		},
 	}
@@ -567,8 +156,11 @@ func TestParseExample(t *testing.T) {
 			if ex.IsBash != tt.expectBash {
 				t.Errorf("IsBash = %v, want %v", ex.IsBash, tt.expectBash)
 			}
-			if len(ex.Segments) == 0 {
-				t.Error("expected at least one segment")
+			if ex.HasBashMix != tt.expectMix {
+				t.Errorf("HasBashMix = %v, want %v", ex.HasBashMix, tt.expectMix)
+			}
+			if len(ex.SubExamples) == 0 {
+				t.Error("expected at least one sub-example")
 			}
 		})
 	}
@@ -586,9 +178,9 @@ func TestParseExample_Errors(t *testing.T) {
 			errMsg:    "reading directory",
 		},
 		{
-			name:      "no shell file",
+			name:      "no sub-example files",
 			exampleID: "empty-dir",
-			errMsg:    "no .sh file found",
+			errMsg:    "no sub-example files found",
 		},
 	}
 
@@ -740,90 +332,6 @@ func TestHighlightCode(t *testing.T) {
 	}
 }
 
-func TestCreateSegmentWithBash_EmptyInputs(t *testing.T) {
-	// Test with empty doc lines
-	seg := createSegmentWithBash(nil, []string{"echo hello"}, false, "")
-	if seg.DocsText != "" {
-		t.Errorf("DocsText = %q, want empty", seg.DocsText)
-	}
-	if seg.CodeText != "echo hello" {
-		t.Errorf("CodeText = %q, want %q", seg.CodeText, "echo hello")
-	}
-
-	// Test with empty code lines
-	seg2 := createSegmentWithBash([]string{"some docs"}, nil, false, "")
-	if seg2.DocsText != "some docs" {
-		t.Errorf("DocsText = %q, want %q", seg2.DocsText, "some docs")
-	}
-	if seg2.CodeText != "" {
-		t.Errorf("CodeText = %q, want empty", seg2.CodeText)
-	}
-
-	// Test with both empty
-	seg3 := createSegmentWithBash(nil, nil, false, "")
-	if seg3.DocsText != "" {
-		t.Errorf("DocsText = %q, want empty", seg3.DocsText)
-	}
-	if seg3.CodeText != "" {
-		t.Errorf("CodeText = %q, want empty", seg3.CodeText)
-	}
-}
-
-func TestParseSegments_EmptyInput(t *testing.T) {
-	segments, isBash := parseSegments(nil)
-	if len(segments) != 0 {
-		t.Errorf("expected 0 segments, got %d", len(segments))
-	}
-	if isBash {
-		t.Error("expected isBash to be false for nil input")
-	}
-
-	segments2, isBash2 := parseSegments([]string{})
-	if len(segments2) != 0 {
-		t.Errorf("expected 0 segments, got %d", len(segments2))
-	}
-	if isBash2 {
-		t.Error("expected isBash to be false for empty input")
-	}
-}
-
-func TestParseSegments_OnlyShebang(t *testing.T) {
-	lines := []string{"#!/bin/sh"}
-	segments, isBash := parseSegments(lines)
-	// Shebang alone creates a segment with just the shebang in code
-	if isBash {
-		t.Error("expected isBash to be false for /bin/sh")
-	}
-	// The segment should have the shebang in it
-	found := false
-	for _, seg := range segments {
-		if strings.Contains(seg.CodeText, "#!/bin/sh") {
-			found = true
-		}
-	}
-	if !found && len(segments) > 0 {
-		t.Error("expected shebang to be present in a segment")
-	}
-}
-
-func TestParseSegments_BashMarkerOnly(t *testing.T) {
-	// Test a bash marker line that only contains the marker
-	input := `#!/bin/sh
-: # [bash]
-# echo "bash only"
-: # [/bash]`
-
-	lines := strings.Split(input, "\n")
-	segments, _ := parseSegments(lines)
-
-	// Should create segments without the markers visible in docs
-	for _, seg := range segments {
-		if strings.Contains(seg.DocsText, "[bash]") || strings.Contains(seg.DocsText, "[/bash]") {
-			t.Errorf("docs should not contain bash markers: %q", seg.DocsText)
-		}
-	}
-}
-
 func TestRun_MoreErrors(t *testing.T) {
 	tests := []struct {
 		name   string
@@ -869,53 +377,37 @@ func TestRun_MoreErrors(t *testing.T) {
 	}
 }
 
-func TestParseExample_WithBashSections(t *testing.T) {
+func TestParseExample_WithMixedFormats(t *testing.T) {
 	ex, err := parseExample("testdata", "bash-section-example")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	// Should not be marked as bash overall (it's a POSIX script with bash sections)
+	// Should be marked as mixed (has both POSIX and Bash sub-examples)
+	if !ex.HasBashMix {
+		t.Error("expected HasBashMix to be true for example with both .sh and .bash files")
+	}
+
+	// Should not be marked as bash overall
 	if ex.IsBash {
-		t.Error("expected IsBash to be false for script with inline bash sections")
+		t.Error("expected IsBash to be false for mixed example")
 	}
 
-	// Check that bash segments have the label set correctly
-	bashSegmentFound := false
-	for _, seg := range ex.Segments {
-		if seg.IsBash {
-			bashSegmentFound = true
-			if seg.BashLabel == "" {
-				t.Error("expected BashLabel to be set for bash segment")
-			}
-		}
+	// Check sub-examples
+	if len(ex.SubExamples) != 2 {
+		t.Errorf("expected 2 sub-examples, got %d", len(ex.SubExamples))
 	}
 
-	if !bashSegmentFound {
-		t.Error("expected to find at least one bash segment")
+	// First should be POSIX, second should be Bash
+	if ex.SubExamples[0].IsBash {
+		t.Error("first sub-example should be POSIX")
+	}
+	if !ex.SubExamples[1].IsBash {
+		t.Error("second sub-example should be Bash")
 	}
 }
 
-func TestParseSegments_EmptySegmentFiltering(t *testing.T) {
-	// Create input that would result in an empty segment
-	input := `#!/bin/sh
-: # doc
-echo code
-: #
-
-`
-	lines := strings.Split(input, "\n")
-	segments, _ := parseSegments(lines)
-
-	// Verify no empty segments
-	for i, seg := range segments {
-		if seg.DocsText == "" && strings.TrimSpace(seg.CodeText) == "" {
-			t.Errorf("segment %d is empty", i)
-		}
-	}
-}
-
-func TestRun_WithBashSectionExample(t *testing.T) {
+func TestRun_WithMixedExample(t *testing.T) {
 	tmpDir := t.TempDir()
 
 	cfg := Config{
@@ -1004,7 +496,7 @@ func TestParseExample_ReadScriptError(t *testing.T) {
 	}
 
 	// Create a shell script with no read permission
-	scriptPath := filepath.Join(exampleDir, "test.sh")
+	scriptPath := filepath.Join(exampleDir, "01-test.sh")
 	if err := os.WriteFile(scriptPath, []byte("#!/bin/sh\necho hello"), 0000); err != nil {
 		t.Fatalf("creating script: %v", err)
 	}
@@ -1041,5 +533,108 @@ func TestRun_MkdirAllError(t *testing.T) {
 	}
 	if !strings.Contains(err.Error(), "creating output directory") {
 		t.Errorf("error = %q, want to contain 'creating output directory'", err.Error())
+	}
+}
+
+func TestParseSubExample(t *testing.T) {
+	tmpDir := t.TempDir()
+
+	// Create a test sub-example file
+	content := `#!/bin/sh
+# This is a test
+# with multiple lines
+
+echo "hello"
+`
+	if err := os.WriteFile(filepath.Join(tmpDir, "01-test.sh"), []byte(content), 0644); err != nil {
+		t.Fatalf("writing test file: %v", err)
+	}
+
+	subEx, err := parseSubExample(tmpDir, "01-test.sh")
+	if err != nil {
+		t.Fatalf("parseSubExample error: %v", err)
+	}
+
+	if subEx.Order != 1 {
+		t.Errorf("Order = %d, want 1", subEx.Order)
+	}
+	if subEx.Name != "Test" {
+		t.Errorf("Name = %q, want %q", subEx.Name, "Test")
+	}
+	if subEx.Filename != "01-test.sh" {
+		t.Errorf("Filename = %q, want %q", subEx.Filename, "01-test.sh")
+	}
+	if subEx.IsBash {
+		t.Error("IsBash should be false for .sh file")
+	}
+	if !strings.Contains(subEx.DocsText, "This is a test") {
+		t.Errorf("DocsText should contain documentation: %q", subEx.DocsText)
+	}
+}
+
+func TestParseSubExample_BashExtension(t *testing.T) {
+	tmpDir := t.TempDir()
+
+	content := `#!/bin/bash
+# Bash script
+
+declare -A arr
+`
+	if err := os.WriteFile(filepath.Join(tmpDir, "01-test.bash"), []byte(content), 0644); err != nil {
+		t.Fatalf("writing test file: %v", err)
+	}
+
+	subEx, err := parseSubExample(tmpDir, "01-test.bash")
+	if err != nil {
+		t.Fatalf("parseSubExample error: %v", err)
+	}
+
+	if !subEx.IsBash {
+		t.Error("IsBash should be true for .bash file")
+	}
+}
+
+func TestParseSubExample_WithOutput(t *testing.T) {
+	tmpDir := t.TempDir()
+
+	// Create script and output files
+	script := `#!/bin/sh
+# Test
+
+echo "hello"
+`
+	output := "hello\n"
+
+	if err := os.WriteFile(filepath.Join(tmpDir, "01-test.sh"), []byte(script), 0644); err != nil {
+		t.Fatalf("writing script: %v", err)
+	}
+	if err := os.WriteFile(filepath.Join(tmpDir, "01-test.output.txt"), []byte(output), 0644); err != nil {
+		t.Fatalf("writing output: %v", err)
+	}
+
+	subEx, err := parseSubExample(tmpDir, "01-test.sh")
+	if err != nil {
+		t.Fatalf("parseSubExample error: %v", err)
+	}
+
+	if subEx.OutputText != "hello" {
+		t.Errorf("OutputText = %q, want %q", subEx.OutputText, "hello")
+	}
+}
+
+func TestParseSubExample_InvalidFilename(t *testing.T) {
+	tmpDir := t.TempDir()
+
+	// Create a file with invalid naming
+	if err := os.WriteFile(filepath.Join(tmpDir, "test.sh"), []byte("#!/bin/sh"), 0644); err != nil {
+		t.Fatalf("writing test file: %v", err)
+	}
+
+	_, err := parseSubExample(tmpDir, "test.sh")
+	if err == nil {
+		t.Error("expected error for invalid filename")
+	}
+	if !strings.Contains(err.Error(), "invalid sub-example filename") {
+		t.Errorf("error = %q, want to contain 'invalid sub-example filename'", err.Error())
 	}
 }

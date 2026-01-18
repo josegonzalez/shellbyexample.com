@@ -1,3 +1,4 @@
 #!/bin/sh
-: # This is a test example
+# This is a test example
+
 echo "Hello, World!"

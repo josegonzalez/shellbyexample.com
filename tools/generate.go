@@ -19,18 +19,7 @@ import (
 	"github.com/gomarkdown/markdown/parser"
 )
 
-// Segment represents a documentation/code pair (old format)
-type Segment struct {
-	Docs          template.HTML
-	DocsText      string
-	Code          template.HTML
-	CodeText      string
-	IsBash        bool   // Whether this segment is bash-specific
-	BashLabel     string // Label like "Bash"
-	ShowBashLabel bool   // True only for first segment in consecutive bash group
-}
-
-// SubExample represents a single sub-example script (new format)
+// SubExample represents a single sub-example script
 type SubExample struct {
 	Order      int
 	Name       string        // Derived from filename (e.g., "Hello World" from "01-hello-world.sh")
@@ -48,8 +37,7 @@ type SubExample struct {
 type Example struct {
 	ID          string
 	Name        string
-	Segments    []Segment    // Old format
-	SubExamples []SubExample // New format
+	SubExamples []SubExample
 	Next        *Example
 	Prev        *Example
 	IsBash      bool
@@ -214,36 +202,26 @@ func parseExample(baseDir, id string) (*Example, error) {
 		return nil, fmt.Errorf("reading directory: %w", err)
 	}
 
-	// Check if this is new format (has numbered sub-example files) or old format
+	// Find numbered sub-example files
 	var subExampleFiles []os.DirEntry
-	var legacyScriptPath string
-
 	for _, entry := range entries {
 		name := entry.Name()
 		if subExampleFileRegex.MatchString(name) {
 			subExampleFiles = append(subExampleFiles, entry)
-		} else if strings.HasSuffix(name, ".sh") && !strings.HasPrefix(name, ".") {
-			legacyScriptPath = filepath.Join(dir, name)
 		}
+	}
+
+	if len(subExampleFiles) == 0 {
+		return nil, fmt.Errorf("no sub-example files found in %s (expected files like 01-name.sh)", dir)
 	}
 
 	// Convert ID to name
 	name := idToName(id)
 
-	// Use new format if sub-example files exist
-	if len(subExampleFiles) > 0 {
-		return parseExampleNewFormat(dir, id, name, subExampleFiles)
-	}
-
-	// Fall back to legacy format
-	if legacyScriptPath == "" {
-		return nil, fmt.Errorf("no .sh file found in %s", dir)
-	}
-
-	return parseExampleLegacy(legacyScriptPath, id, name)
+	return parseExampleSubExamples(dir, id, name, subExampleFiles)
 }
 
-func parseExampleNewFormat(dir, id, name string, files []os.DirEntry) (*Example, error) {
+func parseExampleSubExamples(dir, id, name string, files []os.DirEntry) (*Example, error) {
 	var subExamples []SubExample
 	hasBash := false
 	hasPosix := false
@@ -409,185 +387,6 @@ func extractDocsAndCode(content string) (docs, code string) {
 	return docs, code
 }
 
-func parseExampleLegacy(scriptPath, id, name string) (*Example, error) {
-	content, err := os.ReadFile(scriptPath)
-	if err != nil {
-		return nil, fmt.Errorf("reading script: %w", err)
-	}
-
-	// Parse the script into segments
-	lines := strings.Split(string(content), "\n")
-	segments, isBash := parseSegments(lines)
-
-	// Mark only first segment in each consecutive bash group to show label
-	for i := range segments {
-		if segments[i].IsBash {
-			if i == 0 || !segments[i-1].IsBash {
-				segments[i].ShowBashLabel = true
-			}
-		}
-	}
-
-	return &Example{
-		ID:       id,
-		Name:     name,
-		Segments: segments,
-		IsBash:   isBash,
-	}, nil
-}
-
-func parseSegments(lines []string) ([]Segment, bool) {
-	var segments []Segment
-	var docLines []string
-	var codeLines []string
-	isBash := false
-	inCode := false
-	inBashSection := false
-	currentBashLabel := ""
-
-	for i, line := range lines {
-		// Check for shebang
-		if i == 0 && strings.HasPrefix(line, "#!") {
-			if strings.Contains(line, "bash") {
-				isBash = true
-			}
-			// Include shebang in code only, not docs
-			codeLines = append(codeLines, line)
-			inCode = true
-			continue
-		}
-
-		// Check if this is a documentation line (: # syntax)
-		trimmed := strings.TrimSpace(line)
-		if strings.HasPrefix(trimmed, ": #") {
-			// If we were in code, save the segment
-			if inCode && len(codeLines) > 0 {
-				segments = append(segments, createSegmentWithBash(docLines, codeLines, inBashSection, currentBashLabel))
-				docLines = nil
-				codeLines = nil
-			}
-			inCode = false
-
-			// Extract the comment text (remove leading ": #" and optional space)
-			comment := strings.TrimPrefix(trimmed, ": #")
-			comment = strings.TrimPrefix(comment, " ")
-
-			// Check for bash section end marker
-			if bashEndRegex.MatchString(comment) {
-				inBashSection = false
-				currentBashLabel = ""
-				// Don't include the marker line in output
-				continue
-			}
-
-			// Check for bash section start marker
-			if match := bashStartRegex.FindString(comment); match != "" {
-				inBashSection = true
-				currentBashLabel = extractBashLabel(match)
-				// Remove the marker from the comment text
-				comment = bashStartRegex.ReplaceAllString(comment, "")
-				comment = strings.TrimSpace(comment)
-				// If the line only contained the marker, skip it
-				if comment == "" {
-					continue
-				}
-			}
-
-			docLines = append(docLines, comment)
-		} else {
-			// This is code
-			// Skip shellcheck directives
-			if strings.HasPrefix(strings.TrimSpace(line), "# shellcheck") {
-				continue
-			}
-			if !inCode && len(docLines) > 0 {
-				// Starting code after docs
-				inCode = true
-			}
-			inCode = true
-			codeLines = append(codeLines, line)
-		}
-	}
-
-	// Don't forget the last segment
-	if len(docLines) > 0 || len(codeLines) > 0 {
-		segments = append(segments, createSegmentWithBash(docLines, codeLines, inBashSection, currentBashLabel))
-	}
-
-	// Clean up: remove empty segments and trailing empty code
-	var cleanSegments []Segment
-	for _, seg := range segments {
-		// Skip segments with no real content
-		if seg.DocsText == "" && strings.TrimSpace(seg.CodeText) == "" {
-			continue
-		}
-		cleanSegments = append(cleanSegments, seg)
-	}
-
-	return cleanSegments, isBash
-}
-
-// stripBashCommentPrefix removes leading "# " from code lines in bash sections.
-func stripBashCommentPrefix(codeLines []string) []string {
-	result := make([]string, len(codeLines))
-	for i, line := range codeLines {
-		if strings.HasPrefix(line, "# ") {
-			result[i] = line[2:] // Remove "# " (2 characters)
-		} else {
-			result[i] = line
-		}
-	}
-	return result
-}
-
-func createSegment(docLines, codeLines []string) Segment {
-	return createSegmentWithBash(docLines, codeLines, false, "")
-}
-
-func createSegmentWithBash(docLines, codeLines []string, isBash bool, bashLabel string) Segment {
-	docsText := strings.Join(docLines, "\n")
-
-	// For bash sections, strip leading "# " from code lines
-	if isBash {
-		codeLines = stripBashCommentPrefix(codeLines)
-	}
-
-	codeText := strings.Join(codeLines, "\n")
-
-	// Trim trailing whitespace from code
-	codeText = strings.TrimRight(codeText, "\n\t ")
-
-	// Render markdown for docs
-	var docsHTML template.HTML
-	if docsText != "" {
-		extensions := parser.CommonExtensions | parser.AutoHeadingIDs
-		p := parser.NewWithExtensions(extensions)
-		html := markdown.ToHTML([]byte(docsText), p, nil)
-		docsHTML = template.HTML(html)
-	}
-
-	// Syntax highlight code
-	var codeHTML template.HTML
-	if codeText != "" {
-		highlighted, err := highlightCode(codeText, "bash")
-		if err != nil {
-			// Fallback to plain text
-			codeHTML = template.HTML("<pre><code>" + template.HTMLEscapeString(codeText) + "</code></pre>")
-		} else {
-			codeHTML = template.HTML(highlighted)
-		}
-	}
-
-	return Segment{
-		Docs:      docsHTML,
-		DocsText:  docsText,
-		Code:      codeHTML,
-		CodeText:  codeText,
-		IsBash:    isBash,
-		BashLabel: bashLabel,
-	}
-}
-
 func highlightCode(code, lang string) (string, error) {
 	lexer := lexers.Get(lang)
 	if lexer == nil {
@@ -618,16 +417,4 @@ func idToName(id string) string {
 		}
 	}
 	return strings.Join(words, " ")
-}
-
-// Bash section markers for inline bash sections within POSIX examples
-var bashStartRegex = regexp.MustCompile(`(?i)\[bash(\d)?(\s*\d*\+?)?\]`)
-var bashEndRegex = regexp.MustCompile(`(?i)\[/bash(\d)?\]`)
-
-// extractBashLabel parses a bash marker and returns the display label
-func extractBashLabel(marker string) string {
-	marker = strings.ToLower(marker)
-
-	// Default generic bash
-	return "Bash"
 }

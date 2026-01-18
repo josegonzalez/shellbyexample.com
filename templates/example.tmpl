@@ -13,7 +13,6 @@
             {{if .IsBash}}<span class="label label-bash">Bash</span>{{else if .HasBashMix}}<span class="label label-posix">POSIX</span> <span class="label label-bash">+ Bash</span>{{else}}<span class="label label-posix">POSIX</span>{{end}}
         </h2>
 
-        {{if .SubExamples}}
         <table>
             {{range $index, $sub := .SubExamples}}
             <tr{{if $sub.IsBash}} class="bash-section"{{end}}>
@@ -41,22 +40,6 @@
             <tr class="separator"><td colspan="2"><hr></td></tr>
             {{end}}
         </table>
-        {{else}}
-        <table>
-            {{range $index, $seg := .Segments}}
-            <tr{{if $seg.IsBash}} class="bash-section"{{end}}>
-                <td class="docs">
-                    {{if $seg.ShowBashLabel}}<span class="label label-bash">{{if $seg.BashLabel}}{{$seg.BashLabel}}{{else}}Bash{{end}}</span>{{end}}
-                    {{$seg.Docs}}
-                </td>
-                <td class="code">
-                    {{if eq $index 0}}<div class="code-header"><a class="edit-link" href="https://github.com/josegonzalez/shellbyexample.com/edit/main/examples/{{$.ID}}/{{$.ID}}.sh" target="_blank" rel="noopener noreferrer" title="Edit on GitHub">Edit</a></div>{{end}}
-                    {{$seg.Code}}
-                </td>
-            </tr>
-            {{end}}
-        </table>
-        {{end}}
 
         <p class="next">
             {{if .Prev}}<a href="{{.Prev.ID}}.html">&laquo; {{.Prev.Name}}</a>{{end}}
