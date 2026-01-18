@@ -1,5 +1,5 @@
 #!/bin/bash
-# Run a script safely inside a bash:5.3 Docker container
+# Run a script safely inside the shellbyexample Docker container
 set -euo pipefail
 
 if [ $# -lt 1 ]; then
@@ -33,5 +33,5 @@ docker run --rm \
     --tmpfs /tmp:rw,size=64m \
     -v "$SCRIPT_DIR/$SCRIPT_NAME:/script:ro" \
     -w /tmp \
-    bash:5.3 \
+    shellbyexample:latest \
     timeout 10 "$SHELL_CMD" /script "$@" 2>&1

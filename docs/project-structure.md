@@ -57,6 +57,7 @@ examples/
 
 | File                 | Description                                  |
 | -------------------- | -------------------------------------------- |
+| `Dockerfile`         | Docker image with curl, jq, bc, wget, openssl |
 | `generate.go`        | Main site generator                          |
 | `generate_test.go`   | Unit tests for the generator                 |
 | `generate-output.go` | Generate output files for scripts            |
@@ -91,7 +92,7 @@ examples/
 
 | Target                 | Description                                   |
 | ---------------------- | --------------------------------------------- |
-| `docker-pull`          | Pull the bash:5.3 Docker image                |
+| `docker-build`         | Build the shellbyexample Docker image         |
 | `generate-output`      | Generate output for a single script           |
 | `generate-all-outputs` | Generate outputs for all sub-example scripts  |
 | `test-examples`        | Run all scripts in Docker to verify they work |

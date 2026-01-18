@@ -3,57 +3,85 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"regexp"
+	"runtime"
 	"strings"
+	"sync"
 )
 
-func main() {
-	if len(os.Args) < 2 {
-		fmt.Println("Usage: go run tools/generate-output.go <script> [script...]")
-		fmt.Println("       go run tools/generate-output.go --all")
-		fmt.Println("")
-		fmt.Println("Examples:")
-		fmt.Println("  go run tools/generate-output.go examples/hello-world/01-hello-world.sh")
-		fmt.Println("  go run tools/generate-output.go --all")
-		os.Exit(1)
-	}
+var concurrency = flag.Int("j", runtime.NumCPU(), "number of parallel jobs")
+var runAll = flag.Bool("all", false, "generate output for all scripts")
 
-	if os.Args[1] == "--all" {
-		if err := generateAll(); err != nil {
+func main() {
+	flag.Usage = func() {
+		fmt.Fprintln(os.Stderr, "Usage: go run tools/generate-output.go [options] <script> [script...]")
+		fmt.Fprintln(os.Stderr, "       go run tools/generate-output.go --all [-j N]")
+		fmt.Fprintln(os.Stderr, "")
+		fmt.Fprintln(os.Stderr, "Options:")
+		flag.PrintDefaults()
+		fmt.Fprintln(os.Stderr, "")
+		fmt.Fprintln(os.Stderr, "Examples:")
+		fmt.Fprintln(os.Stderr, "  go run tools/generate-output.go examples/hello-world/01-hello-world.sh")
+		fmt.Fprintln(os.Stderr, "  go run tools/generate-output.go --all")
+		fmt.Fprintln(os.Stderr, "  go run tools/generate-output.go --all -j 4")
+	}
+	flag.Parse()
+
+	if *runAll {
+		if err := generateAll(*concurrency); err != nil {
 			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 			os.Exit(1)
 		}
 		return
 	}
 
-	for _, script := range os.Args[1:] {
-		if err := generateOutput(script); err != nil {
-			fmt.Fprintf(os.Stderr, "Error generating %s: %v\n", script, err)
+	if flag.NArg() < 1 {
+		flag.Usage()
+		os.Exit(1)
+	}
+
+	for _, script := range flag.Args() {
+		result := generateOutput(script, true)
+		if result.err != nil {
+			fmt.Fprintf(os.Stderr, "Error generating %s: %v\n", script, result.err)
 		}
 	}
 }
 
-func generateOutput(scriptPath string) error {
+type scriptResult struct {
+	script  string
+	err     error
+	warning string
+}
+
+func generateOutput(scriptPath string, verbose bool) scriptResult {
+	result := scriptResult{script: scriptPath}
+
 	// Validate script exists
 	if _, err := os.Stat(scriptPath); err != nil {
-		return fmt.Errorf("script not found: %s", scriptPath)
+		result.err = fmt.Errorf("script not found: %s", scriptPath)
+		return result
 	}
 
 	// Validate it's a numbered sub-example
 	base := filepath.Base(scriptPath)
 	if !regexp.MustCompile(`^\d{2}-`).MatchString(base) {
-		return fmt.Errorf("not a numbered sub-example: %s", base)
+		result.err = fmt.Errorf("not a numbered sub-example: %s", base)
+		return result
 	}
 
 	// Determine output file path
 	ext := filepath.Ext(scriptPath)
 	outputPath := strings.TrimSuffix(scriptPath, ext) + ".output.txt"
 
-	fmt.Printf("Running %s...\n", scriptPath)
+	if verbose {
+		fmt.Printf("Running %s...\n", scriptPath)
+	}
 
 	// Run the script in Docker
 	cmd := exec.Command("./tools/run-in-docker.sh", scriptPath)
@@ -61,19 +89,26 @@ func generateOutput(scriptPath string) error {
 
 	// Write output regardless of error (script might have non-zero exit)
 	if writeErr := os.WriteFile(outputPath, output, 0644); writeErr != nil {
-		return fmt.Errorf("writing output: %w", writeErr)
+		result.err = fmt.Errorf("writing output: %w", writeErr)
+		return result
 	}
 
 	if err != nil {
 		// Script failed but we still wrote the output
-		fmt.Printf("  Warning: script exited with error: %v\n", err)
+		result.warning = fmt.Sprintf("script exited with error: %v", err)
 	}
 
-	fmt.Printf("  Created %s\n", outputPath)
-	return nil
+	if verbose {
+		if result.warning != "" {
+			fmt.Printf("  Warning: %s\n", result.warning)
+		}
+		fmt.Printf("  Created %s\n", outputPath)
+	}
+
+	return result
 }
 
-func generateAll() error {
+func generateAll(numWorkers int) error {
 	pattern := regexp.MustCompile(`^\d{2}-.*\.(sh|bash)$`)
 
 	entries, err := os.ReadDir("examples")
@@ -108,14 +143,69 @@ func generateAll() error {
 		return nil
 	}
 
-	fmt.Printf("Found %d scripts to process.\n\n", len(scripts))
+	total := len(scripts)
+	fmt.Printf("Found %d scripts to process with %d workers.\n\n", total, numWorkers)
 
+	// Create channels for job distribution and result collection
+	jobs := make(chan string, total)
+	results := make(chan scriptResult, total)
+
+	// Start workers
+	var wg sync.WaitGroup
+	for i := 0; i < numWorkers; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			for script := range jobs {
+				results <- generateOutput(script, false)
+			}
+		}()
+	}
+
+	// Send all jobs
 	for _, script := range scripts {
-		if err := generateOutput(script); err != nil {
-			fmt.Fprintf(os.Stderr, "  Error: %v\n", err)
+		jobs <- script
+	}
+	close(jobs)
+
+	// Close results channel when all workers complete
+	go func() {
+		wg.Wait()
+		close(results)
+	}()
+
+	// Collect results with progress display
+	var completed int
+	var errors []scriptResult
+	var warnings []scriptResult
+
+	for result := range results {
+		completed++
+		if result.err != nil {
+			errors = append(errors, result)
+		} else if result.warning != "" {
+			warnings = append(warnings, result)
+		}
+		fmt.Printf("\rProcessing: %d/%d scripts (%d errors)", completed, total, len(errors))
+	}
+	fmt.Println() // Move to next line after progress
+
+	// Print summary
+	fmt.Printf("\nDone. Processed %d scripts.\n", total)
+
+	if len(warnings) > 0 {
+		fmt.Printf("\nWarnings (%d):\n", len(warnings))
+		for _, w := range warnings {
+			fmt.Printf("  %s: %s\n", w.script, w.warning)
 		}
 	}
 
-	fmt.Printf("\nDone. Processed %d scripts.\n", len(scripts))
+	if len(errors) > 0 {
+		fmt.Printf("\nErrors (%d):\n", len(errors))
+		for _, e := range errors {
+			fmt.Printf("  %s: %v\n", e.script, e.err)
+		}
+	}
+
 	return nil
 }

@@ -1,5 +1,5 @@
 .PHONY: build serve test clean \
-        docker-pull generate-output generate-all-outputs test-examples \
+        docker-build generate-output generate-all-outputs test-examples \
         validate validate-numbering validate-safety \
         renumber renumber-all \
         migrate watch watch-outputs
@@ -26,17 +26,17 @@ clean:
 # Docker and output generation
 # ==============================================================================
 
-docker-pull:
-	docker pull bash:5.3
+docker-build:
+	docker build -t shellbyexample:latest tools/
 
-generate-output: docker-pull
+generate-output: docker-build
 	@if [ -z "$(SCRIPT)" ]; then echo "Usage: make generate-output SCRIPT=path/to/script.sh"; exit 1; fi
 	go run tools/generate-output.go "$(SCRIPT)"
 
-generate-all-outputs: docker-pull
+generate-all-outputs: docker-build
 	go run tools/generate-output.go --all
 
-test-examples: docker-pull
+test-examples: docker-build
 	@failed=0; \
 	for script in examples/*/*.sh examples/*/*.bash; do \
 		[ -f "$$script" ] || continue; \
@@ -105,7 +105,7 @@ renumber-all:
 watch:
 	go run tools/watch.go
 
-watch-outputs: docker-pull
+watch-outputs: docker-build
 	go run tools/watch-outputs.go
 
 migrate:
