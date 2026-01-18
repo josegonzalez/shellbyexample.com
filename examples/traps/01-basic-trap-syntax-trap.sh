@@ -4,3 +4,13 @@
 # receives signals. It's essential for robust scripts.
 #
 # Basic trap syntax: `trap 'commands' SIGNAL`
+
+basic_trap() {
+  (
+    trap 'echo "  Trap triggered!"' EXIT
+    echo "  Script is running..."
+  )
+}
+
+echo "Basic trap demo:"
+basic_trap

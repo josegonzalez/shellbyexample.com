@@ -2,5 +2,5 @@ Weighted random (5 trials):
   apple
   apple
   cherry
-  banana
   apple
+  banana

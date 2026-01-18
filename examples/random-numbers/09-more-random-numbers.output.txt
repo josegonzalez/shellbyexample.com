@@ -1,6 +1,6 @@
   Multiple random numbers:
-58
-74
-17
-17
-35
+72
+72
+83
+27
+56

@@ -1,4 +1,4 @@
 Random strings:
-  Alphanumeric (16): US0DSwh6QCMt6xKg
-  Hex (16 chars): 1b3664d1e002094f
-  Base64: ySMQYHuFr/WAzUdc
+  Alphanumeric (16): Zga9X2KWRVGhr49v
+  Hex (16 chars): 1397096bf257053a
+  Base64: MEE/bO+w6fb/yPc1

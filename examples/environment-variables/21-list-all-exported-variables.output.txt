@@ -1,5 +1,5 @@
 declare -x HOME="/root"
-declare -x HOSTNAME="aaa448b03714"
+declare -x HOSTNAME="aba97e4ca4a4"
 declare -x OLDPWD
 declare -x PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 declare -x PWD="/tmp"

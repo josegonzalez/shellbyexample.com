@@ -1,2 +1,2 @@
-/script: line 5: can't open /tmp/sample.txt: no such file
 Reading line by line:
+/script: line 5: can't open /tmp/sample.txt: no such file

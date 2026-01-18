@@ -1,0 +1,5 @@
+DEBUG trap demo:
+  DEBUG: x=5
+  DEBUG: y=10
+  DEBUG: echo "  Sum: $((x + y))"
+  Sum: 15

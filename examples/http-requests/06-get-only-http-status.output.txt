@@ -1,3 +1,3 @@
 Status code only:
-/script: line 5: curl: not found
 Status: 
+/script: line 5: curl: not found

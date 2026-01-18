@@ -1,2 +1,2 @@
-Created FIFO: /tmp/tmp.ElaLho
+Created FIFO: /tmp/tmp.cilkIj
 Received: message

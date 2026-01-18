@@ -1,1 +1,1 @@
-Random fruit: banana
+Random fruit: apple

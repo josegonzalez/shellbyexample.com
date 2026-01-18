@@ -1,2 +1,2 @@
-/script: line 5: curl: not found
 Retry on failure:
+/script: line 5: curl: not found

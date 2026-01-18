@@ -2,12 +2,12 @@ Using shuf:
   Random fruit:
 apple
   Two random fruits:
+apple
 orange
-banana
-  Random number 1-10: 9
+  Random number 1-10: 8
   Shuffled list:
-4
-5
-3
 2
+4
 1
+3
+5
