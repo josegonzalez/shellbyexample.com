@@ -1,3 +1,0 @@
-Line: total 0
-Line: drwxrwxrwt    2 root     root            40 Jan 18 09:51 .
-Line: drwxr-xr-x    1 root     root            24 Jan 18 09:51 ..

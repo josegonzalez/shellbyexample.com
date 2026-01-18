@@ -1,5 +1,8 @@
 #!/bin/sh
-# Basic case statement with simple patterns:
+# The `case` statement provides multi-way branching,
+# similar to switch statements in other languages.
+# It matches a value against patterns.
+# This example shows a basic case statement with simple patterns.
 #
 # The `;;` terminates each case block.
 # The `)` follows each pattern.

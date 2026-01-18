@@ -1,5 +1,6 @@
 #!/bin/sh
-# Commands in a subshell with ():
+# Commands in a subshell with `()`. Commands are executed in a subshell,
+# so the changes to the environment are not reflected in the parent shell.
 
 echo "Subshell demo:"
 (

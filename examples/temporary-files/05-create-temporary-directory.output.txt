@@ -1,3 +1,3 @@
-Created temp dir: /tmp/tmp.HjiAci
+Created temp dir: /tmp/tmp.CcCdKi
 file1.txt
 file2.txt

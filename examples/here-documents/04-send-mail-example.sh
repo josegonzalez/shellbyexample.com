@@ -3,7 +3,13 @@
 # that read from stdin.
 # Send mail (example - won't actually send):
 
-# mail -s "Report" user@example.com << EOF
-# Daily report attached.
-# Generated on $(date).
-# EOF
+send_mail() {
+    # readin in stdin
+    message=$(cat)
+    echo "message: $message"
+}
+
+send_mail -s "Report" user@example.com <<EOF
+Daily report attached.
+Generated on $(date).
+EOF
