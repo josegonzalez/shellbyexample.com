@@ -41,7 +41,6 @@ string-manipulation
 printf
 regular-expressions
 line-filters
-sorting
 
 # Processes
 spawning-processes
