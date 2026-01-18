@@ -395,6 +395,10 @@ func extractDocsAndCode(content string) (docs, code string) {
 		// Everything after docs is code
 		if docsDone || (!inDocs && trimmed != "") {
 			docsDone = true
+			// Skip shellcheck directives
+			if strings.HasPrefix(trimmed, "# shellcheck") {
+				continue
+			}
 			codeLines = append(codeLines, line)
 		}
 	}

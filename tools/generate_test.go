@@ -498,6 +498,36 @@ echo "10 - 4 = $(expr 10 - 4)"`
 	}
 }
 
+func TestExtractDocsAndCode_ShellcheckFiltered(t *testing.T) {
+	input := `#!/bin/sh
+# Using expr for arithmetic
+
+# shellcheck disable=SC2003
+echo "5 + 3 = $(expr 5 + 3)"
+# shellcheck disable=SC2086
+echo "10 - 4 = $(expr 10 - 4)"`
+
+	docs, code := extractDocsAndCode(input)
+
+	// Check that code doesn't contain shellcheck
+	if strings.Contains(code, "shellcheck") {
+		t.Errorf("code should not contain shellcheck directive: %q", code)
+	}
+
+	// Verify the expr commands are still present
+	if !strings.Contains(code, "expr 5 + 3") {
+		t.Error("expected to find 'expr 5 + 3' in code")
+	}
+	if !strings.Contains(code, "expr 10 - 4") {
+		t.Error("expected to find 'expr 10 - 4' in code")
+	}
+
+	// Verify docs are extracted correctly
+	if !strings.Contains(docs, "Using expr for arithmetic") {
+		t.Errorf("docs should contain 'Using expr for arithmetic': %q", docs)
+	}
+}
+
 func TestParseExample(t *testing.T) {
 	tests := []struct {
 		name       string
