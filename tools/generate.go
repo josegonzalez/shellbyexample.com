@@ -26,7 +26,7 @@ type Segment struct {
 	Code          template.HTML
 	CodeText      string
 	IsBash        bool   // Whether this segment is bash-specific
-	BashLabel     string // Label like "Bash", "Bash 4+", "Bash 5+"
+	BashLabel     string // Label like "Bash"
 	ShowBashLabel bool   // True only for first segment in consecutive bash group
 }
 
@@ -623,14 +623,6 @@ var bashEndRegex = regexp.MustCompile(`(?i)\[/bash(\d)?\]`)
 // extractBashLabel parses a bash marker and returns the display label
 func extractBashLabel(marker string) string {
 	marker = strings.ToLower(marker)
-
-	// Check for version number patterns
-	if strings.Contains(marker, "5") {
-		return "Bash 5+"
-	}
-	if strings.Contains(marker, "4") {
-		return "Bash 4+"
-	}
 
 	// Default generic bash
 	return "Bash"

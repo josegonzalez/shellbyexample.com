@@ -41,12 +41,6 @@ func TestExtractBashLabel(t *testing.T) {
 		{"[bash]", "Bash"},
 		{"[BASH]", "Bash"},
 		{"[Bash]", "Bash"},
-		{"[bash4]", "Bash 4+"},
-		{"[bash5]", "Bash 5+"},
-		{"[bash 4+]", "Bash 4+"},
-		{"[bash 5+]", "Bash 5+"},
-		{"[BASH4]", "Bash 4+"},
-		{"[BASH5]", "Bash 5+"},
 	}
 
 	for _, tt := range tests {
@@ -109,10 +103,10 @@ func TestStripBashCommentPrefix(t *testing.T) {
 
 func TestParseSegments_BasicParsing(t *testing.T) {
 	tests := []struct {
-		name            string
-		input           string
-		expectedCount   int
-		expectedIsBash  bool
+		name             string
+		input            string
+		expectedCount    int
+		expectedIsBash   bool
 		expectedDocsText []string
 		expectedCodeText []string
 	}{
@@ -200,26 +194,6 @@ echo "posix again"`,
 			expectedBash:   []bool{false, false, true, false},
 			expectedLabels: []string{"", "", "Bash", ""},
 		},
-		{
-			name: "bash4 section",
-			input: `#!/bin/sh
-: # [bash4]
-: # Requires Bash 4
-# declare -A assoc
-: # [/bash]`,
-			expectedBash:   []bool{false, true},
-			expectedLabels: []string{"", "Bash 4+"},
-		},
-		{
-			name: "bash5 section",
-			input: `#!/bin/sh
-: # [bash5]
-: # Requires Bash 5
-# new_feature
-: # [/bash]`,
-			expectedBash:   []bool{false, true},
-			expectedLabels: []string{"", "Bash 5+"},
-		},
 	}
 
 	for _, tt := range tests {
@@ -275,9 +249,9 @@ echo "code"
 
 func TestShowBashLabelDeduplication(t *testing.T) {
 	tests := []struct {
-		name          string
-		bashFlags     []bool
-		expectedShow  []bool
+		name         string
+		bashFlags    []bool
+		expectedShow []bool
 	}{
 		{
 			name:         "single bash segment",
@@ -367,7 +341,7 @@ func TestCreateSegmentWithBash(t *testing.T) {
 	docLines := []string{"Bash feature"}
 	codeLines := []string{"# declare -A arr", "# arr[key]=value"}
 
-	seg := createSegmentWithBash(docLines, codeLines, true, "Bash 4+")
+	seg := createSegmentWithBash(docLines, codeLines, true, "Bash")
 
 	if seg.DocsText != "Bash feature" {
 		t.Errorf("DocsText = %q, want %q", seg.DocsText, "Bash feature")
@@ -379,8 +353,8 @@ func TestCreateSegmentWithBash(t *testing.T) {
 	if !seg.IsBash {
 		t.Error("IsBash should be true")
 	}
-	if seg.BashLabel != "Bash 4+" {
-		t.Errorf("BashLabel = %q, want %q", seg.BashLabel, "Bash 4+")
+	if seg.BashLabel != "Bash" {
+		t.Errorf("BashLabel = %q, want %q", seg.BashLabel, "Bash")
 	}
 }
 
@@ -403,10 +377,6 @@ func TestBashStartRegex(t *testing.T) {
 		{"[bash]", true},
 		{"[BASH]", true},
 		{"[Bash]", true},
-		{"[bash4]", true},
-		{"[bash5]", true},
-		{"[bash 4+]", true},
-		{"[bash 5+]", true},
 		{"bash", false},
 		{"[notbash]", false},
 		{"", false},
@@ -430,8 +400,6 @@ func TestBashEndRegex(t *testing.T) {
 		{"[/bash]", true},
 		{"[/BASH]", true},
 		{"[/Bash]", true},
-		{"[/bash4]", true},
-		{"[/bash5]", true},
 		{"/bash", false},
 		{"[bash]", false},
 		{"", false},
