@@ -1,4 +1,4 @@
-.PHONY: build serve test clean docker-pull generate-output generate-all-outputs test-examples validate-safety migrate watch watch-outputs renumber
+.PHONY: build serve test clean docker-pull generate-output generate-all-outputs test-examples validate-safety validate-numbering migrate watch watch-outputs renumber renumber-all
 
 # Default target
 build:
@@ -74,3 +74,16 @@ watch-outputs: docker-pull
 renumber:
 	@if [ -z "$(DIR)" ]; then echo "Usage: make renumber DIR=examples/command-line-arguments"; exit 1; fi
 	go run tools/renumber.go "$(DIR)"
+
+# Validate example numbering (starts at 01, no gaps, valid shebangs)
+validate-numbering:
+	go run tools/validate.go
+
+# Renumber all example directories and validate
+renumber-all:
+	@for dir in examples/*/; do \
+		go run tools/renumber.go "$$dir"; \
+	done
+	@echo ""
+	@echo "Validating numbering..."
+	go run tools/validate.go
