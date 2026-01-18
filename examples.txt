@@ -48,8 +48,4 @@ spawning-processes
 background-jobs
 
 # Utilities
-dates-and-times
-json
-http-requests
-checksums
 random-numbers

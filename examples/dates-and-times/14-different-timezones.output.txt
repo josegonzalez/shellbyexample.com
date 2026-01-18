@@ -1,5 +1,0 @@
-Timezones:
-  Local: 07:57 UTC
-  UTC: 07:57 UTC
-  New York: 07:57 UTC
-  Tokyo: 07:57 UTC

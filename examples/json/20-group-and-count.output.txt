@@ -1,2 +1,0 @@
-Group by type:
-/script: line 6: jq: not found

@@ -1,2 +1,0 @@
-Seeded awk:
-69

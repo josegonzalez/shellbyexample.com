@@ -1,2 +1,0 @@
-Upload file:
-/script: line 6: curl: not found

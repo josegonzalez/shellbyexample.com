@@ -1,6 +1,0 @@
-Weighted random (5 trials):
-  apple
-  apple
-  cherry
-  apple
-  banana

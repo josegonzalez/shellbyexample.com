@@ -1,7 +1,0 @@
-a
-b
-c
-Debug with tee:
-A
-B
-C

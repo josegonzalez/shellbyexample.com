@@ -1,3 +1,0 @@
-Bash $RANDOM: 17256
-Another: 18664
-Range 1-100: 20

@@ -1,5 +1,0 @@
-Error handling:
-/script: line 5: curl: not found
-sh: out of range
-  Success: HTTP 
-HTTP requests examples complete

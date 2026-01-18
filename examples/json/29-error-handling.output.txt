@@ -1,4 +1,0 @@
-Safe access (null for missing):
-/script: line 5: jq: not found
-Try-catch:
-/script: line 8: jq: not found

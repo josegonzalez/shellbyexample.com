@@ -1,2 +1,0 @@
-/script: line 4: jq: not found
-Array length: 

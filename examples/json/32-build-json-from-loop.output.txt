@@ -1,2 +1,0 @@
-Build from loop:
-/script: line 14: jq: not found

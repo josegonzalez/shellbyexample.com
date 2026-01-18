@@ -1,2 +1,0 @@
-SHA-1 checksums:
-sha1sum: can't open '/tmp/sample.txt': No such file or directory

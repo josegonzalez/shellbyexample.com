@@ -1,9 +1,0 @@
-awk regex examples:
-Lines matching /hello/:
-hello 40
-Lines NOT matching /hello/:
-alice 30
-bob 25
-charlie 35
-Field matching:
-alice 30

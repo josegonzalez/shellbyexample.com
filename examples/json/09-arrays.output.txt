@@ -1,4 +1,0 @@
-Array access:
-/script: line 7: jq: not found
-/script: line 8: jq: not found
-/script: line 9: jq: not found

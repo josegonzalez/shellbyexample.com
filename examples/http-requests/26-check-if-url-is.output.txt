@@ -1,3 +1,0 @@
-URL checks:
-  https://httpbin.org is not accessible
-  https://httpbin.org/status/404 is not accessible

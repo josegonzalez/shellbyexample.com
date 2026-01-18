@@ -1,2 +1,0 @@
-Random in range 1-100: 10
-Random in range 50-60: 52

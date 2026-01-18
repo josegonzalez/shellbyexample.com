@@ -1,6 +1,0 @@
-Random booleans:
-  true
-  false
-  true
-  true
-  false

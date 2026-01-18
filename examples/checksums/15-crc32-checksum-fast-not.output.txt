@@ -1,2 +1,0 @@
-CRC checksum:
-cksum: can't open '/tmp/sample.txt': No such file or directory

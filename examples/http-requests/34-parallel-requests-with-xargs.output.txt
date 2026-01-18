@@ -1,4 +1,0 @@
-Parallel requests:
-sh: curl: not found
-sh: curl: not found
-sh: curl: not found

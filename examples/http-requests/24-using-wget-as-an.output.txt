@@ -1,2 +1,0 @@
-wget example:
-wget: bad address 'httpbin.org'

@@ -1,3 +1,0 @@
-Parse date '2024-03-15':
-  Day: Friday
-  Timestamp: 1710460800

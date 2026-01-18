@@ -1,4 +1,0 @@
-/script: line 5: jq: not found
-Arithmetic:
-/script: line 6: jq: not found
-/script: line 7: jq: not found

@@ -1,4 +1,0 @@
-Using awk as filter:
-20
-40
-60

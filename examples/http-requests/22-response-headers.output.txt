@@ -1,2 +1,0 @@
-Response headers:
-/script: line 5: curl: not found

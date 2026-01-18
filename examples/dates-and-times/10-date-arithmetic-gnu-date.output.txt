@@ -1,2 +1,0 @@
-Date arithmetic:
-  Date arithmetic not available
