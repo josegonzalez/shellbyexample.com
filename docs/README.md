@@ -4,9 +4,10 @@ This directory contains documentation for contributors to the Shell by Example p
 
 ## Available Documentation
 
-| Document | Description |
-|----------|-------------|
-| [writing-examples.md](writing-examples.md) | Guide for writing new shell script examples |
+| Document                                     | Description                                 |
+| -------------------------------------------- | ------------------------------------------- |
+| [writing-examples.md](writing-examples.md)   | Guide for writing new shell script examples |
+| [project-structure.md](project-structure.md) | Repository layout and key files             |
 
 ## Quick Links
 

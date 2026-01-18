@@ -4,34 +4,38 @@
 to shell scripting using annotated example programs. Inspired by
 [Go by Example](https://gobyexample.com).
 
-### Building
+## Building
 
 To build the site you'll need Go installed. Then run:
 
-    $ make build
+```shell
+make build
+```
 
 This will generate the static site in the `public` directory.
 
-### Serving
+## Serving
 
 To build and serve the site locally:
 
-    $ make serve
+```shell
+make serve
+```
 
 Then visit [http://localhost:8000](http://localhost:8000).
 
-### Testing
+## Testing
 
-    $ make test
+```shell
+make test
+```
 
-### Project Structure
+## Documentation
 
-- `examples/` - Shell script source files with annotations
-- `examples.txt` - Master list of examples (determines site order)
-- `templates/` - HTML templates for site generation
-- `tools/` - Go-based site generator
-- `public/` - Generated static site output
-- `docs/` - Contributor documentation
+See the [docs/](docs/) folder for contributor documentation, including:
+
+- [Writing Examples](docs/writing-examples.md)
+- [Project Structure](docs/project-structure.md)
 
 ### License
 
