@@ -31,7 +31,7 @@ echo "Today is $(date +%A), week $(date +%V)"
 
 : # Capture the contents of a file.
 
-# echo "Config: $(cat /etc/hostname)"
+echo "Config: $(cat /etc/hostname)"
 
 : # Use it for conditional checks.
 
