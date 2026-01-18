@@ -1,5 +1,5 @@
 #!/bin/sh
-# Loop counter:
+# Practical example: Loop counter using arithmetic operations.
 
 sum=0
 i=1

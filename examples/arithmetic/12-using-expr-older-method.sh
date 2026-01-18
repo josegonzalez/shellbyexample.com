@@ -1,5 +1,5 @@
 #!/bin/sh
-# Using expr (older method, POSIX):
+# Using `expr` (older method, POSIX):
 
 echo "Using expr:"
 echo "  5 + 3 = $(expr 5 + 3)"

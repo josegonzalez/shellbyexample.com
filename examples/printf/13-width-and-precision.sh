@@ -1,5 +1,5 @@
 #!/bin/sh
-# Width and precision:
+# Width and precision formatting.
 
 echo "Width specifiers:"
 printf "  |%10s|\n" "hello"  # Right-align, width 10

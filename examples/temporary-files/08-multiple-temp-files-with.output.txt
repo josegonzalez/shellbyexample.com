@@ -1,0 +1,3 @@
+Cleanup demo:
+Files: /tmp/tmp.PipLda, /tmp/tmp.hKBgda
+Dir: /tmp/tmp.Bppnda

@@ -1,0 +1,2 @@
+Created FIFO: /tmp/tmp.dNpOnC
+Received: message

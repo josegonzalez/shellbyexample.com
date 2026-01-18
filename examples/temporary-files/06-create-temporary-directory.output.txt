@@ -1,3 +1,0 @@
-Created temp dir: /tmp/tmp.GeciML
-file1.txt
-file2.txt

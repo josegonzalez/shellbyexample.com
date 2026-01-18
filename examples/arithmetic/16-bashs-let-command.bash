@@ -1,5 +1,5 @@
 #!/bin/bash
-# Bash's let command:
+# Bash's `let` command can be used to perform arithmetic operations.
 
 let "result = 5 + 3"
 echo "let result: $result"

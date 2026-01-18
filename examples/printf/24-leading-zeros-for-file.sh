@@ -1,5 +1,5 @@
 #!/bin/sh
-# Leading zeros for file numbering:
+# Practical example: Leading zeros for file numbering using `printf`.
 
 echo "File numbering:"
 for i in 1 2 3 10 100; do

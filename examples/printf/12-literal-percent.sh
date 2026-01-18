@@ -1,4 +1,4 @@
 #!/bin/sh
-# %% - Literal percent sign
+# `%%` is a format specifier for literal percent signs.
 
 printf "Percent: 100%%\n"

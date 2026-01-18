@@ -1,5 +1,5 @@
 #!/bin/sh
-# POSIX alternative for substrings uses expr or cut:
+# POSIX alternative for substrings uses `expr` or `cut`.
 
 echo "POSIX substring with expr:"
 text="Hello, World!"

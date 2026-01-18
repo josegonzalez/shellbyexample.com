@@ -1,5 +1,5 @@
 #!/bin/sh
-# Format date components:
+# Practical example: Format date components using `printf`.
 
 year=2024
 month=3

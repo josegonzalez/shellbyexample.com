@@ -1,4 +1,4 @@
 #!/bin/sh
-# %o - Octal
+# `%o` is a format specifier for octal numbers.
 
 printf "Octal: %o\n" 64

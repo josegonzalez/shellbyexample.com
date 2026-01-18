@@ -1,5 +1,5 @@
 #!/bin/sh
-# Calculate percentage:
+# Practical example: Calculate percentage using arithmetic operations.
 
 total=250
 part=75

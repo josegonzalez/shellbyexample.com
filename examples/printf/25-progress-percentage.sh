@@ -1,5 +1,5 @@
 #!/bin/sh
-# Progress percentage:
+# Practical example: Progress percentage using `printf`.
 
 show_progress() {
   printf "\rProgress: %3d%%" "$1"

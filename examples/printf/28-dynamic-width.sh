@@ -1,5 +1,5 @@
 #!/bin/sh
-# Dynamic width:
+# Practical example: Dynamic width using `printf`.
 
 width=20
 printf "%*s\n" "$width" "right-aligned"

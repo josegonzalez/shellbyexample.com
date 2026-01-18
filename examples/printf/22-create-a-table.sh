@@ -1,5 +1,5 @@
 #!/bin/sh
-# Create a table:
+# Practical example: Create a table using `printf`.
 
 printf "\n%-15s %8s %10s\n" "Name" "Age" "Salary"
 printf "%-15s %8d %10.2f\n" "Alice Smith" 30 75000

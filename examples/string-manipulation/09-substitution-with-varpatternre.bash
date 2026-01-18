@@ -1,5 +1,5 @@
 #!/bin/bash
-# Substitution with ${var/pattern/replacement}:
+# Substitution with `${var/pattern/replacement}`.
 
 msg="hello world world"
 echo "Replace first: ${msg/world/universe}"

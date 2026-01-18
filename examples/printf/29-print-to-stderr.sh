@@ -1,4 +1,4 @@
 #!/bin/sh
-# Print to stderr:
+# Practical example: Print to stderr using `printf`.
 
 printf "Error: %s\n" "Something went wrong" >&2

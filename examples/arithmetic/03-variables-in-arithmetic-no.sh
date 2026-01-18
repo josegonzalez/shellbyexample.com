@@ -1,5 +1,5 @@
 #!/bin/sh
-# Variables in arithmetic (no $ needed inside):
+# Variables in arithmetic (no `$` needed inside):
 
 x=10
 y=3

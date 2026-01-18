@@ -1,5 +1,5 @@
 #!/bin/sh
-# Format currency:
+# Practical example: Format currency using `printf`.
 
 format_currency() {
   printf "$%.2f\n" "$1"

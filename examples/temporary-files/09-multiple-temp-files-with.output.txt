@@ -1,3 +1,0 @@
-Cleanup demo:
-Files: /tmp/tmp.iEdAJa, /tmp/tmp.kGeLJa
-Dir: /tmp/tmp.hEogJa

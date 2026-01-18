@@ -1,5 +1,5 @@
 #!/bin/sh
-# More practical examples:
+# More practical examples using parameter expansion.
 
 filename="document.backup.tar.gz"
 echo "Filename: $filename"

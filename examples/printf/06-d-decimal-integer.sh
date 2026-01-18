@@ -1,4 +1,4 @@
 #!/bin/sh
-# %d - Decimal integer
+# `%d` is a format specifier for decimal integers.
 
 printf "Integer: %d\n" 42

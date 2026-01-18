@@ -1,4 +1,4 @@
 #!/bin/sh
-# %s - String
+# `%s` is a format specifier for strings.
 
 printf "String: %s\n" "hello"

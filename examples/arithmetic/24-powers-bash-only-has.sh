@@ -1,5 +1,7 @@
 #!/bin/sh
-# Powers (bash only has ** operator, use bc for POSIX):
+# Practical example: Powers
+#
+# Only bash has `**` operator, use `bc` for POSIX compatibility.
 
 base=2
 exp=10

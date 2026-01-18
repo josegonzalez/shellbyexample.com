@@ -1,5 +1,5 @@
 #!/bin/sh
-# Extract directory and filename:
+# Extract directory and filename using parameter expansion.
 
 path="/usr/local/bin/script.sh"
 echo "Path: $path"
