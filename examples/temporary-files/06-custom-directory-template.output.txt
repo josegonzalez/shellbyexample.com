@@ -1,1 +1,1 @@
-Custom temp dir: /tmp/myapp.hpcjmk
+Custom temp dir: /tmp/myapp.stab00

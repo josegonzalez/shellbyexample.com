@@ -8,8 +8,8 @@
 
 tmpfile=$(mktemp)
 (
-  sleep 1
-  echo "Background result" >"$tmpfile"
+    sleep 1
+    echo "Background result" >"$tmpfile"
 ) &
 pid=$!
 

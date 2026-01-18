@@ -4,10 +4,10 @@
 # Unquoted `$@` or `$*` breaks arguments containing spaces.
 
 show_args() {
-  echo "Received $# arguments:"
-  for arg in "$@"; do
-    echo "  '$arg'"
-  done
+    echo "Received $# arguments:"
+    for arg in "$@"; do
+        echo "  '$arg'"
+    done
 }
 
 set -- "hello world" "foo bar"
@@ -19,7 +19,7 @@ echo ""
 echo "With quoted \"\$*\":"
 # shellcheck disable=SC2066
 for arg in "$*"; do
-  echo "  [$arg]"
+    echo "  [$arg]"
 done
 
 echo ""

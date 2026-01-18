@@ -6,13 +6,13 @@
 
 echo "Background in pipeline:"
 {
-  echo "one"
-  echo "two"
-  echo "three"
-  echo ""
+    echo "one"
+    echo "two"
+    echo "three"
+    echo ""
 } | while read -r line; do
-  if [ -n "$line" ]; then
-    (echo "Processing: $line") &
-  fi
+    if [ -n "$line" ]; then
+        (echo "Processing: $line") &
+    fi
 done
 wait

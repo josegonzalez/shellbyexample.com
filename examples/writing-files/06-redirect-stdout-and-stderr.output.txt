@@ -1,2 +1,2 @@
 Redirect stdout (1) and stderr (2):
-  Stderr captured: ls: /nonexistent: No such file or directory
+  Stderr captured: ls: cannot access '/nonexistent': No such file or directory

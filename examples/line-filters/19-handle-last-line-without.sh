@@ -3,5 +3,5 @@
 
 echo "Handle missing final newline:"
 printf "line1\nline2" | while IFS= read -r line || [ -n "$line" ]; do
-  echo "  [$line]"
+    echo "  [$line]"
 done

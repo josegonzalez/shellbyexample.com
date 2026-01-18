@@ -1,4 +1,2 @@
 Created /tmp/mydir
-total 0
-drwxr-xr-x    2 root     root            40 Jan 18 13:03 .
-drwxrwxrwt    3 root     root            60 Jan 18 13:03 ..
+mydir

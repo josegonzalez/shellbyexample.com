@@ -10,5 +10,5 @@ EOF
 
 echo "Processing file:"
 while read -r fruit count color; do
-  echo "  $fruit ($color): $count items"
+    echo "  $fruit ($color): $count items"
 done </tmp/data.txt

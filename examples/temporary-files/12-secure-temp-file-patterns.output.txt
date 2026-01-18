@@ -1,1 +1,1 @@
--rw-------    1 root     root             0 Jan 18 13:03 /tmp/tmp.caIakP
+-rw------- 1 root root 0 Jan  1  2025 /tmp/tmp.stab000000

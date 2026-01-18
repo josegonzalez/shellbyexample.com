@@ -4,7 +4,7 @@
 
 total=0
 while read -r n; do
-  total=$((total + n))
+    total=$((total + n))
 done <<'EOF'
 10
 20

@@ -23,5 +23,6 @@ echo 'Hello, $name!'
 # shellcheck disable=SC2028
 echo 'Backslashes are literal: \n \t'
 # shellcheck disable=SC2028
+# shellcheck disable=SC1003
 echo 'Multiple backslashes (4): \\\\'
 echo 'Escaped single quote: '\'''

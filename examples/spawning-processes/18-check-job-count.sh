@@ -5,17 +5,16 @@
 # as it returns background jobs of the current shell, not the parent shell.
 
 count_jobs() {
-  sleep 5 &
-  sleep 5 &
-  sleep 5 &
-  date
+    sleep 5 &
+    sleep 5 &
+    sleep 5 &
 
-  jobs -p >/tmp/job_pids.txt
-  job_count="$(wc -l </tmp/job_pids.txt)"
-  echo "Running jobs: $job_count"
+    jobs -p >/tmp/job_pids.txt
+    job_count="$(wc -l </tmp/job_pids.txt)"
+    echo "Running jobs: $job_count"
 
-  # Clean up
-  kill "$(cat /tmp/job_pids.txt)" 2>/dev/null
-  wait 2>/dev/null
+    # Clean up
+    kill "$(cat /tmp/job_pids.txt)" 2>/dev/null
+    wait 2>/dev/null
 }
 count_jobs

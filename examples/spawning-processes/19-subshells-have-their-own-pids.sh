@@ -2,13 +2,13 @@
 # Subshells also have their own PIDs that can be waited for.
 
 (
-  sleep 1
-  echo "  Process 1 done"
+    sleep 1
+    echo "  Process 1 done"
 ) &
 pid1=$!
 (
-  sleep 2
-  echo "  Process 2 done"
+    sleep 2
+    echo "  Process 2 done"
 ) &
 pid2=$!
 

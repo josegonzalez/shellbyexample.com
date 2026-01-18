@@ -5,7 +5,7 @@ get_extension() {
     filename="$1"
     case "$filename" in
         *.*) echo "${filename##*.}" ;;
-        *)   echo "" ;;
+        *) echo "" ;;
     esac
 }
 

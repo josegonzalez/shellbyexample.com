@@ -1,5 +1,7 @@
 Hello, world!
 Hello, "world"!
-Backslashes are literal here as well: \n \t
+Backslashes are literal here as well: \n \t more content after the escape sequences
+Backslashes are literal here as well: 
+ 	 more content after the escape sequences
 Multiple backslashes (2): \\
 Escaped double quote: "

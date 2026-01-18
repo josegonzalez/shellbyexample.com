@@ -8,9 +8,9 @@ dst="$2"
 verbose=""
 
 for arg in "$@"; do
-  case "$arg" in
-  --verbose | -v) verbose=true ;;
-  esac
+    case "$arg" in
+        --verbose | -v) verbose=true ;;
+    esac
 done
 
 echo "Source: $src"

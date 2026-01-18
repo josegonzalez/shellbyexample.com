@@ -13,5 +13,5 @@ calculate() {
 
 result="global"
 sum=$(calculate 1 2 3 4 5)
-echo "Sum: $sum"          # Sum: 15
-echo "Result: $result"    # Result: global (unchanged)
+echo "Sum: $sum"       # Sum: 15
+echo "Result: $result" # Result: global (unchanged)

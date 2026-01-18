@@ -5,6 +5,6 @@
 echo "Until loop:"
 num=1
 until [ "$num" -gt 3 ]; do
-  echo "  num is $num"
-  num=$((num + 1))
+    echo "  num is $num"
+    num=$((num + 1))
 done

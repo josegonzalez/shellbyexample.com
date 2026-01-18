@@ -6,10 +6,10 @@
 # Basic trap syntax: `trap 'commands' SIGNAL`
 
 basic_trap() {
-  (
-    trap 'echo "  Trap triggered!"' EXIT
-    echo "  Script is running..."
-  )
+    (
+        trap 'echo "  Trap triggered!"' EXIT
+        echo "  Script is running..."
+    )
 }
 
 echo "Basic trap demo:"

@@ -1,4 +1,3 @@
 Files modified in last day:
-/tmp/findtest/old.txt
 /tmp/findtest/file2.txt
 /tmp/findtest/file1.txt

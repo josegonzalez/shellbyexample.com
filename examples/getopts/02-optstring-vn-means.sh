@@ -5,20 +5,20 @@
 # - `n:` - option with required argument (colon after)
 
 demo_optstring() {
-  OPTIND=1
-  verbose=false
-  name=""
+    OPTIND=1
+    verbose=false
+    name=""
 
-  # 'v' takes no argument, 'n:' requires one
-  while getopts "vn:" opt; do
-    case "$opt" in
-    v) verbose=true ;;
-    n) name="$OPTARG" ;;
-    *) echo "Unknown option: -$opt" ;;
-    esac
-  done
+    # 'v' takes no argument, 'n:' requires one
+    while getopts "vn:" opt; do
+        case "$opt" in
+            v) verbose=true ;;
+            n) name="$OPTARG" ;;
+            *) echo "Unknown option: -$opt" ;;
+        esac
+    done
 
-  echo "verbose=$verbose, name=$name"
+    echo "verbose=$verbose, name=$name"
 }
 
 echo "With -v flag only:"

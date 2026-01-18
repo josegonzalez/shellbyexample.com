@@ -1,2 +1,2 @@
-Created FIFO: /tmp/tmp.dIcHOD
+Created FIFO: /tmp/tmp.stab000000
 Received: message

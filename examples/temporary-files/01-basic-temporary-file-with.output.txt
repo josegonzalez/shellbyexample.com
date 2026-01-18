@@ -1,2 +1,2 @@
-Created temp file: /tmp/tmp.KchBLD
+Created temp file: /tmp/tmp.stab000000
 Hello, temp!

@@ -1,2 +1,2 @@
-6 X's works: /tmp/data.PiJKnO
-More X's also works: /tmp/longer.XXXXiecDoO
+6 X's works: /tmp/data.stab00
+More X's also works: /tmp/longer.stab000001

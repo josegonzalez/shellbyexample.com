@@ -3,7 +3,7 @@
 # `exit` would terminate the entire script.
 
 check_file() {
-  [ -f "$1" ] # Return code is the test's result
+    [ -f "$1" ] # Return code is the test's result
 }
 
 check_file "/etc/passwd"

@@ -6,4 +6,4 @@
 
 mkdir /tmp/mydir
 echo "Created /tmp/mydir"
-ls -la /tmp/mydir
+ls /tmp

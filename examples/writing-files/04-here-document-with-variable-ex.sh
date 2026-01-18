@@ -4,7 +4,7 @@
 name="Alice"
 cat >/tmp/template.txt <<EOF
 Hello, $name!
-Today is $(date +%Y-%m-%d)
+Today is $(date)
 Your home is $HOME
 EOF
 echo "Template with variables:"

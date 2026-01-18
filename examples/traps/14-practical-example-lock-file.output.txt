@@ -1,5 +1,5 @@
 Lock file pattern:
-  Creating lock: /tmp/mylock_1
+  Creating lock: /tmp/mylock_7
   Doing work...
   Lock will be removed on exit
   Lock removed: yes

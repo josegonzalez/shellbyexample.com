@@ -1,4 +1,4 @@
 Temp file cleanup demo:
-  Created /tmp/trap_demo_1
+  Created /tmp/tmp.stab000000
   File exists: yes
-  Cleaned up /tmp/trap_demo_1
+  Cleaned up /tmp/tmp.stab000000

@@ -11,8 +11,8 @@ EOF
 
 echo "File statistics:"
 wc /tmp/sample.txt | while read -r lines words chars filename; do
-  echo "  File: $filename"
-  echo "  Lines: $lines"
-  echo "  Words: $words"
-  echo "  Chars: $chars"
+    echo "  File: $filename"
+    echo "  Lines: $lines"
+    echo "  Words: $words"
+    echo "  Chars: $chars"
 done

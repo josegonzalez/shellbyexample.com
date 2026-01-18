@@ -20,6 +20,8 @@ read -u "${calculator[0]}" result
 # optionally close stdin ([0]) and stdout ([1])
 # to avoid the need to wait for the calculator coproc to finish
 # note the special syntax for closing file descriptors
+# that requires no spaces between the curly braces and
+# the redirection operator
 exec {calculator[0]}<&-
 exec {calculator[1]}>&-
 

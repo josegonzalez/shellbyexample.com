@@ -4,7 +4,7 @@
 
 echo "All arguments (\$@):"
 for arg in "$@"; do
-  echo "  - $arg"
+    echo "  - $arg"
 done
 
 echo "All arguments (\$*):"

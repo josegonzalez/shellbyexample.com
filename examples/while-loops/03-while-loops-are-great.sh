@@ -5,7 +5,7 @@
 
 echo "Reading lines:"
 while IFS= read -r line; do
-  echo "  -> $line"
+    echo "  -> $line"
 done <<'EOF'
 First line
 Second line

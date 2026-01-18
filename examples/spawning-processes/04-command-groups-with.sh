@@ -6,7 +6,7 @@
 
 echo "Command group demo:"
 {
-  y="group_value"
-  echo "  In group"
+    y="group_value"
+    echo "  In group"
 }
 echo "  y is: $y"

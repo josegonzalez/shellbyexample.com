@@ -5,11 +5,11 @@
 # - `OPTIND` is the index of the next argument to process.
 
 demo_optarg() {
-  OPTIND=1
+    OPTIND=1
 
-  while getopts "n:f:" opt; do
-    echo "Option: -$opt, OPTARG: '$OPTARG', OPTIND: $OPTIND"
-  done
+    while getopts "n:f:" opt; do
+        echo "Option: -$opt, OPTARG: '$OPTARG', OPTIND: $OPTIND"
+    done
 }
 
 echo "Parsing: -n Alice -f output.txt"

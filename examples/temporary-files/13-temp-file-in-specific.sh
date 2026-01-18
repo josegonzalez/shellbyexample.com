@@ -1,8 +1,6 @@
 #!/bin/sh
-# Temp file in specific directory:
+# Temp file in specific directory using a template
 
-# mktemp --tmpdir=/var/tmp myapp.XXXXXX  # GNU
-# Or use template:
-customtmp=$(mktemp /var/tmp/myapp.XXXXXX 2>/dev/null || mktemp)
+customtmp=$(mktemp /tmp/myapp.XXXXXX)
 echo "Custom location: $customtmp"
 rm "$customtmp"

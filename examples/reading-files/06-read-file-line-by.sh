@@ -11,5 +11,5 @@ EOF
 
 echo "Reading line by line:"
 while IFS= read -r line; do
-  echo "  -> $line"
+    echo "  -> $line"
 done </tmp/sample.txt

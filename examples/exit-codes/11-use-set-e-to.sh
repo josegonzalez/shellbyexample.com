@@ -3,14 +3,14 @@
 
 echo "Without set -e:"
 (
-  false
-  echo "  This still runs"
+    false
+    echo "  This still runs"
 )
 
 echo "With set -e:"
 (
-  set -e
-  true
-  echo "  This runs"
-  # false would cause exit here
+    set -e
+    true
+    echo "  This runs"
+    # false would cause exit here
 )

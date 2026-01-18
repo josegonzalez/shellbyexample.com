@@ -1,6 +1,6 @@
 First 5 environment variables:
 _BASH_BASELINE=5.3
-HOSTNAME=35bc05926756
+HOSTNAME=shellbyexample
 SHLVL=1
 HOME=/root
-_BASH_VERSION=5.3.9
+FAKETIME_NO_CACHE=1

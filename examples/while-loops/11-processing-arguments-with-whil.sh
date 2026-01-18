@@ -4,6 +4,6 @@
 set -- arg1 arg2 arg3
 echo "Processing arguments:"
 while [ $# -gt 0 ]; do
-  echo "  Arg: $1"
-  shift
+    echo "  Arg: $1"
+    shift
 done

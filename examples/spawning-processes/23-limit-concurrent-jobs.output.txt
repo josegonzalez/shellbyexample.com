@@ -1,6 +1,6 @@
 Limited concurrency:
-  Job 2 done
   Job 1 done
-  Job 4 done
+  Job 2 done
   Job 3 done
+  Job 4 done
   Job 5 done

@@ -9,5 +9,5 @@ EOF
 
 echo "Reading colon-separated fields:"
 while IFS=: read -r name age job; do
-  echo "  $name is a $age year old $job"
+    echo "  $name is a $age year old $job"
 done </tmp/data.txt

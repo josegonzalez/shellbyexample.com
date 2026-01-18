@@ -1,0 +1,118 @@
+#!/bin/sh
+# Mock mktemp for reproducible documentation output
+# Produces deterministic paths instead of random suffixes
+
+# Options
+CREATE_DIR=false
+NO_CREATE=false
+TEMPLATE=""
+
+# Parse options
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -d)
+            CREATE_DIR=true
+            shift
+            ;;
+        -u)
+            NO_CREATE=true
+            shift
+            ;;
+        -*)
+            # Skip other options (like -t, -p, etc.)
+            shift
+            ;;
+        *)
+            # Template argument
+            TEMPLATE="$1"
+            shift
+            ;;
+    esac
+done
+
+# Default template if none provided
+if [ -z "$TEMPLATE" ]; then
+    TEMPLATE="/tmp/tmp.XXXXXXXXXX"
+fi
+
+# Count trailing X's in template
+count_trailing_x() {
+    _template="$1"
+    _count=0
+    _len=${#_template}
+    _i=$((_len - 1))
+
+    while [ $_i -ge 0 ]; do
+        _char=$(printf '%s' "$_template" | cut -c$((_i + 1)))
+        if [ "$_char" = "X" ]; then
+            _count=$((_count + 1))
+            _i=$((_i - 1))
+        else
+            break
+        fi
+    done
+
+    printf '%d' "$_count"
+}
+
+# Counter file for persistence across invocations
+COUNTER_FILE="${MKTEMP_COUNTER_FILE:-/tmp/.mktemp_counter}"
+
+# Get current counter value (file-based for persistence)
+if [ -f "$COUNTER_FILE" ]; then
+    COUNTER=$(cat "$COUNTER_FILE" 2>/dev/null || echo 0)
+else
+    COUNTER=0
+fi
+
+# Count trailing X's
+X_COUNT=$(count_trailing_x "$TEMPLATE")
+
+# Minimum 3 X's required (like real mktemp)
+if [ "$X_COUNT" -lt 3 ]; then
+    echo "mktemp: too few X's in template '$TEMPLATE'" >&2
+    exit 1
+fi
+
+# Calculate how many digits we need for the counter
+# Suffix is "stab" (4 chars) + zero-padded counter
+COUNTER_WIDTH=$((X_COUNT - 4))
+if [ "$COUNTER_WIDTH" -lt 1 ]; then
+    COUNTER_WIDTH=1
+fi
+
+# Generate the suffix: "stab" + zero-padded counter
+SUFFIX=$(printf "stab%0${COUNTER_WIDTH}d" "$COUNTER")
+
+# Ensure suffix matches X_COUNT exactly
+SUFFIX_LEN=${#SUFFIX}
+if [ "$SUFFIX_LEN" -gt "$X_COUNT" ]; then
+    # Truncate if too long
+    SUFFIX=$(printf '%s' "$SUFFIX" | cut -c1-"$X_COUNT")
+elif [ "$SUFFIX_LEN" -lt "$X_COUNT" ]; then
+    # Pad with zeros if too short
+    PAD=$((X_COUNT - SUFFIX_LEN))
+    ZEROS=$(printf "%0${PAD}d" 0)
+    SUFFIX="${SUFFIX}${ZEROS}"
+fi
+
+# Replace trailing X's with suffix
+PREFIX_LEN=$((${#TEMPLATE} - X_COUNT))
+PREFIX=$(printf '%s' "$TEMPLATE" | cut -c1-"$PREFIX_LEN")
+RESULT="${PREFIX}${SUFFIX}"
+
+# Save incremented counter for next call
+echo $((COUNTER + 1)) >"$COUNTER_FILE"
+
+# Create file/directory unless -u flag
+if [ "$NO_CREATE" = false ]; then
+    if [ "$CREATE_DIR" = true ]; then
+        mkdir -m 700 "$RESULT" || exit 1
+    else
+        : >"$RESULT"
+        chmod 600 "$RESULT"
+    fi
+fi
+
+# Print the path
+printf '%s\n' "$RESULT"

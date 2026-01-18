@@ -11,5 +11,5 @@ EOF
 
 head -1 /tmp/csv.txt
 tail -n +2 /tmp/csv.txt | while IFS=, read -r name age city; do
-  echo "  $name (age $age) from $city"
+    echo "  $name (age $age) from $city"
 done

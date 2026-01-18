@@ -4,12 +4,12 @@
 value="skip"
 
 case "$value" in
-  skip)
-    # Do nothing
-    ;;
-  process)
-    echo "Processing..."
-    ;;
+    skip)
+        # Do nothing
+        ;;
+    process)
+        echo "Processing..."
+        ;;
 esac
 
 echo "Done"

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Call a function by using its name.
 
 function greet() {

@@ -1,7 +1,8 @@
 #!/bin/sh
 # Here-documents work great for multi-line variables.
 
-help_text=$(cat << 'EOF'
+help_text=$(
+    cat <<'EOF'
 Usage: myscript [options] <file>
 
 Options:

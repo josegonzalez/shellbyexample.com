@@ -2,9 +2,9 @@
 # Atomic write (write to temp, then rename):
 
 atomic_write() {
-  tmpfile=$(mktemp)
-  echo "Important data" >"$tmpfile"
-  mv "$tmpfile" "$1"
+    tmpfile=$(mktemp)
+    echo "Important data" >"$tmpfile"
+    mv "$tmpfile" "$1"
 }
 
 atomic_write /tmp/atomic.txt

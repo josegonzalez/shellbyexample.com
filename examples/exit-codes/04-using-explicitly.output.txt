@@ -1,1 +1,1 @@
-ls failed with exit code: 1
+ls failed with exit code: 2

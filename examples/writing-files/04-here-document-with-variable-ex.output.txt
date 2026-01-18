@@ -1,4 +1,4 @@
 Template with variables:
 Hello, Alice!
-Today is 2026-01-18
+Today is Wed Jan  1 10:00:00 UTC 2025
 Your home is /root

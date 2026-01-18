@@ -4,19 +4,19 @@
 action="start"
 
 case "$action" in
-  start)
-    echo "Starting service..."
-    ;;
-  stop)
-    echo "Stopping service..."
-    ;;
-  restart)
-    echo "Restarting service..."
-    ;;
-  status)
-    echo "Checking status..."
-    ;;
-  *)
-    echo "Usage: $0 {start|stop|restart|status}"
-    ;;
+    start)
+        echo "Starting service..."
+        ;;
+    stop)
+        echo "Stopping service..."
+        ;;
+    restart)
+        echo "Restarting service..."
+        ;;
+    status)
+        echo "Checking status..."
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|restart|status}"
+        ;;
 esac

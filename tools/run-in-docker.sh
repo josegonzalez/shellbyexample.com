@@ -12,7 +12,7 @@ while getopts "n" opt; do
         *) ;;
     esac
 done
-shift $((OPTIND-1))
+shift $((OPTIND - 1))
 
 if [ $# -lt 1 ]; then
     echo "Usage: $0 [-n] <script> [args...]" >&2

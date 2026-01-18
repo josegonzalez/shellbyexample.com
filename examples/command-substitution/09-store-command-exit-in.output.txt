@@ -1,2 +1,2 @@
-Result: ls: /nonexistent: No such file or directory
-Exit code was: 1
+Result: ls: cannot access '/nonexistent': No such file or directory
+Exit code was: 2

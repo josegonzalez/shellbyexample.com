@@ -8,18 +8,18 @@
 # - `ERR`        - On error (bash only)
 
 demo_exit_success() {
-  (
-    trap 'echo "  EXIT trap (success)"' EXIT
-    echo "  Exiting normally..."
-  )
+    (
+        trap 'echo "  EXIT trap (success)"' EXIT
+        echo "  Exiting normally..."
+    )
 }
 
 demo_exit_failure() {
-  (
-    trap 'echo "  EXIT trap (failure)"' EXIT
-    echo "  About to fail..."
-    exit 1
-  )
+    (
+        trap 'echo "  EXIT trap (failure)"' EXIT
+        echo "  About to fail..."
+        exit 1
+    )
 }
 
 echo "EXIT runs on success:"

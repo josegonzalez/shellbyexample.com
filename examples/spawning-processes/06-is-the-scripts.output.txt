@@ -1,6 +1,6 @@
-Script PID: 1
-Script BASHPID: 1
-Command group PID: 1
-Command group BASHPID: 1
-Subshell PID: 1
-Subshell BASHPID: 9
+Script PID: 7
+Script BASHPID: 7
+Command group PID: 7
+Command group BASHPID: 7
+Subshell PID: 7
+Subshell BASHPID: 8

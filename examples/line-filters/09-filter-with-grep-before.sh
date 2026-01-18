@@ -9,5 +9,5 @@ date 25 brown
 EOF
 
 grep "red" /tmp/data.txt | while read -r fruit count color; do
-  echo "  Red fruit: $fruit ($count, $color)"
+    echo "  Red fruit: $fruit ($count, $color)"
 done

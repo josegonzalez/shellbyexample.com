@@ -5,7 +5,7 @@
 grade="B"
 case "$grade" in
     A) echo "Excellent" ;;&
-    A|B) echo "Good" ;;&
-    A|B|C) echo "Passed" ;;
+    A | B) echo "Good" ;;&
+    A | B | C) echo "Passed" ;;
     *) echo "Failed" ;;
 esac

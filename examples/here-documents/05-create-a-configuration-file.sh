@@ -1,7 +1,9 @@
 #!/bin/sh
-# Create a configuration file:
+# Create a configuration file file with a here-document by
+# adding a redirection operator `>/path/to/file` to the beginning
+# of the here-document.
 
-cat << EOF > /tmp/config.example
+cat <<EOF >/tmp/config.example
 # Configuration file
 # Generated: $(date)
 

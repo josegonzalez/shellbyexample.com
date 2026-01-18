@@ -27,7 +27,7 @@ clean:
 # ==============================================================================
 
 docker-build:
-	docker build -t shellbyexample:latest tools/
+	docker build --progress=plain -t shellbyexample:latest tools/
 
 generate-output: docker-build
 	@if [ -z "$(SCRIPT)" ]; then echo "Usage: make generate-output SCRIPT=path/to/script.sh"; exit 1; fi
