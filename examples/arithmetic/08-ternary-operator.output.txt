@@ -1,1 +1,1 @@
-Max of  and : 0
+Max of 10 and 20: 20

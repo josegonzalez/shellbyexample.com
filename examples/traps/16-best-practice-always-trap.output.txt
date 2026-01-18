@@ -1,3 +1,0 @@
-Created: /tmp/example.eIjLbk
-some data
-Cleaned up /tmp/example.eIjLbk

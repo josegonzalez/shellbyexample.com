@@ -7,11 +7,11 @@ wait_with_timeout() {
 
   (
     sleep "$timeout"
-    kill $pid 2>/dev/null
+    kill "$pid" 2>/dev/null
   ) &
   timeout_pid=$!
 
-  if wait $pid 2>/dev/null; then
+  if wait "$pid" 2>/dev/null; then
     kill $timeout_pid 2>/dev/null
     wait $timeout_pid 2>/dev/null
     return 0

@@ -1,1 +1,5 @@
+Indices: 0 1 2
 With indices:
+  [0] = apple
+  [1] = banana
+  [2] = cherry

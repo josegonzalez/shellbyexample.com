@@ -1,9 +1,0 @@
-declare -x HOME="/root"
-declare -x HOSTNAME="8a03c8e7464d"
-declare -x OLDPWD
-declare -x PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-declare -x PWD="/tmp"
-declare -x SHLVL="1"
-declare -x _BASH_BASELINE="5.3"
-declare -x _BASH_LATEST_PATCH="9"
-declare -x _BASH_VERSION="5.3.9"

@@ -1,3 +1,0 @@
-Random numbers:
-  $RANDOM: 15808
-  1-100: 65

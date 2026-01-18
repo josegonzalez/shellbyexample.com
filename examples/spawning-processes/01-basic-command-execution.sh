@@ -5,4 +5,5 @@
 # This example shows basic command execution.
 
 echo "Running a command:"
+# shellcheck disable=SC2012
 ls -la /tmp | head -3

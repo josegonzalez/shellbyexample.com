@@ -1,4 +1,4 @@
 Background in pipeline:
 Processing: one
-Processing: three
 Processing: two
+Processing: three

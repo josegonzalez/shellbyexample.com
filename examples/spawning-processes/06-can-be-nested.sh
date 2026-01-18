@@ -1,4 +1,4 @@
 #!/bin/sh
-# $() can be nested easily:
+# `$()` can be nested to achieve more complex operations.
 
-echo "Nested: $(basename $(dirname /usr/local/bin))"
+echo "Nested: $(basename "$(dirname /usr/local/bin)")"

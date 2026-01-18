@@ -1,4 +1,4 @@
 Reading from command:
   total 0
-  drwxrwxrwt    2 root     root            40 Jan 18 10:02 .
-  drwxr-xr-x    1 root     root            24 Jan 18 10:02 ..
+  drwxrwxrwt    2 root     root            40 Jan 18 10:58 .
+  drwxr-xr-x    1 root     root            24 Jan 18 10:58 ..

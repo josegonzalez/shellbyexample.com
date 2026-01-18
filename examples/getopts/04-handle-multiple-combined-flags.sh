@@ -7,9 +7,10 @@ demo_combined() {
 
   while getopts "abc" opt; do
     case "$opt" in
-      a) a=true ;;
-      b) b=true ;;
-      c) c=true ;;
+    a) a=true ;;
+    b) b=true ;;
+    c) c=true ;;
+    *) echo "Unknown option: -$opt" ;;
     esac
   done
 

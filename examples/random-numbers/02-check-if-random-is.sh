@@ -1,6 +1,7 @@
 #!/bin/sh
 # Check if $RANDOM is available:
 
+# shellcheck disable=SC3028
 if [ -n "$RANDOM" ]; then
   echo "Using \$RANDOM:"
   echo "  Value: $RANDOM"

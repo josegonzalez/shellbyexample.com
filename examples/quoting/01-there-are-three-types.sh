@@ -15,5 +15,6 @@
 name="World"
 
 echo "Hello, $name!"
+# shellcheck disable=SC2016
 echo 'Hello, $name!'
 echo "Hello, \$name!"

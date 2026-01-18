@@ -14,6 +14,7 @@ demo_optstring() {
     case "$opt" in
     v) verbose=true ;;
     n) name="$OPTARG" ;;
+    *) echo "Unknown option: -$opt" ;;
     esac
   done
 

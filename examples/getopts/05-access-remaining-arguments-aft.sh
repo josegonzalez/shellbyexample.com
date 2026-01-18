@@ -7,7 +7,8 @@ demo_remaining() {
 
   while getopts "v" opt; do
     case "$opt" in
-      v) verbose=true ;;
+    v) verbose=true ;;
+    *) echo "Unknown option: -$opt" ;;
     esac
   done
 

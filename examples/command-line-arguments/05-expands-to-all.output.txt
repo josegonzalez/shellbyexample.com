@@ -1,1 +1,3 @@
 All arguments ($@):
+All arguments ($*):
+  

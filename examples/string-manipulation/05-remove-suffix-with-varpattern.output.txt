@@ -1,2 +1,2 @@
-Remove extension (%.*): 
-Directory (%/*): 
+Remove extension (%.*): /home/user/documents/file
+Directory (%/*): /home/user/documents

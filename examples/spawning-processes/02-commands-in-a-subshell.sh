@@ -4,9 +4,11 @@
 
 echo "Subshell demo:"
 (
-  cd /tmp
+  cd /tmp || exit 1
   echo "  In subshell: $(pwd)"
+  # shellcheck disable=SC2030
   x="subshell_value"
 )
 echo "  After subshell: $(pwd)"
+# shellcheck disable=SC2031
 echo "  x is: ${x:-unset}"

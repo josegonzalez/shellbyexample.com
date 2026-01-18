@@ -1,4 +1,9 @@
 #!/bin/sh
-# Export makes it available to child processes:
+# Export makes variables available to child processes.
+# You can set and export in one line.
 
-export MY_EXPORTED="world"
+export MY_VAR="hello"
+export GREETING="Hello, World!"
+
+echo "MY_VAR: $MY_VAR"
+echo "GREETING: $GREETING"

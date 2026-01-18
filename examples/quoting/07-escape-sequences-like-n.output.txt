@@ -1,0 +1,4 @@
+Line 1\nLine 2
+Tab:\tseparated
+Line 1
+Line 2
