@@ -1,0 +1,4 @@
+Calling function:
+  Inside function
+  RETURN: function finished
+Back in main script

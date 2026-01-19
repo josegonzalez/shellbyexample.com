@@ -1,2 +1,0 @@
-Current traps:
-trap -- 'echo trapped' EXIT

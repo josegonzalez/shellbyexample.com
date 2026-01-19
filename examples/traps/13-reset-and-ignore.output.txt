@@ -1,0 +1,7 @@
+Reset trap:
+  Custom trap set
+  Trap reset (no output on exit)
+
+Ignore signal:
+  Ctrl+C is now ignored
+  Ctrl+C restored

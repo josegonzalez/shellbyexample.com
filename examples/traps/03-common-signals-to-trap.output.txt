@@ -1,6 +1,0 @@
-EXIT runs on success:
-  Exiting normally...
-  EXIT trap (success)
-EXIT runs on failure too:
-  About to fail...
-  EXIT trap (failure)

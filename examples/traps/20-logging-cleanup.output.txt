@@ -1,0 +1,4 @@
+Created: /tmp/tmp.stab000000
+Files: file1 file2 
+Exiting...
+Cleanup: success

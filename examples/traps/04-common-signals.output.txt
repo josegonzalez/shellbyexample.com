@@ -1,0 +1,9 @@
+EXIT signal:
+  Trap set for EXIT
+  EXIT signal caught
+
+INT signal (Ctrl+C):
+  Trap set for Ctrl+C, won't run as script ends normally
+
+TERM signal (kill):
+  Trap set for TERM, won't run as script ends normally

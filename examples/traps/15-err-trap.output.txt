@@ -1,0 +1,4 @@
+Running commands...
+ERR: false failed with status 1
+ERR: test -d /nonexistent failed with status 1
+Script continues after errors

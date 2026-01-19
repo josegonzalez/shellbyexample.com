@@ -1,3 +1,0 @@
-Cleanup function pattern:
-  Script running
-  Performing cleanup...

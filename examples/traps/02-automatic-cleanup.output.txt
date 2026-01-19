@@ -1,0 +1,3 @@
+Created: /tmp/demo_6
+File exists: yes
+Exiting - trap will clean up...

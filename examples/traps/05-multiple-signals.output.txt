@@ -1,0 +1,2 @@
+Same handler for INT and TERM
+Exiting normally (neither signal sent)

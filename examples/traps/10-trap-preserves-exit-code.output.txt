@@ -1,3 +1,0 @@
-Exit code preservation:
-  Trap ran, exit code was: 42
-  Subshell exited with: 42

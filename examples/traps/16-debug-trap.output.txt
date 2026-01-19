@@ -1,0 +1,5 @@
+TRACE: x=5
+TRACE: y=10
+TRACE: sum=$((x + y))
+TRACE: trap - DEBUG
+Tracing disabled, sum=15

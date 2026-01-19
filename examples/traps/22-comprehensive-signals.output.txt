@@ -1,0 +1,3 @@
+Script handles EXIT, INT, and TERM
+Cleanup always runs via EXIT trap
+Cleanup ran

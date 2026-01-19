@@ -1,0 +1,4 @@
+Tracking: /tmp/tmp.stab000000 /tmp/tmp.stab000001
+Cleaning up /tmp/tmp.stab000000
+Cleaning up /tmp/tmp.stab000001
+All resources cleaned

@@ -1,3 +1,0 @@
-Basic trap demo:
-  Script is running...
-  Trap triggered!

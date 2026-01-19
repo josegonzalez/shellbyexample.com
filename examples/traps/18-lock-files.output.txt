@@ -1,0 +1,3 @@
+Lock acquired: /tmp/myapp_lock_7
+Work complete
+Lock released: /tmp/myapp_lock_7

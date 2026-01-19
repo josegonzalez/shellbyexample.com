@@ -1,0 +1,3 @@
+First trap set
+Second trap set (replaces first)
+Second handler
