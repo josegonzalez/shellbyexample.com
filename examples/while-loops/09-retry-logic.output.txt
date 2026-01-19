@@ -1,0 +1,7 @@
+Attempt 1 of 3
+  Failed, will retry...
+Attempt 2 of 3
+  Failed, will retry...
+Attempt 3 of 3
+  Success!
+Operation completed successfully

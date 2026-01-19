@@ -1,0 +1,3 @@
+Line: '  indented line'
+Line: 'line with trailing space'
+Line: 'normal line'

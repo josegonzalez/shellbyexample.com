@@ -1,0 +1,8 @@
+Using while (with negated condition):
+  num is 1
+  num is 2
+  num is 3
+Using until (same result):
+  num is 1
+  num is 2
+  num is 3

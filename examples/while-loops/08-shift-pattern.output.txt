@@ -1,0 +1,6 @@
+Processing 4 arguments:
+  Current arg: apple (remaining: 4)
+  Current arg: banana (remaining: 3)
+  Current arg: cherry (remaining: 2)
+  Current arg: date (remaining: 1)
+Done. Arguments remaining: 0

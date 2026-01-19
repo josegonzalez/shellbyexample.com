@@ -1,4 +1,4 @@
-Break example:
+Break example (exit on condition):
   Iteration 1
   Iteration 2
   Iteration 3
@@ -7,5 +7,3 @@ Continue example (skip even numbers):
   Odd: 1
   Odd: 3
   Odd: 5
-  Odd: 7
-  Odd: 9

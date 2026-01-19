@@ -1,0 +1,8 @@
+For loop (fixed list):
+  a
+  b
+  c
+While loop (condition-based):
+  iteration 1
+  iteration 2
+  iteration 3

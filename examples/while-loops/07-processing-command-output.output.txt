@@ -1,0 +1,5 @@
+Processing lines from a command:
+  Got: first
+  Got: second
+  Got: third
+Count after piped loop: 0 (still 0 due to subshell)
