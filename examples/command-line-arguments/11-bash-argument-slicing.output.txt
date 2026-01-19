@@ -1,0 +1,4 @@
+All arguments: one two three four five
+Last argument (${!#}): five
+Skip first (${@:2}): two three four five
+Args 2-3 (${@:2:2}): two three

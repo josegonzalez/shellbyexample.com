@@ -1,3 +1,0 @@
-Before shift: first second third fourth
-After shift: second third fourth
-After shift 2: fourth

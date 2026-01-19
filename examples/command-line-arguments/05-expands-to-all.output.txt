@@ -1,8 +1,0 @@
-All arguments ($@):
-  - a
-  - b
-  - c
-  - d
-  - e
-All arguments ($*):
-  a b c d e

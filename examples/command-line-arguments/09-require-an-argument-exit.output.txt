@@ -1,0 +1,3 @@
+With both arguments:
+Source: input.txt
+Destination: output.txt

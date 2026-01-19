@@ -1,3 +1,0 @@
-Got exactly two: one and two
-Usage: exactly_two <arg1> <arg2>
-Failed to get exactly two arguments

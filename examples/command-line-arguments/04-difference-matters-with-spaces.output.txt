@@ -1,0 +1,16 @@
+With quoted "$@" (correct):
+Received 2 arguments:
+  'hello world'
+  'foo bar'
+
+With quoted "$*" (becomes one argument):
+  [hello world foo bar]
+
+With unquoted $@ (breaks on spaces - wrong):
+Received 4 arguments:
+  'hello'
+  'world'
+  'foo'
+  'bar'
+
+Rule: Always use "$@" when passing arguments.

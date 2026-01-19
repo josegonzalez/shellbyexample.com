@@ -1,1 +1,10 @@
-Script name: /script
+Script name ($0): /script
+
+Positional parameters:
+  First argument ($1): hello
+  Second argument ($2): world
+  Third argument ($3): foo
+
+Argument count ($#): 4
+
+Named variables: input=hello, output=world

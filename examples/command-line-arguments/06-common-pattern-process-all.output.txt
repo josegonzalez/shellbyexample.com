@@ -1,0 +1,5 @@
+Processing files:
+  Processing: file1.txt
+  Processing: file2.txt
+  Processing: file3.txt
+All files processed (remaining args: 0)

@@ -1,0 +1,7 @@
+Without braces (wrong):
+  $10 = a0  (actually $1 + '0')
+
+With braces (correct):
+  ${10} = j
+  ${11} = k
+  ${12} = l

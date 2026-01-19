@@ -1,0 +1,9 @@
+Testing check_any_args:
+Error: No arguments provided
+Usage: command <arg>...
+Got 2 argument(s): one two
+
+Testing check_exactly_two:
+Error: Expected exactly 2 arguments, got 1
+Usage: command <source> <destination>
+Got exactly two: one and two

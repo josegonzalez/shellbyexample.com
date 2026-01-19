@@ -1,0 +1,7 @@
+With $@ (separate words in a for loop):
+  - apple
+  - banana
+  - cherry
+
+With $* (single string):
+  apple banana cherry
