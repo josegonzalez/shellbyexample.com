@@ -156,6 +156,10 @@ make test-examples
 2. **Show basic usage first** - Introduce simple cases before advanced patterns
 3. **Keep sub-examples focused** - One related group of concepts per file
 4. **Build progressively** - Later sub-examples can build on earlier ones
+5. **Respect concept order** - Only use concepts introduced in earlier categories (per `examples.txt`). For example, `if-statements` examples should not use functions.
+6. **Stay on topic** - Only use helper concepts (like functions) if they clarify the main lesson
+7. **Show equivalent syntaxes** - When multiple syntaxes work identically, demonstrate both with labeled output
+8. **Split distinct concepts** - If a file covers unrelated topics, move them to separate files
 
 ### Bash-Specific Features
 
