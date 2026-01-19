@@ -3,6 +3,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -12,18 +13,59 @@ import (
 	"strings"
 )
 
+var runAll = flag.Bool("all", false, "renumber all example directories")
+
 func main() {
-	if len(os.Args) < 2 {
-		fmt.Println("Usage: go run tools/renumber.go <example-directory>")
-		fmt.Println("Example: go run tools/renumber.go examples/command-line-arguments")
+	flag.Usage = func() {
+		fmt.Fprintln(os.Stderr, "Usage: go run tools/renumber.go [options] <directory>")
+		fmt.Fprintln(os.Stderr, "       go run tools/renumber.go --all")
+		fmt.Fprintln(os.Stderr, "")
+		fmt.Fprintln(os.Stderr, "Options:")
+		flag.PrintDefaults()
+		fmt.Fprintln(os.Stderr, "")
+		fmt.Fprintln(os.Stderr, "Examples:")
+		fmt.Fprintln(os.Stderr, "  go run tools/renumber.go examples/hello-world")
+		fmt.Fprintln(os.Stderr, "  go run tools/renumber.go --all")
+	}
+	flag.Parse()
+
+	if *runAll {
+		if err := renumberAll(); err != nil {
+			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+			os.Exit(1)
+		}
+		return
+	}
+
+	if flag.NArg() < 1 {
+		flag.Usage()
 		os.Exit(1)
 	}
 
-	dir := os.Args[1]
+	dir := flag.Arg(0)
 	if err := renumberFiles(dir); err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		os.Exit(1)
 	}
+}
+
+func renumberAll() error {
+	entries, err := os.ReadDir("examples")
+	if err != nil {
+		return fmt.Errorf("reading examples directory: %w", err)
+	}
+
+	for _, entry := range entries {
+		if !entry.IsDir() {
+			continue
+		}
+		dir := filepath.Join("examples", entry.Name())
+		fmt.Printf("Processing %s...\n", dir)
+		if err := renumberFiles(dir); err != nil {
+			return fmt.Errorf("%s: %w", dir, err)
+		}
+	}
+	return nil
 }
 
 type numberedFile struct {

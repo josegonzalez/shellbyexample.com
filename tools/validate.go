@@ -4,6 +4,7 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -13,10 +14,51 @@ import (
 	"strings"
 )
 
+var categoryFlag = flag.String("category", "", "Category directory to validate (e.g., examples/hello-world)")
+
 func main() {
+	flag.Usage = func() {
+		fmt.Fprintln(os.Stderr, "Usage: go run tools/validate.go [options]")
+		fmt.Fprintln(os.Stderr, "       go run tools/validate.go --category <directory>")
+		fmt.Fprintln(os.Stderr, "")
+		fmt.Fprintln(os.Stderr, "Options:")
+		flag.PrintDefaults()
+		fmt.Fprintln(os.Stderr, "")
+		fmt.Fprintln(os.Stderr, "Examples:")
+		fmt.Fprintln(os.Stderr, "  go run tools/validate.go")
+		fmt.Fprintln(os.Stderr, "  go run tools/validate.go --category examples/hello-world")
+	}
+	flag.Parse()
+
+	// If category specified, validate just that one
+	if *categoryFlag != "" {
+		errors := validateDirectory(*categoryFlag)
+
+		// Find and report empty scripts in just this category
+		emptyScripts := findEmptyScriptsInDirectory(*categoryFlag)
+		if len(emptyScripts) > 0 {
+			fmt.Printf("Found %d script(s) containing only shebang and comments:\n", len(emptyScripts))
+			for _, path := range emptyScripts {
+				fmt.Printf("  %s\n", path)
+			}
+			fmt.Println()
+		}
+
+		if len(errors) > 0 {
+			fmt.Println("Validation errors found:")
+			for _, err := range errors {
+				fmt.Printf("  - %s\n", err)
+			}
+			os.Exit(1)
+		}
+		fmt.Printf("Category %s validated successfully.\n", *categoryFlag)
+		return
+	}
+
+	// Otherwise, validate all (existing behavior)
 	examplesDir := "examples"
-	if len(os.Args) > 1 {
-		examplesDir = os.Args[1]
+	if flag.NArg() > 0 {
+		examplesDir = flag.Arg(0)
 	}
 
 	errors := validate(examplesDir)
@@ -232,6 +274,34 @@ func findEmptyScripts(examplesDir string) []string {
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error walking directory: %v\n", err)
+	}
+
+	return emptyScripts
+}
+
+func findEmptyScriptsInDirectory(dir string) []string {
+	var emptyScripts []string
+
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error reading directory: %v\n", err)
+		return emptyScripts
+	}
+
+	for _, entry := range entries {
+		if entry.IsDir() {
+			continue
+		}
+
+		ext := filepath.Ext(entry.Name())
+		if ext != ".sh" && ext != ".bash" {
+			continue
+		}
+
+		path := filepath.Join(dir, entry.Name())
+		if isEmptyScript(path) {
+			emptyScripts = append(emptyScripts, path)
+		}
 	}
 
 	return emptyScripts

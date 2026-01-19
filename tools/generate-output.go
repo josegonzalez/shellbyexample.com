@@ -16,11 +16,13 @@ import (
 
 var concurrency = flag.Int("j", runtime.NumCPU(), "number of parallel jobs")
 var runAll = flag.Bool("all", false, "generate output for all scripts")
+var categoryFlag = flag.String("category", "", "Category directory to generate outputs for (e.g., examples/hello-world)")
 
 func main() {
 	flag.Usage = func() {
 		fmt.Fprintln(os.Stderr, "Usage: go run tools/generate-output.go [options] <script> [script...]")
 		fmt.Fprintln(os.Stderr, "       go run tools/generate-output.go --all [-j N]")
+		fmt.Fprintln(os.Stderr, "       go run tools/generate-output.go --category <directory> [-j N]")
 		fmt.Fprintln(os.Stderr, "")
 		fmt.Fprintln(os.Stderr, "Options:")
 		flag.PrintDefaults()
@@ -29,11 +31,20 @@ func main() {
 		fmt.Fprintln(os.Stderr, "  go run tools/generate-output.go examples/hello-world/01-hello-world.sh")
 		fmt.Fprintln(os.Stderr, "  go run tools/generate-output.go --all")
 		fmt.Fprintln(os.Stderr, "  go run tools/generate-output.go --all -j 4")
+		fmt.Fprintln(os.Stderr, "  go run tools/generate-output.go --category examples/hello-world")
 	}
 	flag.Parse()
 
 	if *runAll {
 		if err := generateAll(*concurrency); err != nil {
+			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+			os.Exit(1)
+		}
+		return
+	}
+
+	if *categoryFlag != "" {
+		if err := generateCategory(*categoryFlag, *concurrency); err != nil {
 			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 			os.Exit(1)
 		}
@@ -204,6 +215,105 @@ func generateAll(numWorkers int) error {
 
 	// Print summary
 	fmt.Printf("\nDone. Processed %d scripts.\n", total)
+
+	if len(warnings) > 0 {
+		fmt.Printf("\nWarnings (%d):\n", len(warnings))
+		for _, w := range warnings {
+			fmt.Printf("  %s: %s\n", w.script, w.warning)
+		}
+	}
+
+	if len(errors) > 0 {
+		fmt.Printf("\nErrors (%d):\n", len(errors))
+		for _, e := range errors {
+			fmt.Printf("  %s: %v\n", e.script, e.err)
+		}
+	}
+
+	return nil
+}
+
+func generateCategory(categoryDir string, numWorkers int) error {
+	pattern := regexp.MustCompile(`^\d{2}-.*\.(sh|bash)$`)
+
+	// Validate the directory exists
+	info, err := os.Stat(categoryDir)
+	if err != nil {
+		return fmt.Errorf("category directory not found: %s", categoryDir)
+	}
+	if !info.IsDir() {
+		return fmt.Errorf("not a directory: %s", categoryDir)
+	}
+
+	files, err := os.ReadDir(categoryDir)
+	if err != nil {
+		return fmt.Errorf("reading category directory: %w", err)
+	}
+
+	var scripts []string
+	for _, file := range files {
+		if file.IsDir() {
+			continue
+		}
+		if pattern.MatchString(file.Name()) {
+			scripts = append(scripts, filepath.Join(categoryDir, file.Name()))
+		}
+	}
+
+	if len(scripts) == 0 {
+		fmt.Printf("No numbered scripts found in %s.\n", categoryDir)
+		return nil
+	}
+
+	total := len(scripts)
+	fmt.Printf("Found %d scripts in %s to process with %d workers.\n\n", total, categoryDir, numWorkers)
+
+	// Create channels for job distribution and result collection
+	jobs := make(chan string, total)
+	results := make(chan scriptResult, total)
+
+	// Start workers
+	var wg sync.WaitGroup
+	for i := 0; i < numWorkers; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			for script := range jobs {
+				results <- generateOutput(script, false)
+			}
+		}()
+	}
+
+	// Send all jobs
+	for _, script := range scripts {
+		jobs <- script
+	}
+	close(jobs)
+
+	// Close results channel when all workers complete
+	go func() {
+		wg.Wait()
+		close(results)
+	}()
+
+	// Collect results with progress display
+	var completed int
+	var errors []scriptResult
+	var warnings []scriptResult
+
+	for result := range results {
+		completed++
+		if result.err != nil {
+			errors = append(errors, result)
+		} else if result.warning != "" {
+			warnings = append(warnings, result)
+		}
+		fmt.Printf("\rProcessing: %d/%d scripts (%d errors)", completed, total, len(errors))
+	}
+	fmt.Println() // Move to next line after progress
+
+	// Print summary
+	fmt.Printf("\nDone. Processed %d scripts in %s.\n", total, categoryDir)
 
 	if len(warnings) > 0 {
 		fmt.Printf("\nWarnings (%d):\n", len(warnings))

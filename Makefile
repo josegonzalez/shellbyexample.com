@@ -1,6 +1,6 @@
 .PHONY: build serve test clean \
-        docker-build generate-output generate-all-outputs test-examples \
-        validate validate-numbering \
+        docker-build generate-output generate-all-outputs generate-category-outputs test-examples test-category \
+        validate validate-numbering validate-category \
         renumber renumber-all \
         watch watch-outputs
 
@@ -36,24 +36,16 @@ generate-output: docker-build
 generate-all-outputs: docker-build
 	go run tools/generate-output.go --all
 
+generate-category-outputs: docker-build
+	@if [ -z "$(CATEGORY)" ]; then echo "Usage: make generate-category-outputs CATEGORY=examples/hello-world"; exit 1; fi
+	go run tools/generate-output.go --category "$(CATEGORY)"
+
 test-examples: docker-build
-	@failed=0; \
-	for script in examples/*/*.sh examples/*/*.bash; do \
-		[ -f "$$script" ] || continue; \
-		if echo "$$script" | grep -qE '/[0-9]{2}-'; then \
-			echo -n "Testing $$script... "; \
-			if ./tools/run-in-docker.sh "$$script" > /dev/null 2>&1; then \
-				echo "OK"; \
-			else \
-				echo "FAILED"; \
-				failed=$$((failed + 1)); \
-			fi; \
-		fi; \
-	done; \
-	if [ $$failed -gt 0 ]; then \
-		echo "$$failed script(s) failed"; \
-		exit 1; \
-	fi
+	go run tools/test-examples.go --all
+
+test-category: docker-build
+	@if [ -z "$(CATEGORY)" ]; then echo "Usage: make test-category CATEGORY=examples/hello-world"; exit 1; fi
+	go run tools/test-examples.go --category "$(CATEGORY)"
 
 # ==============================================================================
 # Validation
@@ -64,6 +56,10 @@ validate: validate-numbering
 validate-numbering:
 	go run tools/validate.go
 
+validate-category:
+	@if [ -z "$(CATEGORY)" ]; then echo "Usage: make validate-category CATEGORY=examples/hello-world"; exit 1; fi
+	go run tools/validate.go --category "$(CATEGORY)"
+
 # ==============================================================================
 # Renumbering
 # ==============================================================================
@@ -73,9 +69,7 @@ renumber:
 	go run tools/renumber.go "$(DIR)"
 
 renumber-all:
-	@for dir in examples/*/; do \
-		go run tools/renumber.go "$$dir"; \
-	done
+	go run tools/renumber.go --all
 	@echo ""
 	@echo "Validating numbering..."
 	go run tools/validate.go
