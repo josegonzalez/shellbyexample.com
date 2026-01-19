@@ -6,12 +6,11 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"regexp"
 	"runtime"
-	"strings"
-	"sync"
+
+	"github.com/josegonzalez/shellbyexample.com/tools/toollib"
 )
 
 var concurrency = flag.Int("j", runtime.NumCPU(), "number of parallel jobs")
@@ -102,20 +101,10 @@ func testScript(scriptPath string) testResult {
 	}
 
 	// Check if script needs network access
-	needsNetwork := false
-	content, err := os.ReadFile(scriptPath)
-	if err == nil && strings.Contains(string(content), "# network: required") {
-		needsNetwork = true
-	}
+	needsNetwork := toollib.ScriptNeedsNetwork(scriptPath)
 
 	// Run the script in Docker
-	args := []string{}
-	if needsNetwork {
-		args = append(args, "-n")
-	}
-	args = append(args, scriptPath)
-	cmd := exec.Command("./tools/run-in-docker.sh", args...)
-	_, err = cmd.CombinedOutput()
+	_, err := toollib.RunScriptInDocker(scriptPath, needsNetwork)
 
 	if err != nil {
 		result.err = err
@@ -127,34 +116,10 @@ func testScript(scriptPath string) testResult {
 }
 
 func testAll(numWorkers int) (passed, failed int) {
-	pattern := regexp.MustCompile(`^\d{2}-.*\.(sh|bash)$`)
-
-	entries, err := os.ReadDir("examples")
+	scripts, err := toollib.FindAllScripts()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error reading examples directory: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		return 0, 1
-	}
-
-	var scripts []string
-	for _, entry := range entries {
-		if !entry.IsDir() {
-			continue
-		}
-
-		dir := filepath.Join("examples", entry.Name())
-		files, err := os.ReadDir(dir)
-		if err != nil {
-			continue
-		}
-
-		for _, file := range files {
-			if file.IsDir() {
-				continue
-			}
-			if pattern.MatchString(file.Name()) {
-				scripts = append(scripts, filepath.Join(dir, file.Name()))
-			}
-		}
 	}
 
 	if len(scripts) == 0 {
@@ -166,33 +131,15 @@ func testAll(numWorkers int) (passed, failed int) {
 }
 
 func testCategory(categoryDir string, numWorkers int) (passed, failed int) {
-	pattern := regexp.MustCompile(`^\d{2}-.*\.(sh|bash)$`)
+	if err := toollib.ValidateCategoryDir(categoryDir); err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		return 0, 1
+	}
 
-	// Validate the directory exists
-	info, err := os.Stat(categoryDir)
+	scripts, err := toollib.FindCategoryScripts(categoryDir)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: category directory not found: %s\n", categoryDir)
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		return 0, 1
-	}
-	if !info.IsDir() {
-		fmt.Fprintf(os.Stderr, "Error: not a directory: %s\n", categoryDir)
-		return 0, 1
-	}
-
-	files, err := os.ReadDir(categoryDir)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error reading category directory: %v\n", err)
-		return 0, 1
-	}
-
-	var scripts []string
-	for _, file := range files {
-		if file.IsDir() {
-			continue
-		}
-		if pattern.MatchString(file.Name()) {
-			scripts = append(scripts, filepath.Join(categoryDir, file.Name()))
-		}
 	}
 
 	if len(scripts) == 0 {
@@ -207,39 +154,16 @@ func runTests(scripts []string, numWorkers int) (passed, failed int) {
 	total := len(scripts)
 	fmt.Printf("Found %d scripts to test with %d workers.\n\n", total, numWorkers)
 
-	// Create channels for job distribution and result collection
-	jobs := make(chan string, total)
-	results := make(chan testResult, total)
-
-	// Start workers
-	var wg sync.WaitGroup
-	for i := 0; i < numWorkers; i++ {
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-			for script := range jobs {
-				results <- testScript(script)
-			}
-		}()
-	}
-
-	// Send all jobs
-	for _, script := range scripts {
-		jobs <- script
-	}
-	close(jobs)
-
-	// Close results channel when all workers complete
-	go func() {
-		wg.Wait()
-		close(results)
-	}()
-
-	// Collect results with progress display
 	var completed int
 	var failures []testResult
 
-	for result := range results {
+	pool := toollib.WorkerPool[testResult]{
+		Jobs:       scripts,
+		NumWorkers: numWorkers,
+		ProcessFn:  testScript,
+	}
+
+	pool.Run(func(result testResult) {
 		completed++
 		if result.passed {
 			passed++
@@ -248,7 +172,7 @@ func runTests(scripts []string, numWorkers int) (passed, failed int) {
 			failures = append(failures, result)
 		}
 		fmt.Printf("\rTesting: %d/%d scripts (%d passed, %d failed)", completed, total, passed, failed)
-	}
+	})
 	fmt.Println() // Move to next line after progress
 
 	// Print failures

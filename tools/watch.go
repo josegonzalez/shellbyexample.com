@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/fsnotify/fsnotify"
+	"github.com/josegonzalez/shellbyexample.com/tools/toollib"
 )
 
 func main() {
@@ -28,11 +29,11 @@ func main() {
 	defer watcher.Close()
 
 	// Add directories recursively
-	if err := addWatchRecursive(watcher, "examples"); err != nil {
+	if err := toollib.AddWatchRecursive(watcher, toollib.ExamplesDir); err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to watch examples/: %v\n", err)
 		os.Exit(1)
 	}
-	if err := addWatchRecursive(watcher, "templates"); err != nil {
+	if err := toollib.AddWatchRecursive(watcher, "templates"); err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to watch templates/: %v\n", err)
 		os.Exit(1)
 	}
@@ -62,7 +63,7 @@ func main() {
 
 			// Ignore temporary/hidden files
 			base := filepath.Base(event.Name)
-			if base[0] == '.' || base[len(base)-1] == '~' {
+			if toollib.IsHiddenOrBackup(base) {
 				continue
 			}
 
@@ -77,7 +78,7 @@ func main() {
 				changeType = "created"
 				// Watch newly created directories
 				if info, err := os.Stat(event.Name); err == nil && info.IsDir() {
-					if err := addWatchRecursive(watcher, event.Name); err != nil {
+					if err := toollib.AddWatchRecursive(watcher, event.Name); err != nil {
 						fmt.Fprintf(os.Stderr, "Failed to watch new directory %s: %v\n", event.Name, err)
 					}
 				}
@@ -107,21 +108,6 @@ func main() {
 			fmt.Fprintf(os.Stderr, "Watcher error: %v\n", err)
 		}
 	}
-}
-
-// addWatchRecursive adds a directory and all subdirectories to the watcher
-func addWatchRecursive(watcher *fsnotify.Watcher, root string) error {
-	return filepath.WalkDir(root, func(path string, d os.DirEntry, err error) error {
-		if err != nil {
-			return err
-		}
-		if d.IsDir() {
-			if err := watcher.Add(path); err != nil {
-				return fmt.Errorf("watching %s: %w", path, err)
-			}
-		}
-		return nil
-	})
 }
 
 // runBuild executes the site generator

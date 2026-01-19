@@ -6,12 +6,11 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"regexp"
 	"runtime"
-	"strings"
-	"sync"
+
+	"github.com/josegonzalez/shellbyexample.com/tools/toollib"
 )
 
 var concurrency = flag.Int("j", runtime.NumCPU(), "number of parallel jobs")
@@ -87,28 +86,17 @@ func generateOutput(scriptPath string, verbose bool) scriptResult {
 	}
 
 	// Check if script needs network access
-	needsNetwork := false
-	content, err := os.ReadFile(scriptPath)
-	if err == nil && strings.Contains(string(content), "# network: required") {
-		needsNetwork = true
-	}
+	needsNetwork := toollib.ScriptNeedsNetwork(scriptPath)
 
 	// Determine output file path
-	ext := filepath.Ext(scriptPath)
-	outputPath := strings.TrimSuffix(scriptPath, ext) + ".output.txt"
+	outputPath := toollib.OutputPathForScript(scriptPath)
 
 	if verbose {
 		fmt.Printf("Running %s...\n", scriptPath)
 	}
 
 	// Run the script in Docker
-	args := []string{}
-	if needsNetwork {
-		args = append(args, "-n")
-	}
-	args = append(args, scriptPath)
-	cmd := exec.Command("./tools/run-in-docker.sh", args...)
-	output, err := cmd.CombinedOutput()
+	output, err := toollib.RunScriptInDocker(scriptPath, needsNetwork)
 
 	// Write output regardless of error (script might have non-zero exit)
 	if writeErr := os.WriteFile(outputPath, output, 0644); writeErr != nil {
@@ -132,33 +120,9 @@ func generateOutput(scriptPath string, verbose bool) scriptResult {
 }
 
 func generateAll(numWorkers int) error {
-	pattern := regexp.MustCompile(`^\d{2}-.*\.(sh|bash)$`)
-
-	entries, err := os.ReadDir("examples")
+	scripts, err := toollib.FindAllScripts()
 	if err != nil {
-		return fmt.Errorf("reading examples directory: %w", err)
-	}
-
-	var scripts []string
-	for _, entry := range entries {
-		if !entry.IsDir() {
-			continue
-		}
-
-		dir := filepath.Join("examples", entry.Name())
-		files, err := os.ReadDir(dir)
-		if err != nil {
-			continue
-		}
-
-		for _, file := range files {
-			if file.IsDir() {
-				continue
-			}
-			if pattern.MatchString(file.Name()) {
-				scripts = append(scripts, filepath.Join(dir, file.Name()))
-			}
-		}
+		return err
 	}
 
 	if len(scripts) == 0 {
@@ -166,98 +130,17 @@ func generateAll(numWorkers int) error {
 		return nil
 	}
 
-	total := len(scripts)
-	fmt.Printf("Found %d scripts to process with %d workers.\n\n", total, numWorkers)
-
-	// Create channels for job distribution and result collection
-	jobs := make(chan string, total)
-	results := make(chan scriptResult, total)
-
-	// Start workers
-	var wg sync.WaitGroup
-	for i := 0; i < numWorkers; i++ {
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-			for script := range jobs {
-				results <- generateOutput(script, false)
-			}
-		}()
-	}
-
-	// Send all jobs
-	for _, script := range scripts {
-		jobs <- script
-	}
-	close(jobs)
-
-	// Close results channel when all workers complete
-	go func() {
-		wg.Wait()
-		close(results)
-	}()
-
-	// Collect results with progress display
-	var completed int
-	var errors []scriptResult
-	var warnings []scriptResult
-
-	for result := range results {
-		completed++
-		if result.err != nil {
-			errors = append(errors, result)
-		} else if result.warning != "" {
-			warnings = append(warnings, result)
-		}
-		fmt.Printf("\rProcessing: %d/%d scripts (%d errors)", completed, total, len(errors))
-	}
-	fmt.Println() // Move to next line after progress
-
-	// Print summary
-	fmt.Printf("\nDone. Processed %d scripts.\n", total)
-
-	if len(warnings) > 0 {
-		fmt.Printf("\nWarnings (%d):\n", len(warnings))
-		for _, w := range warnings {
-			fmt.Printf("  %s: %s\n", w.script, w.warning)
-		}
-	}
-
-	if len(errors) > 0 {
-		fmt.Printf("\nErrors (%d):\n", len(errors))
-		for _, e := range errors {
-			fmt.Printf("  %s: %v\n", e.script, e.err)
-		}
-	}
-
-	return nil
+	return runGeneration(scripts, numWorkers, "")
 }
 
 func generateCategory(categoryDir string, numWorkers int) error {
-	pattern := regexp.MustCompile(`^\d{2}-.*\.(sh|bash)$`)
+	if err := toollib.ValidateCategoryDir(categoryDir); err != nil {
+		return err
+	}
 
-	// Validate the directory exists
-	info, err := os.Stat(categoryDir)
+	scripts, err := toollib.FindCategoryScripts(categoryDir)
 	if err != nil {
-		return fmt.Errorf("category directory not found: %s", categoryDir)
-	}
-	if !info.IsDir() {
-		return fmt.Errorf("not a directory: %s", categoryDir)
-	}
-
-	files, err := os.ReadDir(categoryDir)
-	if err != nil {
-		return fmt.Errorf("reading category directory: %w", err)
-	}
-
-	var scripts []string
-	for _, file := range files {
-		if file.IsDir() {
-			continue
-		}
-		if pattern.MatchString(file.Name()) {
-			scripts = append(scripts, filepath.Join(categoryDir, file.Name()))
-		}
+		return err
 	}
 
 	if len(scripts) == 0 {
@@ -265,43 +148,28 @@ func generateCategory(categoryDir string, numWorkers int) error {
 		return nil
 	}
 
+	return runGeneration(scripts, numWorkers, categoryDir)
+}
+
+func runGeneration(scripts []string, numWorkers int, categoryDir string) error {
 	total := len(scripts)
-	fmt.Printf("Found %d scripts in %s to process with %d workers.\n\n", total, categoryDir, numWorkers)
-
-	// Create channels for job distribution and result collection
-	jobs := make(chan string, total)
-	results := make(chan scriptResult, total)
-
-	// Start workers
-	var wg sync.WaitGroup
-	for i := 0; i < numWorkers; i++ {
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-			for script := range jobs {
-				results <- generateOutput(script, false)
-			}
-		}()
+	if categoryDir != "" {
+		fmt.Printf("Found %d scripts in %s to process with %d workers.\n\n", total, categoryDir, numWorkers)
+	} else {
+		fmt.Printf("Found %d scripts to process with %d workers.\n\n", total, numWorkers)
 	}
 
-	// Send all jobs
-	for _, script := range scripts {
-		jobs <- script
-	}
-	close(jobs)
-
-	// Close results channel when all workers complete
-	go func() {
-		wg.Wait()
-		close(results)
-	}()
-
-	// Collect results with progress display
 	var completed int
 	var errors []scriptResult
 	var warnings []scriptResult
 
-	for result := range results {
+	pool := toollib.WorkerPool[scriptResult]{
+		Jobs:       scripts,
+		NumWorkers: numWorkers,
+		ProcessFn:  func(script string) scriptResult { return generateOutput(script, false) },
+	}
+
+	pool.Run(func(result scriptResult) {
 		completed++
 		if result.err != nil {
 			errors = append(errors, result)
@@ -309,11 +177,15 @@ func generateCategory(categoryDir string, numWorkers int) error {
 			warnings = append(warnings, result)
 		}
 		fmt.Printf("\rProcessing: %d/%d scripts (%d errors)", completed, total, len(errors))
-	}
+	})
 	fmt.Println() // Move to next line after progress
 
 	// Print summary
-	fmt.Printf("\nDone. Processed %d scripts in %s.\n", total, categoryDir)
+	if categoryDir != "" {
+		fmt.Printf("\nDone. Processed %d scripts in %s.\n", total, categoryDir)
+	} else {
+		fmt.Printf("\nDone. Processed %d scripts.\n", total)
+	}
 
 	if len(warnings) > 0 {
 		fmt.Printf("\nWarnings (%d):\n", len(warnings))
