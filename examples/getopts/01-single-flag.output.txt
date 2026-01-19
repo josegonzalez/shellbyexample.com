@@ -1,0 +1,4 @@
+With -v:
+Verbose: true
+Without flags:
+Verbose: false

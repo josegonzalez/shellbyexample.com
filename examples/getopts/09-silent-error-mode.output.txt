@@ -1,0 +1,6 @@
+With unknown option -x:
+Error: Unknown option -x
+With missing argument for -n:
+Error: -n requires an argument
+With valid -n Alice:
+Name: Alice

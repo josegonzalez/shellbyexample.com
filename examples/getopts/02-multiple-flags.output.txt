@@ -1,0 +1,4 @@
+With -v -d:
+Verbose: true, Debug: true
+With -v only:
+Verbose: true, Debug: false

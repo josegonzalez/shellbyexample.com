@@ -1,0 +1,5 @@
+tar-like: -xvf archive.tar
+Extract: true, Verbose: true, File: archive.tar
+
+Separate flags: -x -v -f archive.tar
+Extract: true, Verbose: true, File: archive.tar

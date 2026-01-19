@@ -1,0 +1,6 @@
+Separate flags: -v -d
+Verbose: true, Debug: true, Name: <none>
+Combined flags: -vd
+Verbose: true, Debug: true, Name: <none>
+Combined with argument: -vdn Alice
+Verbose: true, Debug: true, Name: Alice

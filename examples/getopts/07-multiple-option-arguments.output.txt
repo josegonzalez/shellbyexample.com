@@ -1,0 +1,4 @@
+With -v -n Alice -o results.txt:
+Verbose: true, Name: Alice, Output: results.txt
+With -n Bob only:
+Verbose: false, Name: Bob, Output: <none>

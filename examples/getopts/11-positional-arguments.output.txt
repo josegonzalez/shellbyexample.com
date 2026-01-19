@@ -1,0 +1,6 @@
+With -v file1.txt file2.txt:
+Verbose: true
+Files: file1.txt file2.txt
+With just file3.txt:
+Verbose: false
+Files: file3.txt

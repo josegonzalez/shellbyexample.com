@@ -1,0 +1,12 @@
+With -h flag:
+Usage: greet [-v] [-h]
+
+Options:
+  -v    Enable verbose output
+  -h    Show this help message
+
+Example:
+  greet -v
+
+With -v flag:
+Running with verbose=true

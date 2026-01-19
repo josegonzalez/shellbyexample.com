@@ -1,0 +1,5 @@
+With -v (valid):
+Running with verbose=true
+
+With -h (not in optstring):
+Unknown option

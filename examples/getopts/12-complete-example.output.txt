@@ -1,0 +1,7 @@
+Basic usage: -v -o results.txt data.txt log.txt
+Verbose: true, Output: results.txt
+Processing: data.txt
+Processing: log.txt
+
+Help flag: -h
+Usage: process [-v] [-o outfile] file...

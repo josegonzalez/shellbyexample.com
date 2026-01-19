@@ -1,3 +1,0 @@
-Remaining arguments:
-Verbose: true
-Remaining args: file1.txt file2.txt

@@ -1,3 +1,0 @@
-Basic getopts demo:
-Verbose: true
-Name: Alice

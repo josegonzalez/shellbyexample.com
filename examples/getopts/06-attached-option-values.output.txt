@@ -1,0 +1,8 @@
+With space: -n Alice
+Name: Alice
+
+Attached: -nAlice
+Name: Alice
+
+Attached: -nBob
+Name: Bob

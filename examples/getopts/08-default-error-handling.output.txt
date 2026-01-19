@@ -1,0 +1,4 @@
+With valid -v:
+Verbose: true
+With invalid -x (stderr suppressed for demo):
+Usage: script [-v] [-n name]
