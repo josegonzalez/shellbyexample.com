@@ -1,9 +1,14 @@
 #!/bin/sh
-# Character class patterns work too:
+# Character classes `[...]` match any single character
+# in the set. Common classes include:
+# - `[0-9]` for digits
+# - `[a-z]` for lowercase letters
+# - `[A-Z]` for uppercase letters
+# - `[abc]` for specific characters
 
-char="5"
+char="7"
 
-case "$char" in
+case $char in
     [0-9])
         echo "'$char' is a digit"
         ;;

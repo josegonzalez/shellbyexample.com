@@ -1,0 +1,8 @@
+Using ;& (unconditional fall-through):
+  Good job!
+  You passed.
+
+Using ;;& (continue testing patterns):
+  Matched: hello
+  Matched: h*
+  Matched: *o
