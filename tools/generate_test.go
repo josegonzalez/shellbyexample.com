@@ -638,3 +638,262 @@ func TestParseSubExample_InvalidFilename(t *testing.T) {
 		t.Errorf("error = %q, want to contain 'invalid sub-example filename'", err.Error())
 	}
 }
+
+func TestParseSubExample_EmptyCode(t *testing.T) {
+	tmpDir := t.TempDir()
+
+	// Create a script with only shebang and docs (no actual code)
+	content := `#!/bin/sh
+# Just documentation
+# No actual code
+`
+	if err := os.WriteFile(filepath.Join(tmpDir, "01-empty.sh"), []byte(content), 0644); err != nil {
+		t.Fatalf("writing test file: %v", err)
+	}
+
+	subEx, err := parseSubExample(tmpDir, "01-empty.sh")
+	if err != nil {
+		t.Fatalf("parseSubExample error: %v", err)
+	}
+
+	// Should still parse successfully, just with minimal code
+	if subEx.Order != 1 {
+		t.Errorf("Order = %d, want 1", subEx.Order)
+	}
+}
+
+func TestParseSubExample_NoDocs(t *testing.T) {
+	tmpDir := t.TempDir()
+
+	// Create a script without documentation comments
+	content := `#!/bin/sh
+echo "no docs"
+`
+	if err := os.WriteFile(filepath.Join(tmpDir, "01-nodocs.sh"), []byte(content), 0644); err != nil {
+		t.Fatalf("writing test file: %v", err)
+	}
+
+	subEx, err := parseSubExample(tmpDir, "01-nodocs.sh")
+	if err != nil {
+		t.Fatalf("parseSubExample error: %v", err)
+	}
+
+	if subEx.DocsText != "" {
+		t.Errorf("DocsText = %q, want empty", subEx.DocsText)
+	}
+}
+
+func TestExtractDocsAndCode_EdgeCases(t *testing.T) {
+	tests := []struct {
+		name         string
+		input        string
+		expectedDocs string
+		expectedCode string
+	}{
+		{
+			name:         "empty input",
+			input:        "",
+			expectedDocs: "",
+			expectedCode: "",
+		},
+		{
+			name:         "only shebang",
+			input:        "#!/bin/sh",
+			expectedDocs: "",
+			expectedCode: "#!/bin/sh",
+		},
+		{
+			name:         "shebang with trailing newline",
+			input:        "#!/bin/sh\n",
+			expectedDocs: "",
+			expectedCode: "#!/bin/sh",
+		},
+		{
+			name: "doc with code on same line style",
+			input: `#!/bin/sh
+# Doc line
+code_here`,
+			expectedDocs: "Doc line",
+			expectedCode: "#!/bin/sh\ncode_here",
+		},
+		{
+			name: "multiple blank lines",
+			input: `#!/bin/sh
+# Doc
+
+code`,
+			expectedDocs: "Doc",
+			expectedCode: "#!/bin/sh\ncode",
+		},
+		{
+			name: "shellcheck in middle of code",
+			input: `#!/bin/sh
+# Doc
+
+echo "start"
+# shellcheck disable=SC2086
+echo $var`,
+			expectedDocs: "Doc",
+			expectedCode: "#!/bin/sh\necho \"start\"\necho $var",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			docs, code := extractDocsAndCode(tt.input)
+			if docs != tt.expectedDocs {
+				t.Errorf("docs = %q, want %q", docs, tt.expectedDocs)
+			}
+			if code != tt.expectedCode {
+				t.Errorf("code = %q, want %q", code, tt.expectedCode)
+			}
+		})
+	}
+}
+
+func TestRun_ClipboardJsWriteError(t *testing.T) {
+	// Create a temp directory structure that allows everything except clipboard.js write
+	tmpDir := t.TempDir()
+	outDir := filepath.Join(tmpDir, "out")
+
+	// Create output directory as writable initially
+	if err := os.MkdirAll(outDir, 0755); err != nil {
+		t.Fatalf("creating output dir: %v", err)
+	}
+
+	cfg := Config{
+		BaseDir: "testdata",
+		OutDir:  outDir,
+	}
+
+	// Run once to create all files
+	err := run(cfg)
+	if err != nil {
+		t.Fatalf("initial run error: %v", err)
+	}
+
+	// Make the clipboard.js file read-only to prevent overwriting
+	clipboardPath := filepath.Join(outDir, "clipboard.js")
+	if _, err := os.Stat(clipboardPath); err == nil {
+		// File exists, make it non-writable
+		if err := os.Chmod(clipboardPath, 0444); err != nil {
+			t.Skipf("cannot make clipboard.js read-only: %v", err)
+		}
+		defer os.Chmod(clipboardPath, 0644)
+
+		// Run again - should fail to write clipboard.js
+		err = run(cfg)
+		if err == nil {
+			// Some systems may allow overwriting read-only files
+			t.Skip("clipboard.js write succeeded despite read-only (running as root?)")
+		}
+		if !strings.Contains(err.Error(), "clipboard.js") {
+			t.Errorf("error = %q, want to contain 'clipboard.js'", err.Error())
+		}
+	}
+}
+
+func TestRun_CSSWriteError(t *testing.T) {
+	tmpDir := t.TempDir()
+	outDir := filepath.Join(tmpDir, "out")
+
+	if err := os.MkdirAll(outDir, 0755); err != nil {
+		t.Fatalf("creating output dir: %v", err)
+	}
+
+	// Create site.css as a directory to cause write error
+	cssDirPath := filepath.Join(outDir, "site.css")
+	if err := os.MkdirAll(cssDirPath, 0755); err != nil {
+		t.Fatalf("creating site.css as dir: %v", err)
+	}
+
+	cfg := Config{
+		BaseDir: "testdata",
+		OutDir:  outDir,
+	}
+
+	err := run(cfg)
+	if err == nil {
+		t.Fatal("expected error, got nil")
+	}
+	if !strings.Contains(err.Error(), "site.css") {
+		t.Errorf("error = %q, want to contain 'site.css'", err.Error())
+	}
+}
+
+func TestRun_IndexWriteError(t *testing.T) {
+	tmpDir := t.TempDir()
+	outDir := filepath.Join(tmpDir, "out")
+
+	if err := os.MkdirAll(outDir, 0755); err != nil {
+		t.Fatalf("creating output dir: %v", err)
+	}
+
+	// Create index.html as a directory to cause write error
+	indexDirPath := filepath.Join(outDir, "index.html")
+	if err := os.MkdirAll(indexDirPath, 0755); err != nil {
+		t.Fatalf("creating index.html as dir: %v", err)
+	}
+
+	cfg := Config{
+		BaseDir: "testdata",
+		OutDir:  outDir,
+	}
+
+	err := run(cfg)
+	if err == nil {
+		t.Fatal("expected error, got nil")
+	}
+	// Error could be from writing example HTML or index.html
+	if !strings.Contains(err.Error(), ".html") {
+		t.Errorf("error = %q, want to contain '.html'", err.Error())
+	}
+}
+
+func TestParseExampleSubExamples(t *testing.T) {
+	tmpDir := t.TempDir()
+
+	// Create test files
+	files := map[string]string{
+		"01-first.sh":  "#!/bin/sh\n# First\necho first",
+		"02-second.sh": "#!/bin/sh\n# Second\necho second",
+	}
+	for name, content := range files {
+		if err := os.WriteFile(filepath.Join(tmpDir, name), []byte(content), 0644); err != nil {
+			t.Fatalf("creating %s: %v", name, err)
+		}
+	}
+
+	// Read directory entries
+	entries, err := os.ReadDir(tmpDir)
+	if err != nil {
+		t.Fatalf("reading dir: %v", err)
+	}
+
+	// Filter to just .sh files
+	var scriptEntries []os.DirEntry
+	for _, e := range entries {
+		if strings.HasSuffix(e.Name(), ".sh") {
+			scriptEntries = append(scriptEntries, e)
+		}
+	}
+
+	ex, err := parseExampleSubExamples(tmpDir, "test-id", "Test Name", scriptEntries)
+	if err != nil {
+		t.Fatalf("parseExampleSubExamples error: %v", err)
+	}
+
+	if ex.ID != "test-id" {
+		t.Errorf("ID = %q, want %q", ex.ID, "test-id")
+	}
+	if ex.Name != "Test Name" {
+		t.Errorf("Name = %q, want %q", ex.Name, "Test Name")
+	}
+	if len(ex.SubExamples) != 2 {
+		t.Errorf("got %d sub-examples, want 2", len(ex.SubExamples))
+	}
+	// Verify sorting by order
+	if ex.SubExamples[0].Order != 1 || ex.SubExamples[1].Order != 2 {
+		t.Error("sub-examples not sorted by order")
+	}
+}
