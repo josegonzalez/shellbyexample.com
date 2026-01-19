@@ -1,0 +1,11 @@
+First 5 users from /etc/passwd:
+  - root
+  - bin
+  - daemon
+  - lp
+  - sync
+
+Simple word list from echo:
+  word: one
+  word: two
+  word: three

@@ -1,0 +1,4 @@
+After loop, letter = c
+
+Practical use - find last matching item:
+Last existing file: /etc/fstab

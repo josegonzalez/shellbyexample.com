@@ -1,6 +1,0 @@
-Users with login shells:
-  - root
-  - bin
-  - daemon
-  - lp
-  - sync

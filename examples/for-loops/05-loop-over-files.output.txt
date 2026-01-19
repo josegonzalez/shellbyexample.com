@@ -1,0 +1,12 @@
+Simple file iteration:
+  found: /tmp/file1.txt
+  found: /tmp/file2.txt
+  found: /tmp/file3.txt
+
+Using a glob pattern:
+  found: /tmp/file1.txt
+  found: /tmp/file2.txt
+  found: /tmp/file3.txt
+
+Defensive pattern (handles no matches):
+  (no files matched, loop body never ran)

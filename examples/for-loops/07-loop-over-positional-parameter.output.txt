@@ -1,3 +1,0 @@
-Argument: first
-Argument: second
-Argument: third

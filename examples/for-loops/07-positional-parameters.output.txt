@@ -1,0 +1,9 @@
+Looping over "$@":
+  arg: first arg
+  arg: second arg
+  arg: third arg
+
+Shorthand (omit 'in "$@"'):
+  arg: first arg
+  arg: second arg
+  arg: third arg

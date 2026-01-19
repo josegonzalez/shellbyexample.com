@@ -1,0 +1,9 @@
+Without a loop (repetitive):
+  processing: file1
+  processing: file2
+  processing: file3
+
+With a loop (scalable):
+  processing: file1
+  processing: file2
+  processing: file3

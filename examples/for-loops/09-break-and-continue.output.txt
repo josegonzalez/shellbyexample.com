@@ -1,0 +1,11 @@
+Using 'break' to exit early:
+  checking 1
+  checking 2
+  found 3, stopping
+
+Using 'continue' to skip items:
+  processing 1
+  processing 2
+  skipping 3
+  processing 4
+  processing 5

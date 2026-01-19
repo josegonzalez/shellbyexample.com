@@ -1,0 +1,9 @@
+Iterating over array elements:
+  - apple
+  - banana
+  - cherry pie
+
+Array indices are also available:
+  index 0: apple
+  index 1: banana
+  index 2: cherry pie
