@@ -1,0 +1,17 @@
+Without set -a:
+  Parent sees APP_HOST: 0.0.0.0
+  Child sees APP_HOST:  <not visible>
+
+With set -a:
+  Parent sees APP_HOST: 0.0.0.0
+  Child sees APP_HOST:  0.0.0.0
+
+Config function with defaults:
+  APP_PORT=3000
+  APP_HOST=0.0.0.0
+  APP_DEBUG=false
+
+Overridden via inline variables:
+  APP_PORT=8080
+  APP_HOST=0.0.0.0
+  APP_DEBUG=true

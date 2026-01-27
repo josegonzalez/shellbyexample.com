@@ -1,0 +1,16 @@
+Checking with test flags:
+  HOME is set to: /root
+  UNDEFINED_VAR is not set
+
+Fallback values with ${VAR:-default}:
+  DB_HOST: localhost
+  DB_PORT: 5432
+
+Assign defaults with ${VAR:=default}:
+  CACHE_DIR is now: /tmp/cache
+
+Alternate values with ${VAR:+alternate}:
+  USER is set: 
+  MISSING is set: 
+
+${VAR:?message} exits if VAR is unset (commented out above)

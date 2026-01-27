@@ -1,0 +1,8 @@
+Parent sees SECRET: I am local
+Child sees SECRET:
+  <not visible>
+
+After export:
+Parent sees SECRET: I am local
+Child sees SECRET:
+  I am local

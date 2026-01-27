@@ -1,0 +1,11 @@
+Inline assignment (VAR=value command):
+  During: GREETING=Hola
+  After:  GREETING=<gone>
+
+Using env:
+  During: COLOR=blue
+  After:  COLOR=<gone>
+
+Modifying PATH temporarily:
+  PATH has 6 entries
+  After prepend, PATH starts with: /root/bin

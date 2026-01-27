@@ -1,0 +1,7 @@
+Child process can see the secret:
+  API_KEY=secret123
+
+Storing a secret in a file instead:
+  Permissions: -rw-------
+  Secret read from file: my_secret_token
+  Cleaned up secret file

@@ -1,4 +1,0 @@
-Current user: 
-Home directory: /root
-Current shell: 
-Current path: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin

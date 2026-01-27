@@ -1,4 +1,0 @@
-DB_HOST: localhost
-CACHE_DIR: /tmp/cache
-USER is set: 
-UNSET is set: 

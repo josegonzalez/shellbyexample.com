@@ -1,0 +1,11 @@
+Method 1 - shell variable:
+  Parent: DB_NAME=mydb
+  Child:  DB_NAME=<not visible>
+
+Method 2 - export in one step:
+  Parent: DB_HOST=localhost
+  Child:  DB_HOST=localhost
+
+Method 3 - export on a separate line:
+  Parent: DB_PORT=5432
+  Child:  DB_PORT=5432

@@ -1,8 +1,0 @@
-Common environment variables:
-  USER=
-  HOME=/root
-  PWD=/tmp
-  PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-  SHELL=
-  TERM=
-  LANG=

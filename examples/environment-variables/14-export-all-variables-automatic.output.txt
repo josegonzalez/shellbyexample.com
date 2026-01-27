@@ -1,2 +1,0 @@
-Without -a: DB_HOST=<not set>
-With -a: DB_HOST=localhost

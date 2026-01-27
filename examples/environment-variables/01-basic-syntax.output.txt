@@ -1,0 +1,3 @@
+Your username: 
+Your home directory: /root
+Current directory: /tmp

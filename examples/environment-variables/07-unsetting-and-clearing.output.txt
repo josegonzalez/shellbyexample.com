@@ -1,0 +1,14 @@
+Before unset: TEMP_VAR=temporary
+After unset:  TEMP_VAR=<removed>
+
+Exported variables (first 5):
+FAKETIME=2025-01-01 10:00:00
+FAKETIME_NO_CACHE=1
+FAKETIME_SHARED=/faketime_sem_1 /faketime_shm_1
+HOME=/root
+HOSTNAME=shellbyexample
+
+Clean environment with env -i:
+  Variables in clean env: 3
+  PATH is set: yes
+  USER is set: <not set>
