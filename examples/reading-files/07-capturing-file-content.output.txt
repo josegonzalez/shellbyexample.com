@@ -1,0 +1,9 @@
+=== File in a variable ===
+Hello from the file.
+This is line two.
+
+=== Lines as positional parameters ===
+Count: 3
+First: apple
+Last:  cherry
+All:   apple banana cherry

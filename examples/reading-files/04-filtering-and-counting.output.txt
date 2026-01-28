@@ -1,0 +1,11 @@
+=== Errors only (grep) ===
+ERROR Cannot connect to database
+ERROR Timeout waiting for response
+
+=== Error count ===
+2 errors found
+
+=== File statistics (wc) ===
+Lines: 6
+Words: 26
+Bytes: 183

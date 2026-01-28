@@ -1,0 +1,11 @@
+=== Safe read (file exists) ===
+first
+second
+third
+
+=== Safe read (file missing) ===
+Error: /tmp/no_such_file.txt not found
+
+=== File descriptors ===
+First line:  first
+Second line: second

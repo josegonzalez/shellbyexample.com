@@ -1,0 +1,12 @@
+=== First 2 lines (head) ===
+Line 1: Introduction
+Line 2: Background
+
+=== Last 2 lines (tail) ===
+Line 5: Discussion
+Line 6: Conclusion
+
+=== Lines 3-5 (sed) ===
+Line 3: Methods
+Line 4: Results
+Line 5: Discussion

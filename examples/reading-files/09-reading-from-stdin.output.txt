@@ -1,0 +1,10 @@
+=== Pipe into while-read ===
+  got: one
+  got: two
+  got: three
+
+=== Single read from a pipe ===
+  hello from pipe
+
+=== cat - passes stdin through ===
+piped through cat

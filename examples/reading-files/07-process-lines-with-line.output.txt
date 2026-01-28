@@ -1,6 +1,0 @@
-With line numbers:
-  1: Line 1: Hello
-  2: Line 2: World
-  3: Line 3: Shell
-  4: Line 4: Scripting
-  5: Line 5: Example

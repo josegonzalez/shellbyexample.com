@@ -1,2 +1,0 @@
-Number of lines: 5
-First line: Line 1: Hello

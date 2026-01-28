@@ -1,3 +1,0 @@
-Last 2 lines (tail):
-Line 4: Scripting
-Line 5: Example

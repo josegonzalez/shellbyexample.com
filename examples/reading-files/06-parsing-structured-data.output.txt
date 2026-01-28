@@ -1,0 +1,8 @@
+=== Parsing colon-delimited data ===
+  alice is 30, works as engineer
+  bob is 25, works as designer
+  carol is 35, works as manager
+
+=== Handling missing final newline ===
+  red -> apple
+  green -> pear

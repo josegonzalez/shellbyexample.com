@@ -1,4 +1,0 @@
-Lines 2-4 (sed):
-Line 2: World
-Line 3: Shell
-Line 4: Scripting

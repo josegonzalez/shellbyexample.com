@@ -1,0 +1,13 @@
+=== Without IFS= and -r (broken) ===
+  [indented line]
+  [line with backslashesnormal line]
+
+=== With IFS= read -r (correct) ===
+  [  indented line]
+  [line with \backslashes\]
+  [normal line]
+
+=== With line numbers ===
+  1:   indented line
+  2: line with \backslashes\
+  3: normal line

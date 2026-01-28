@@ -1,0 +1,9 @@
+=== Single file ===
+Hello, World!
+Welcome to shell scripting.
+
+=== Two files combined ===
+Hello, World!
+Welcome to shell scripting.
+Goodbye for now.
+See you next time!

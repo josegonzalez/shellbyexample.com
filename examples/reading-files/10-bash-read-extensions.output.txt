@@ -1,0 +1,14 @@
+=== read -t (timeout) ===
+  Got: hello from timeout
+
+=== read -n (single character) ===
+
+  Got: y
+
+=== read -p (prompt) ===
+  Got: 42
+
+=== mapfile (array loading) ===
+  Count: 3
+  First: alpha
+  Last:  gamma

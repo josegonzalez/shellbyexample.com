@@ -1,3 +1,0 @@
-Using file descriptor:
-  First line: Line 1: Hello
-  Second line: Line 2: World
